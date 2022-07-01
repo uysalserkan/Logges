@@ -4,9 +4,7 @@
 @email: uysalserkan08@gmail.com
 """
 
-from ntpath import realpath
 import os
-import pathlib
 import datetime
 import temp
 
@@ -19,6 +17,7 @@ class Logges:
 
     @staticmethod
     def write_logs(msg):
+        """TODO: Buraya standartlara uygun bir açıklama eklenecek."""
         filename = Logges.get_daily_log_file_name()
         saving_dir = Logges.get_saving_path()
         log_file = open(f"{saving_dir}/{filename}", 'a')
@@ -26,10 +25,12 @@ class Logges:
         # log_file.write("\n")
 
     def get_status_message(status: int) -> str:
+        """TODO: Buraya standartlara uygun bir açıklama eklenecek."""
         status_text = f"[{STATUS[status]}] "
         return status_text
 
     def get_daily_log_file_name(markdown: bool = False, pdf: bool = False) -> str:
+        """TODO: Buraya standartlara uygun bir açıklama eklenecek."""
         if pdf:
             filename = f"{os.path.basename(__file__).split('.py')[0]}_{datetime.datetime.today().strftime('%Y-%m-%d')}.pdf"
         elif markdown:
@@ -37,7 +38,7 @@ class Logges:
         else:
             filename = f"{os.path.basename(__file__).split('.py')[0]}_{datetime.datetime.today().strftime('%Y-%m-%d')}.log"
         return filename
-    
+
     def get_current_time_HM():
         """TODO: Buraya standartlara uygun bir açıklama eklenecek."""
         hour_min_sec = datetime.datetime.today().strftime('%H:%M:%S')
@@ -46,18 +47,22 @@ class Logges:
     @staticmethod
     def set_logger_name(log_name: str):
         """TODO: Buraya standartlara uygun açıklama gelecek."""
+        pass
 
     @staticmethod
-    def log(log: str, status: int = 0):
+    def log(log: str, status: int = 0, print_log: bool = True):
         """TODO: Buraya standartlara uygun açıklama gelecek."""
-
         cur_time = Logges.get_current_time_HM()
         status = Logges.get_status_message(status=status)
         msg = f"{status}{cur_time}\t{log}"
+
+        if print_log:
+            print(msg)
+
         Logges.write_logs(msg=msg)
 
-
     def get_saving_path(log_dir: bool = False):
+        """TODO: Buraya standartlara uygun bir açıklama eklenecek."""
         script_path = os.path.realpath(__file__)
         dir_path = "/".join(script_path.split('/')[:-1])
 
@@ -65,9 +70,9 @@ class Logges:
             dir_path += "/logs"
         return dir_path
 
-
     @staticmethod
     def to_markdown():
+        """TODO: Buraya standartlara uygun bir açıklama eklenecek."""
         icons = {
             "INFO": ":passport_control:",
             "WARNING": ":vs:",
@@ -85,7 +90,7 @@ class Logges:
         file_date = filename.split('_')[1].replace(".log", '')
 
         markdown_file.writelines(f"# {only_filename} {file_date} Logs :see_no_evil: :hear_no_evil: :speak_no_evil:\n")
-        markdown_file.writelines(f"|TYPE|TIME|MESSAGE|\n| :--: | :--: | :--: |\n")
+        markdown_file.writelines("|TYPE|TIME|MESSAGE|\n| :--: | :--: | :--: |\n")
         for each_log in logs[::-1]:
             log_type = each_log.split("\t")[0].split(" ")[0].replace('[', '').replace(']', '')
             log_time = each_log.split("\t")[0].split(" ")[1].replace('[', '').replace(']', '')[0:-1]
@@ -96,32 +101,20 @@ class Logges:
                 markdown_file.writelines("\n")
             except:
                 raise("Please check your icon.")
-        
 
-        # print(only_filename, file_date)
-
-        # for each_log in logs:
-
-        #     print(each_log)
-    
     @staticmethod
     def to_console():
+        """TODO: Buraya standartlara uygun bir açıklama eklenecek."""
         pass
-    
+
     @staticmethod
     def to_pdf():
+        """TODO: Buraya standartlara uygun bir açıklama eklenecek."""
         pass
-        
 
 
 if __name__ == '__main__':
-    # temp.temp_func()
-    # real_path = os.path.realpath(__file__)
-    # print("Real Path:", "/".join(real_path.split('/')[:-1]))
     Logges.log("It is a not INFO log.", 2)
     Logges.to_markdown()
     temp.temp_func()
-    # print("CWD: ", os.getcwd())
-    # print("Pathlib: ", pathlib.Path.cwd())
     Logges.to_markdown()
-    # print(f"{os.path.basename(__file__).split('.py')[0]}_{datetime.datetime.today().strftime('%Y-%m-%d')}_logs.tmp")
