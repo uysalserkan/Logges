@@ -131,3 +131,6 @@ dmypy.json
 *.log
 *.md
 *.pdf
+*.png
+*.jpg
+*.gif

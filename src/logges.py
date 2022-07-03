@@ -7,6 +7,7 @@
 import os
 import datetime
 import temp
+from utils import create_pie_chart
 
 
 STATUS = ["INFO", "WARNING", "ERROR"]
@@ -78,6 +79,7 @@ class Logges:
             "WARNING": ":vs:",
             "ERROR": ":sos:"
         }
+        type_counter = [0, 0, 0]
         md_file = Logges.get_saving_path() + '/' + Logges.get_daily_log_file_name(markdown=True)
         markdown_file = open(md_file, 'w')
 
@@ -90,9 +92,17 @@ class Logges:
         file_date = filename.split('_')[1].replace(".log", '')
 
         markdown_file.writelines(f"# {only_filename} {file_date} Logs :see_no_evil: :hear_no_evil: :speak_no_evil:\n")
+        markdown_file.writelines("![](pie_chart.png)\n")
         markdown_file.writelines("|TYPE|TIME|MESSAGE|\n| :--: | :--: | :--: |\n")
         for each_log in logs[::-1]:
             log_type = each_log.split("\t")[0].split(" ")[0].replace('[', '').replace(']', '')
+            if log_type == list(icons.keys())[0]:
+                type_counter[0] += 1
+            elif log_type == list(icons.keys())[1]:
+                type_counter[1] += 1
+            elif log_type == list(icons.keys())[2]:
+                type_counter[2] += 1
+
             log_time = each_log.split("\t")[0].split(" ")[1].replace('[', '').replace(']', '')[0:-1]
             log_msg = each_log.split("\t")[1]
             log_msg.replace("\n", '')
@@ -101,6 +111,7 @@ class Logges:
                 markdown_file.writelines("\n")
             except:
                 raise("Please check your icon.")
+        create_pie_chart(info_size=type_counter[0], warning_size=type_counter[1], error_size=type_counter[2])
 
     @staticmethod
     def to_console():
@@ -115,6 +126,6 @@ class Logges:
 
 if __name__ == '__main__':
     Logges.log("It is a not INFO log.", 2)
-    Logges.to_markdown()
+    Logges.log("It is a not ERROR log.", 1)
     temp.temp_func()
     Logges.to_markdown()
