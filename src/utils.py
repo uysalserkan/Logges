@@ -74,20 +74,27 @@ def console_data(script_name: str) -> None:
 
     type_counter = [0, 0, 0]
     for each_log in logs[::-1]:
+        color = ""
         log_type = each_log.split("\t")[0].split(" ")[0].replace('[', '').replace(']', '')
         if log_type == list(icons.keys())[0]:
+            color = "cyan"
             type_counter[0] += 1
         elif log_type == list(icons.keys())[1]:
+            color = "yellow"
             type_counter[1] += 1
         elif log_type == list(icons.keys())[2]:
+            color = "red"
             type_counter[2] += 1
 
         log_time = each_log.split("\t")[0].split(" ")[1].replace('[', '').replace(']', '')[0:-1]
         log_msg = each_log.split("\t")[1]
         log_msg.replace("\n", '')
         try:
-            rich_table.add_row(f"{icons[log_type]} {log_type}", f"{log_msg}", f"{log_time}")
+            rich_table.add_row(f"[bold]{icons[log_type]} {log_type}", f"[{color}]{log_msg}", f"[italic]{log_time}")
         except:
             raise("Please check your icon.")
     rich_console = Console()
     rich_console.print(rich_table)
+    total_length = type_counter[0] + type_counter[1] + type_counter[2]
+    rich_console.print("[blue]████████████████[yellow]████████████████[red]██████████████████")
+    rich_console.print(f"Info: %{round(type_counter[0]/total_length*100, 2)}\tWarning: %{round(type_counter[1]/total_length*100, 2)}\tError: %{round(type_counter[2]/total_length*100, 2)}")
