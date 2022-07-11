@@ -6,12 +6,7 @@
 
 import os
 import temp
-from utils import create_pie_chart
-from utils import console_data
-from utils import get_saving_path
-from utils import get_current_time_HM
-from utils import get_daily_log_file_name
-
+from utils import (create_pie_chart, console_data, get_saving_path, get_current_time_HM, get_daily_log_file_name, to_pdf)
 
 STATUS = ["INFO", "WARNING", "ERROR"]
 
@@ -25,9 +20,8 @@ class Logges:
         filename = get_daily_log_file_name(filename=Logges.get_log_name())
         saving_dir = get_saving_path()
         log_file = open(f"{saving_dir}/{filename}", 'a')
-        msg = msg.replace('\t', ' ').replace('\n', ' ')
+        # msg = msg.replace('\t', ' ').replace('\n', ' ')
         log_file.writelines(msg + "\n")
-        # log_file.write("\n")
 
     def get_status_message(status: int) -> str:
         """TODO: Buraya standartlara uygun bir açıklama eklenecek."""
@@ -93,11 +87,6 @@ class Logges:
                 raise("Please check your icon.")
         create_pie_chart(info_size=type_counter[0], warning_size=type_counter[1], error_size=type_counter[2])
 
-    @staticmethod
-    def to_pdf():
-        """TODO: Buraya standartlara uygun bir açıklama eklenecek."""
-        pass
-
 
 if __name__ == '__main__':
     Logges.log("It is a not INFO log.", 2, print_log=False)
@@ -105,3 +94,4 @@ if __name__ == '__main__':
     temp.temp_func()
     Logges.to_markdown()
     console_data(script_name=Logges.get_log_name())
+    to_pdf(script_name=Logges.get_log_name())
