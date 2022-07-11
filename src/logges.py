@@ -20,11 +20,12 @@ class Logges:
     """TODO: Buraya standartlara uygun bir açıklama eklenecek."""
 
     @staticmethod
-    def write_logs(msg):
+    def write_logs(msg: str):
         """TODO: Buraya standartlara uygun bir açıklama eklenecek."""
         filename = get_daily_log_file_name(filename=Logges.get_log_name())
         saving_dir = get_saving_path()
         log_file = open(f"{saving_dir}/{filename}", 'a')
+        msg = msg.replace('\t', ' ').replace('\n', ' ')
         log_file.writelines(msg + "\n")
         # log_file.write("\n")
 
@@ -93,11 +94,6 @@ class Logges:
         create_pie_chart(info_size=type_counter[0], warning_size=type_counter[1], error_size=type_counter[2])
 
     @staticmethod
-    def to_console():
-        """TODO: Buraya standartlara uygun bir açıklama eklenecek."""
-        pass
-
-    @staticmethod
     def to_pdf():
         """TODO: Buraya standartlara uygun bir açıklama eklenecek."""
         pass
@@ -105,7 +101,7 @@ class Logges:
 
 if __name__ == '__main__':
     Logges.log("It is a not INFO log.", 2, print_log=False)
-    # Logges.log("It is a not ERROR log.", 1)
+    Logges.log("It is a not ERROR log.", 1)
     temp.temp_func()
     Logges.to_markdown()
     console_data(script_name=Logges.get_log_name())
