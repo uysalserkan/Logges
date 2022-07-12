@@ -1,0 +1,48 @@
+# Dependency Review Action
+#
+# This Action will scan dependency manifest files that change as part of a Pull Request, surfacing known-vulnerable versions of the packages declared or updated in the PR. Once installed, if the workflow run is marked as required, PRs introducing known-vulnerable packages will be blocked from merging.
+#
+# Source repository: https://github.com/actions/dependency-review-action
+# Public documentation: https://docs.github.com/en/code-security/supply-chain-security/understanding-your-software-supply-chain/about-dependency-review#dependency-review-enforcement
+name: 'Dependency Review'
+on: [pull_request]
+
+permissions:
+  contents: read
+
+jobs:
+  dependency-review:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Checkout Repository'
+        uses: actions/checkout@v3
+      - name: 'Dependency Review'
+        uses: actions/dependency-review-action@v1
+      - name: action-git-diff-suggestions
+        # You may pin to the exact commit or the version.
+        # uses: getsentry/action-git-diff-suggestions@8c75946d0d7bbe80a92cf3579d544321512c30b7
+        uses: getsentry/action-git-diff-suggestions@v1
+
+      - name: Python Linter
+        # You may pin to the exact commit or the version.
+        # uses: sunnysid3up/python-linter@93076bd8f740f062069291d738fc70c1b4171c1d
+        uses: sunnysid3up/python-linter@v0.1-beta.7
+        with:
+          # Source file or directory
+          source: . # optional, default is .
+          # Set strictness for lint [low, medium, high]
+          strict: medium # optional, default is medium
+          # Pylint options
+          pylint-options: True # optional, default is 
+          # Black options
+          black-options: True # optional, default is 
+
+      - name: python-flake8
+        # You may pin to the exact commit or the version.
+        # uses: julianwachholz/flake8-action@75749239077651dfd0ecbe405899cdcb0673ee8f
+        uses: julianwachholz/flake8-action@v2.0.2
+        with:
+          # The name of the check to add annotations to. Generally the same as the job that uses this action
+          checkName: Flake8 
+          # Path to use for flake8
+          path: . # optional, default is .
