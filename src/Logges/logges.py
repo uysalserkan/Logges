@@ -5,8 +5,7 @@
 """
 
 import os
-import temp
-from utils import (create_pie_chart, console_data, get_saving_path, get_current_time_HM, get_daily_log_file_name, to_pdf)
+from src.Logges.utils import (create_pie_chart, console_data, get_saving_path, get_current_time_HM, get_daily_log_file_name, to_pdf)
 
 STATUS = ["INFO", "WARNING", "ERROR"]
 
@@ -87,11 +86,12 @@ class Logges:
                 raise("Please check your icon.")
         create_pie_chart(info_size=type_counter[0], warning_size=type_counter[1], error_size=type_counter[2])
 
+    @staticmethod
+    def console_data():
+        """We are printing our data on console."""
+        console_data(script_name=Logges.get_log_name())
 
-if __name__ == '__main__':
-    Logges.log("It is a not INFO log.", 2, print_log=False)
-    Logges.log("It is a not ERROR log.", 1)
-    temp.temp_func()
-    Logges.to_markdown()
-    console_data(script_name=Logges.get_log_name())
-    to_pdf(script_name=Logges.get_log_name())
+    @staticmethod
+    def to_pdf():
+        """We create a pdf file about logs and charts."""
+        to_pdf(script_name=Logges.get_log_name())
