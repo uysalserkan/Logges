@@ -5,7 +5,7 @@
 """
 
 import os
-from src.Logges.utils import (create_pie_chart, console_data, get_saving_path, get_current_time_HM, get_daily_log_file_name, to_pdf)
+from .utils import (create_pie_chart, console_data, get_saving_path, get_current_time_HM, get_daily_log_file_name, to_pdf)
 
 STATUS = ["INFO", "WARNING", "ERROR"]
 
