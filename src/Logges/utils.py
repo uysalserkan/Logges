@@ -23,7 +23,7 @@ def get_saving_path(log_dir: bool = False):
     return dir_path
 
 
-def create_pie_chart(info_size: bool = 0, warning_size: bool = 0, error_size: bool = 0) -> None:
+def create_pie_chart(saving_path: str, info_size: bool = 0, warning_size: bool = 0, error_size: bool = 0) -> None:
     """We are creating and saving a plot that show us the rate of log types."""
     chart_labels = ["INFO", "WARNING", "ERROR"]
     chart_explode = [0, 0.01, 0.01]
@@ -33,10 +33,7 @@ def create_pie_chart(info_size: bool = 0, warning_size: bool = 0, error_size: bo
 
     plt.pie(logs_size, labels=chart_labels, explode=chart_explode, colors=chart_colors, autopct='%1.1f%%')
 
-    script_path = os.path.realpath(__file__)
-    dir_path = "/".join(script_path.split('/')[:-1])
-
-    plt.savefig(f"{dir_path}/pie_chart.png")
+    plt.savefig(f"{saving_path}/pie_chart.png")
 
 
 def get_daily_log_file_name(filename: str, markdown: bool = False, pdf: bool = False) -> str:
@@ -113,12 +110,12 @@ def console_data(script_name: str) -> None:
     rich_console.print(f"Info: %{round(type_counter[0]/total_length*100, 2)}\tWarning: %{round(type_counter[1]/total_length*100, 2)}\tError: %{round(type_counter[2]/total_length*100, 2)}")
 
 
-def to_pdf(script_name: str) -> None:
+def to_pdf(script_name: str, saving_path: str) -> None:
     """Export the logs to a file with `.pdf` format.."""
 
     def copyright_text() -> Paragraph:
         """We are add a text on the page."""
-        uysaltext = 'All right reserved 2022 &copy;&nbsp;<a href="https://github.com/uysalserkan/Logges">Logges</a> - <strong><a href="https://github.com/uysalserkan">uysalserkan</a></strong>'
+        uysaltext = 'All right reserved 2022 &copy;&nbsp;<a href="https://github.com/uysalserkan/Logges">Logges</a> - <strong><a href="https://github.com/uysalserkan">uysalserkan</a></strong> & <strong><a href="https://github.com/ozkanuysal">Ozkan</a></strong>'
         copyright_style = ParagraphStyle("copyright_style", fontSize=8, alignment=TA_CENTER)
         uysaltext_p = Paragraph(uysaltext, copyright_style)
         return uysaltext_p
@@ -197,5 +194,5 @@ def to_pdf(script_name: str) -> None:
 
     page_elements.append(copyright_text())
     page_elements.append(PageBreak())
-    pdf_doc = SimpleDocTemplate(f"{dir_path}/{script_name}_{datetime.datetime.today().strftime('%Y-%m-%d')}.pdf", pagesize=LETTER)
+    pdf_doc = SimpleDocTemplate(f"{saving_path}/{script_name}_{datetime.datetime.today().strftime('%Y-%m-%d')}.pdf", pagesize=LETTER)
     pdf_doc.multiBuild(page_elements)

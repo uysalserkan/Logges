@@ -8,10 +8,20 @@ import os
 from .utils import (create_pie_chart, console_data, get_saving_path, get_current_time_HM, get_daily_log_file_name, to_pdf)
 
 STATUS = ["INFO", "WARNING", "ERROR"]
+FILENAME = None
+SAVINGPATH = None
 
 
 class Logges:
     """TODO: Buraya standartlara uygun bir açıklama eklenecek."""
+
+    @staticmethod
+    def setup(filepath) -> None:
+        """You need to enter just `__file__` input to filepath arguemnt."""
+        global FILENAME, SAVINGPATH
+        path = os.path.abspath(filepath)
+        FILENAME = path.split('/')[-1].split('.py')[0]
+        SAVINGPATH = "/".join(path.split('/')[:-1])
 
     @staticmethod
     def write_logs(msg: str):
@@ -30,7 +40,8 @@ class Logges:
     @staticmethod
     def get_log_name() -> str:
         """TODO: Buraya standartlara uygun açıklama gelecek."""
-        return os.path.basename(__file__).split('.py')[0]
+        global FILENAME
+        return FILENAME
 
     @staticmethod
     def log(log: str, status: int = 0, print_log: bool = True):
@@ -53,7 +64,7 @@ class Logges:
             "ERROR": ":sos:"
         }
         type_counter = [0, 0, 0]
-        md_file = get_saving_path() + '/' + get_daily_log_file_name(filename=Logges.get_log_name(), markdown=True)
+        md_file = SAVINGPATH + '/' + get_daily_log_file_name(filename=Logges.get_log_name(), markdown=True)
         markdown_file = open(md_file, 'w')
 
         filename = get_daily_log_file_name(filename=Logges.get_log_name())
@@ -84,7 +95,8 @@ class Logges:
                 markdown_file.writelines("\n")
             except:
                 raise("Please check your icon.")
-        create_pie_chart(info_size=type_counter[0], warning_size=type_counter[1], error_size=type_counter[2])
+        markdown_file.writelines("All right reserved 2022 &copy;&nbsp; [Logges](https://github.com/uysalserkan/Logges) - *[uysalserkan](https://github.com/uysalserkan/) & [Ozkan](https://github.com/ozkanuysal)*\n")
+        create_pie_chart(saving_path=SAVINGPATH, info_size=type_counter[0], warning_size=type_counter[1], error_size=type_counter[2])
 
     @staticmethod
     def console_data():
@@ -94,4 +106,4 @@ class Logges:
     @staticmethod
     def to_pdf():
         """We create a pdf file about logs and charts."""
-        to_pdf(script_name=Logges.get_log_name())
+        to_pdf(script_name=Logges.get_log_name(), saving_path=SAVINGPATH)
