@@ -134,3 +134,4 @@ dmypy.json
 *.png
 *.jpg
 *.gif
+*.DS_Store
