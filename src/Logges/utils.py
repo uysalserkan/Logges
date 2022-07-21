@@ -132,6 +132,11 @@ def to_pdf(script_name: str, saving_path: str) -> None:
     # Burada eklemeler yapılıyor..
     page_elements = []
 
+    # Reading data başlıyor..
+    with open(f"{filename}", 'r') as file:
+        logs = file.readlines()
+        file.close()
+
     # Header Başlığı Ekleniyor.
     header_text = f"{script_name}.py {datetime.datetime.today().strftime('%Y-%m-%d')} Logs"
     header_style = ParagraphStyle("H1", fontSize=18, alignment=TA_LEFT)
@@ -139,7 +144,18 @@ def to_pdf(script_name: str, saving_path: str) -> None:
     page_elements.append(header)
     page_elements.append(Spacer(10, 20))
 
-    img = Image(f'{dir_path}/pie_chart.png')
+    if not os.path.exists(f'{saving_path}/pie_chart.png'):
+        info_, warn_, err_ = (0, 0, 0)
+        for each_log in logs[::-1]:
+            log_type = each_log.split("\t")[0].split(" ")[0].replace('[', '').replace(']', '')
+            if log_type == list(type_colors.keys())[0]:
+                info_ += 1
+            elif log_type == list(type_colors.keys())[1]:
+                warn_ += 1
+            elif log_type == list(type_colors.keys())[2]:
+                err_ += 1
+        create_pie_chart(saving_path=saving_path, info_size=info_, warning_size=warn_, error_size=err_)
+    img = Image(f'{saving_path}/pie_chart.png')
     img.drawHeight = 3.5 * inch
     img.drawWidth = 5.5 * inch
     page_elements.append(img)
@@ -157,11 +173,6 @@ def to_pdf(script_name: str, saving_path: str) -> None:
     table_data.append(column_styled_list)
 
     alignStyle = ParagraphStyle(name="data", alignment=TA_CENTER)
-
-    # Reading data başlıyor..
-    with open(f"{filename}", 'r') as file:
-        logs = file.readlines()
-        file.close()
 
     # Reading data bitiyor..
     for each_log in logs[::-1]:
