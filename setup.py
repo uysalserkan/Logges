@@ -11,7 +11,7 @@ setup(
     name="Logges",
     version=Logges.__version__,
     license='MIT',
-    author='Serkan UYSAL',
+    author='Serkan UYSAL, Ozkan UYSAL',
     maintainer="Ozkan UYSAL",
     author_email='uysalserkan08@gmail.com',
     maintainer_email="ozkan.uysal.2009@gmail.com",
@@ -26,24 +26,4 @@ setup(
         'rich==12.5.1',
         'reportlab==3.5.67'
     ],
-    classifiers=[
-        'License :: OSI Approved :: MIMT License',
-        'Development Status :: 1 - Beta',
-        'Environment :: Console',
-        'Environment :: Other Environment',
-        'Intended Audience :: Developers',
-        'Intended Audience :: System Administrators',
-        'Natural Language :: English',
-        'Operating System :: OS Independent',
-        'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.6',
-        'Programming Language :: Python :: 3.7',
-        'Programming Language :: Python :: 3.8',
-        'Programming Language :: Python :: 3.9',
-        'Programming Language :: Python :: 3.10',
-        'Topic :: Documentation',
-        'Topic :: Log',
-        'Topic :: Logging',
-        'Topic :: Utilities',
-    ]
 )
