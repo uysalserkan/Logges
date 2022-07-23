@@ -11,7 +11,7 @@ setup(
     name="Logges",
     version=Logges.__version__,
     license='MIT',
-    author='Serkan UYSAL',
+    author='Serkan UYSAL, Ozkan UYSAL',
     maintainer="Ozkan UYSAL",
     author_email='uysalserkan08@gmail.com',
     maintainer_email="ozkan.uysal.2009@gmail.com",
