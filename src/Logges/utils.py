@@ -2,6 +2,7 @@
 
 import os
 import datetime
+import platform
 import matplotlib.pyplot as plt
 from rich.console import Console
 from rich.table import Table
@@ -13,13 +14,18 @@ from reportlab.platypus import Table as reportlabTable
 from reportlab.lib.colors import Color
 
 
+def get_current_platform_name() -> str:
+    """TODO: Buraya standartlara uygun bir açıklama eklenecek."""
+    sys_name = platform.system()
+    return sys_name
+
+
 def get_saving_path(log_dir: bool = False):
     """TODO: Buraya standartlara uygun bir açıklama eklenecek."""
     script_path = os.path.realpath(__file__)
-    dir_path = "/".join(script_path.split('/')[:-1])
-
+    dir_path = os.path.split(script_path)[0]
     if log_dir:
-        dir_path += "/logs"
+        dir_path += os.path.join(dir_path, "logs")
     return dir_path
 
 
@@ -33,17 +39,19 @@ def create_pie_chart(saving_path: str, info_size: bool = 0, warning_size: bool =
 
     plt.pie(logs_size, labels=chart_labels, explode=chart_explode, colors=chart_colors, autopct='%1.1f%%')
 
-    plt.savefig(f"{saving_path}/pie_chart.png")
+    png_path = os.path.join(saving_path, "pie_chart.png")
+
+    plt.savefig(f"{png_path}")
 
 
 def get_daily_log_file_name(filename: str, markdown: bool = False, pdf: bool = False) -> str:
     """TODO: Buraya standartlara uygun bir açıklama eklenecek."""
     if pdf:
-        filename = f"{filename}_{datetime.datetime.today().strftime('%Y-%m-%d')}.pdf"
+        filename = f"{datetime.datetime.today().strftime('%Y-%m-%d')}_{filename}.pdf"
     elif markdown:
-        filename = f"{filename}_{datetime.datetime.today().strftime('%Y-%m-%d')}.md"
+        filename = f"{datetime.datetime.today().strftime('%Y-%m-%d')}_{filename}.md"
     else:
-        filename = f"{filename}_{datetime.datetime.today().strftime('%Y-%m-%d')}.log"
+        filename = f"{datetime.datetime.today().strftime('%Y-%m-%d')}_{filename}.log"
     return filename
 
 
@@ -64,7 +72,8 @@ def console_data(script_name: str) -> None:
     """
     dir_path = get_saving_path()
 
-    filename = f"{dir_path}/{script_name}_{datetime.datetime.today().strftime('%Y-%m-%d')}.log"
+    log_dir = os.path.join(dir_path, get_daily_log_file_name(filename=script_name))
+    filename = f"{log_dir}"
 
     rich_table = Table(title=f"{filename.split('/')[-1]} :see_no_evil: :hear_no_evil: :speak_no_evil:")
 
@@ -127,7 +136,8 @@ def to_pdf(script_name: str, saving_path: str) -> None:
     }
     dir_path = get_saving_path()
 
-    filename = f"{dir_path}/{script_name}_{datetime.datetime.today().strftime('%Y-%m-%d')}.log"
+    log_dir = os.path.join(dir_path, get_daily_log_file_name(filename=script_name))
+    filename = f"{log_dir}"
 
     # Burada eklemeler yapılıyor..
     page_elements = []
@@ -155,7 +165,8 @@ def to_pdf(script_name: str, saving_path: str) -> None:
             elif log_type == list(type_colors.keys())[2]:
                 err_ += 1
         create_pie_chart(saving_path=saving_path, info_size=info_, warning_size=warn_, error_size=err_)
-    img = Image(f'{saving_path}/pie_chart.png')
+    png_path = os.path.join(saving_path, 'pie_chart.png')
+    img = Image(f'{png_path}')
     img.drawHeight = 3.5 * inch
     img.drawWidth = 5.5 * inch
     page_elements.append(img)
@@ -205,5 +216,6 @@ def to_pdf(script_name: str, saving_path: str) -> None:
 
     page_elements.append(copyright_text())
     page_elements.append(PageBreak())
-    pdf_doc = SimpleDocTemplate(f"{saving_path}/{script_name}_{datetime.datetime.today().strftime('%Y-%m-%d')}.pdf", pagesize=LETTER)
+    to_pdf_path = os.path.join(saving_path, get_daily_log_file_name(filename=script_name, pdf=True))
+    pdf_doc = SimpleDocTemplate(to_pdf_path, pagesize=LETTER)
     pdf_doc.multiBuild(page_elements)

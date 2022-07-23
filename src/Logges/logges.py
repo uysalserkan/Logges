@@ -5,7 +5,7 @@
 """
 
 import os
-from .utils import (create_pie_chart, console_data, get_saving_path, get_current_time_HM, get_daily_log_file_name, to_pdf)
+from .utils import (create_pie_chart, console_data, get_saving_path, get_current_time_HM, get_daily_log_file_name, to_pdf, get_current_platform_name)
 
 STATUS = ["INFO", "WARNING", "ERROR"]
 FILENAME = None
@@ -20,16 +20,16 @@ class Logges:
         """You need to enter just `__file__` input to filepath arguemnt."""
         global FILENAME, SAVINGPATH
         path = os.path.abspath(filepath)
-        FILENAME = path.split('/')[-1].split('.py')[0]
-        SAVINGPATH = "/".join(path.split('/')[:-1])
+        FILENAME = os.path.split(path)[1].split(".py")[0]
+        SAVINGPATH = os.path.split(path)[0]
 
     @staticmethod
     def write_logs(msg: str):
         """TODO: Buraya standartlara uygun bir açıklama eklenecek."""
         filename = get_daily_log_file_name(filename=Logges.get_log_name())
         saving_dir = get_saving_path()
-        log_file = open(f"{saving_dir}/{filename}", 'a')
-        # msg = msg.replace('\t', ' ').replace('\n', ' ')
+        log_dir = os.path.join(saving_dir, filename)
+        log_file = open(f"{log_dir}", 'a')
         log_file.writelines(msg + "\n")
 
     def get_status_message(status: int) -> str:
@@ -64,17 +64,20 @@ class Logges:
             "ERROR": ":sos:"
         }
         type_counter = [0, 0, 0]
-        md_file = SAVINGPATH + '/' + get_daily_log_file_name(filename=Logges.get_log_name(), markdown=True)
+        md_file = os.path.join(SAVINGPATH, get_daily_log_file_name(filename=Logges.get_log_name(), markdown=True))
         markdown_file = open(md_file, 'w')
 
         filename = get_daily_log_file_name(filename=Logges.get_log_name())
         file_dir = get_saving_path()
-        with open(f"{file_dir}/{filename}", 'r') as file:
+        log_path = os.path.join(file_dir, filename)
+        with open(log_path, 'r') as file:
             logs = file.readlines()
             file.close()
-        only_filename = filename.split('_')[0] + ".py"
-        file_date = filename.split('_')[1].replace(".log", '')
+        only_filename = "_".join(filename.split('_')[1:]) + ".py".replace(".log", '')
+        file_date = filename.split('_')[0]
 
+        if get_current_platform_name() == "Windows":
+            only_filename = os.path.split(only_filename)[1]
         markdown_file.writelines(f"# {only_filename} {file_date} Logs :see_no_evil: :hear_no_evil: :speak_no_evil:\n")
         markdown_file.writelines("![](pie_chart.png)\n")
         markdown_file.writelines("|TYPE|TIME|MESSAGE|\n| :--: | :--: | :--: |\n")
