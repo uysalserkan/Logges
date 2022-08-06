@@ -1,7 +1,9 @@
-"""An ultimate logger for python.
+"""An ultimate logging tool for python.
 
-@author: Serkan UYSAL
-@email: uysalserkan08@gmail.com
+@package: Logges
+@authors: Serkan UYSAL, Özkan UYSAL
+@date: 2022
+@mails: uysalserkan08@gmail.com, ozkan.uysal.2009@hotmail.com
 """
 
 import os
@@ -13,19 +15,37 @@ SAVINGPATH = None
 
 
 class Logges:
-    """TODO: Buraya standartlara uygun bir açıklama eklenecek."""
+    """The best logging tool in the world :D.
+
+    You have to initial `setup` method with run script and set as `setup(__file__)`.
+
+    Main method is `log` and that have 3 argument, please check its docstring.
+
+    You can export you logs with `to_pdf()` and `to_markdown()`, if you want to just print the logs, use `console_data()` method.
+    """
 
     @staticmethod
     def setup(filepath) -> None:
-        """You need to enter just `__file__` input to filepath arguemnt."""
+        """You need to enter just `__file__` input to filepath argument. This method will name your logs as running script name.
+
+        Return:
+            None
+        """
         global FILENAME, SAVINGPATH
         path = os.path.abspath(filepath)
         FILENAME = os.path.split(path)[1].split(".py")[0]
         SAVINGPATH = os.path.split(path)[0]
 
     @staticmethod
-    def write_logs(msg: str):
-        """TODO: Buraya standartlara uygun bir açıklama eklenecek."""
+    def write_logs(msg: str) -> None:
+        """write_logs method called by `logs` method for writting all logs to a file. You do not need this method.
+
+        Parameters:
+            msg `str`: A string that contains all log informations, separated by new line character.
+
+        Return:
+            None
+        """
         filename = get_daily_log_file_name(filename=Logges.get_log_name())
         saving_dir = get_saving_path()
         log_dir = os.path.join(saving_dir, filename)
@@ -33,19 +53,35 @@ class Logges:
         log_file.writelines(msg + "\n")
 
     def get_status_message(status: int) -> str:
-        """TODO: Buraya standartlara uygun bir açıklama eklenecek."""
+        """Hidden internal method, that returns the status to text.
+
+        Parameters:
+            status `int`: Status number 0 to 2.
+
+        Return:
+            status_text `str`: What is status name.
+        """
         status_text = f"[{STATUS[status]}] "
         return status_text
 
     @staticmethod
     def get_log_name() -> str:
-        """TODO: Buraya standartlara uygun açıklama gelecek."""
+        """Actually this method do nothing."""
         global FILENAME
         return FILENAME
 
     @staticmethod
-    def log(log: str, status: int = 0, print_log: bool = True):
-        """TODO: Buraya standartlara uygun açıklama gelecek."""
+    def log(log: str, status: int = 0, print_log: bool = True) -> None:
+        r"""Log a string with status message, please do not use `\n` character in your strigs.
+
+        Parameters:
+            logs `str`: A string, showing on your report.
+            status `int`: `0` is info, `1` is warning and `2` is error, default is 0.
+            print_log `bool`: If you set that parameter True, print that log, default is False.
+
+        Return:
+            None
+        """
         cur_time = get_current_time_HM()
         status = Logges.get_status_message(status=status)
         msg = f"{status}{cur_time}\t{log}"
@@ -56,8 +92,8 @@ class Logges:
         Logges.write_logs(msg=msg)
 
     @staticmethod
-    def to_markdown():
-        """TODO: Buraya standartlara uygun bir açıklama eklenecek."""
+    def to_markdown() -> None:
+        """Convert days logs as markdown file.."""
         icons = {
             "INFO": ":passport_control:",
             "WARNING": ":vs:",
@@ -102,11 +138,11 @@ class Logges:
         create_pie_chart(saving_path=SAVINGPATH, info_size=type_counter[0], warning_size=type_counter[1], error_size=type_counter[2])
 
     @staticmethod
-    def console_data():
-        """We are printing our data on console."""
+    def console_data() -> None:
+        """Fill the beautiful table with days logs."""
         console_data(script_name=Logges.get_log_name())
 
     @staticmethod
-    def to_pdf():
-        """We create a pdf file about logs and charts."""
+    def to_pdf() -> None:
+        """Convert logs to pdf file with day logs."""
         to_pdf(script_name=Logges.get_log_name(), saving_path=SAVINGPATH)
