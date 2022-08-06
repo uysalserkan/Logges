@@ -1,4 +1,10 @@
-"""There are some functions used in logges."""
+"""There are some functions used in logges.
+
+@package: Logges
+@authors: Serkan UYSAL, Özkan UYSAL
+@date: 2022
+@mails: uysalserkan08@gmail.com, ozkan.uysal.2009@hotmail.com
+"""
 
 import os
 import datetime
@@ -15,13 +21,24 @@ from reportlab.lib.colors import Color
 
 
 def get_current_platform_name() -> str:
-    """TODO: Buraya standartlara uygun bir açıklama eklenecek."""
+    """get_current_platform_name method return current platform name like Windows, Linux, OSX.
+
+    Return:
+        sys_name `string`: System platform name.
+    """
     sys_name = platform.system()
     return sys_name
 
 
-def get_saving_path(log_dir: bool = False):
-    """TODO: Buraya standartlara uygun bir açıklama eklenecek."""
+def get_saving_path(log_dir: bool = False) -> str:
+    """get_saving_path method save the hidden log files to package directory.
+
+    Parameters:
+        log_dir `bool`: If you want to store all logs to logs directory, set True, default is False.
+
+    Return:
+        dir_path `str`:  Name of saving path which will contain all log files.
+    """
     script_path = os.path.realpath(__file__)
     dir_path = os.path.split(script_path)[0]
     if log_dir:
@@ -29,8 +46,18 @@ def get_saving_path(log_dir: bool = False):
     return dir_path
 
 
-def create_pie_chart(saving_path: str, info_size: bool = 0, warning_size: bool = 0, error_size: bool = 0) -> None:
-    """We are creating and saving a plot that show us the rate of log types."""
+def create_pie_chart(saving_path: str, info_size: int = 0, warning_size: int = 0, error_size: int = 0) -> None:
+    """We are creating and saving a plot that show us the rate of log types.
+
+    Parameters:
+        saving_path `str`: pic_chart.png saved on that parameter as path.
+        info_size `int`: Info logs length.
+        warning_size `int`: Warning logs length.
+        error_size `int`: Error logs lenght.
+
+    Return:
+        None
+    """
     chart_labels = ["INFO", "WARNING", "ERROR"]
     chart_explode = [0, 0.01, 0.01]
     chart_colors = ['blue', 'yellow', 'red']
@@ -45,7 +72,16 @@ def create_pie_chart(saving_path: str, info_size: bool = 0, warning_size: bool =
 
 
 def get_daily_log_file_name(filename: str, markdown: bool = False, pdf: bool = False) -> str:
-    """TODO: Buraya standartlara uygun bir açıklama eklenecek."""
+    """get_daily_log_file_name method returns a filename, which will be name of the saving file, priority sequence is: pdf, markdown and log file.
+
+    Parameters:
+        filename `str`: Running script name.
+        markdown `bool`: If you want to save your logs as markdwon file, set that parameter to True, default is False.
+        pdf `bool`: If you want to save your logs as pdf file, set that parameter to True, default is False.
+
+    Return:
+        filename `str`: Full name of file name with specific extension.
+    """
     if pdf:
         filename = f"{datetime.datetime.today().strftime('%Y-%m-%d')}_{filename}.pdf"
     elif markdown:
@@ -55,8 +91,12 @@ def get_daily_log_file_name(filename: str, markdown: bool = False, pdf: bool = F
     return filename
 
 
-def get_current_time_HM():
-    """TODO: Buraya standartlara uygun bir açıklama eklenecek."""
+def get_current_time_HM() -> str:
+    """We need that information for log with current time.
+
+    Return:
+        hour_min_sec `str`: Current hour:minute:second.
+    """
     hour_min_sec = datetime.datetime.today().strftime('%H:%M:%S')
     return f"[{hour_min_sec}]: "
 
@@ -120,7 +160,15 @@ def console_data(script_name: str) -> None:
 
 
 def to_pdf(script_name: str, saving_path: str) -> None:
-    """Export the logs to a file with `.pdf` format.."""
+    """Export the logs to a file with `.pdf` format.
+
+    Parameters:
+        script_name `str`: Save the pdf file as that string.
+        saving_path `str`:  Save the pdf file to the that path.
+
+    Return:
+        None
+    """
 
     def copyright_text() -> Paragraph:
         """We are add a text on the page."""

@@ -30,6 +30,7 @@ LLLLLLLLLLLLLLLLLLLLLLLL   ooooooooooo       gggggggg::::::g     gggggggg::::::g
 - [About :speaker:](#about-speaker)
 - [Installation :open_file_folder:](#installation-open_file_folder)
 - [Example :memo:](#example-memo)
+- [Restrictions :ghost:](#restrictions-ghost)
 - [Contact :tophat:](#contact-tophat)
 
 ## About :speaker:
@@ -52,6 +53,10 @@ You can install Logges with typing `pip install Logges` on Python package manage
 * :pushpin: Step 4: At the and, use the `to_markdown()` or `to_pdf()` method for saving your logs. (If you want just show your logs at console, use `console_data()` method.)
 
 Check our [example](examples) scripts to understand how to use.
+
+## Restrictions :ghost:
+
+Please do not use dash (-) character on your script name. If you want to use that character, markdown and pdf inside header will change dash to dot. (For beauty.)
 
 ## Contact :tophat:
 
