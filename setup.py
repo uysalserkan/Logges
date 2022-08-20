@@ -9,7 +9,6 @@ import src.Logges as Logges
 this_directory = Path(__file__).parent
 long_description = (this_directory / "README.md").read_text()
 
-
 setup(
     name="Logges",
     version=Logges.__version__,
@@ -23,7 +22,8 @@ setup(
     package_dir={"": "src"},
     include_package_data=True,
     url="https://github.com/uysalserkan/Logges",
-    description="A simple Logging tool can extract as Markdown, PDF, or print console.",
+    description=
+    "A simple Logging tool can extract as Markdown, PDF, or print console.",
     long_description=long_description,
     keywords="Log, Logging, Logges, Logger",
     install_requires=[
