@@ -1,0 +1,10 @@
+[project]
+name = "Logges"
+requires-python = ">=3.6"
+[build-system]
+requires = [
+    "setuptools",
+    'matplotlib==3.5.2',
+    'rich==10.16.2',
+    'reportlab==3.5.67',
+]
