@@ -11,5 +11,6 @@ def abs_path():
 def abs_path_2(filename=__file__):
     return os.path.abspath(filename)
 
+
 # if __name__ == '__main__':
 #     print(abs_path())
