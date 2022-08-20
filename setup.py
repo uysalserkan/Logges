@@ -25,9 +25,5 @@ setup(
     description="A simple Logging tool can extract as Markdown, PDF, or print console.",
     long_description=long_description,
     keywords="Log, Logging, Logges, Logger",
-    install_requires=[
-        'matplotlib==3.5.3',
-        'rich==10.16.2',
-        'reportlab==3.5.67'
-    ],
+    install_requires=["matplotlib==3.5.3", "rich==10.16.2", "reportlab==3.5.67"],
 )
