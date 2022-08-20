@@ -1,6 +1,8 @@
 """Setup tool for making a library."""
-from setuptools import setup, find_packages
 from pathlib import Path
+
+from setuptools import find_packages, setup
+
 import src.Logges as Logges
 
 this_directory = Path(__file__).parent
