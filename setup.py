@@ -15,8 +15,10 @@ setup(
     maintainer="Ozkan UYSAL",
     author_email='uysalserkan08@gmail.com',
     maintainer_email="ozkan.uysal.2009@gmail.com",
-    packages=find_packages('src'),
+    python_requires=">=3.6",
+    packages=find_packages(where='src'),
     package_dir={'': 'src'},
+    include_package_data=True,
     url="https://github.com/uysalserkan/Logges",
     description="A simple Logging tool can extract as Markdown, PDF, or print console.",
     long_description=long_description,
@@ -24,6 +26,6 @@ setup(
     install_requires=[
         'matplotlib==3.5.2',
         'rich==10.16.2',
-        'reportlab==3.5.67'
+        'reportlab==3.5.67',
     ],
 )
