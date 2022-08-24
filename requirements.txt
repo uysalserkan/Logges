@@ -14,7 +14,7 @@ cryptography @ file:///private/var/folders/sy/f16zz6x50xz3113nwtb9bvq00000gp/T/a
 cycler @ file:///tmp/build/80754af9/cycler_1637851556182/work
 docutils @ file:///Users/builder/ci_310/docutils_1642501816213/work
 flake8 @ file:///opt/conda/conda-bld/flake8_1648129545443/work
-fonttools==4.36.0
+fonttools==4.37.0
 future @ file:///Users/builder/ci_310/future_1642502263251/work
 idna @ file:///tmp/build/80754af9/idna_1637925883363/work
 importlib-metadata @ file:///opt/concourse/worker/volumes/live/a8740f82-0523-4b08-5bb5-afa0c929f5e0/volume/importlib-metadata_1648562424930/work
