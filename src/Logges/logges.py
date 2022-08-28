@@ -8,19 +8,12 @@
 
 import os
 import sys
-
 from enum import Enum
 from typing import Dict
 
-from .utils import (
-    create_pie_chart,
-    console_data,
-    get_saving_path,
-    get_current_time_HM,
-    get_daily_log_file_name,
-    to_pdf,
-    get_current_platform_name,
-)
+from .utils import (console_data, create_pie_chart, get_current_platform_name,
+                    get_current_time_HM, get_daily_log_file_name,
+                    get_saving_path, to_pdf)
 
 FILENAME = None
 SAVINGPATH = None
