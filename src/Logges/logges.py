@@ -5,15 +5,18 @@
 @date: 2022
 @mails: uysalserkan08@gmail.com, ozkan.uysal.2009@hotmail.com
 """
-
 import os
 import sys
 from enum import Enum
 from typing import Dict
 
-from .utils import (console_data, create_pie_chart, get_current_platform_name,
-                    get_current_time_HM, get_daily_log_file_name,
-                    get_saving_path, to_pdf)
+from .utils import console_data
+from .utils import create_pie_chart
+from .utils import get_current_platform_name
+from .utils import get_current_time_HM
+from .utils import get_daily_log_file_name
+from .utils import get_saving_path
+from .utils import to_pdf
 
 FILENAME = None
 SAVINGPATH = None
