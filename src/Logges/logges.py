@@ -6,12 +6,23 @@
 @mails: uysalserkan08@gmail.com, ozkan.uysal.2009@hotmail.com
 """
 
+from enum import Enum
 import os
 from .utils import (create_pie_chart, console_data, get_saving_path, get_current_time_HM, get_daily_log_file_name, to_pdf, get_current_platform_name)
 
 STATUS = ["INFO", "WARNING", "ERROR"]
 FILENAME = None
 SAVINGPATH = None
+
+
+class LogStatus(Enum):
+    """Log types."""
+
+    DEBUG = "DEBUG"
+    INFO = "INFO"
+    WARNING = "WARNING"
+    ERROR = "ERROR"
+    CRITICAL = "CRITICAL"
 
 
 class Logges:
