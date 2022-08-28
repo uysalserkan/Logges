@@ -15,7 +15,8 @@ from rich.table import Table
 from reportlab.lib.enums import TA_LEFT, TA_CENTER
 from reportlab.lib.styles import ParagraphStyle
 from reportlab.lib.pagesizes import LETTER, inch
-from reportlab.platypus import (SimpleDocTemplate, Paragraph, PageBreak, Image, Spacer, TableStyle)
+from reportlab.platypus import (
+    SimpleDocTemplate, Paragraph, PageBreak, Image, Spacer, TableStyle)
 from reportlab.platypus import Table as reportlabTable
 from reportlab.lib.colors import Color
 
@@ -64,7 +65,8 @@ def create_pie_chart(saving_path: str, info_size: int = 0, warning_size: int = 0
 
     logs_size = [info_size, warning_size, error_size]
 
-    plt.pie(logs_size, labels=chart_labels, explode=chart_explode, colors=chart_colors, autopct='%1.1f%%')
+    plt.pie(logs_size, labels=chart_labels, explode=chart_explode,
+            colors=chart_colors, autopct='%1.1f%%')
 
     png_path = os.path.join(saving_path, "pie_chart.png")
 
@@ -112,10 +114,12 @@ def console_data(script_name: str) -> None:
     """
     dir_path = get_saving_path()
 
-    log_dir = os.path.join(dir_path, get_daily_log_file_name(filename=script_name))
+    log_dir = os.path.join(
+        dir_path, get_daily_log_file_name(filename=script_name))
     filename = f"{log_dir}"
 
-    rich_table = Table(title=f"{filename.split('/')[-1]} :see_no_evil: :hear_no_evil: :speak_no_evil:")
+    rich_table = Table(
+        title=f"{filename.split('/')[-1]} :see_no_evil: :hear_no_evil: :speak_no_evil:")
 
     rich_table.add_column("Type", justify="left", style="white", no_wrap=True)
     rich_table.add_column("Message", justify="left", style="magenta")
@@ -134,7 +138,8 @@ def console_data(script_name: str) -> None:
     type_counter = [0, 0, 0]
     for each_log in logs[::-1]:
         color = ""
-        log_type = each_log.split("\t")[0].split(" ")[0].replace('[', '').replace(']', '')
+        log_type = each_log.split("\t")[0].split(
+            " ")[0].replace('[', '').replace(']', '')
         if log_type == list(icons.keys())[0]:
             color = "cyan"
             type_counter[0] += 1
@@ -145,18 +150,22 @@ def console_data(script_name: str) -> None:
             color = "red"
             type_counter[2] += 1
 
-        log_time = each_log.split("\t")[0].split(" ")[1].replace('[', '').replace(']', '')[0:-1]
+        log_time = each_log.split("\t")[0].split(
+            " ")[1].replace('[', '').replace(']', '')[0:-1]
         log_msg = each_log.split("\t")[1]
         log_msg.replace("\n", '')
         try:
-            rich_table.add_row(f"[bold]{icons[log_type]} {log_type}", f"[{color}]{log_msg}", f"[italic]{log_time}")
+            rich_table.add_row(
+                f"[bold]{icons[log_type]} {log_type}", f"[{color}]{log_msg}", f"[italic]{log_time}")
         except:
             raise("Please check your icon.")
     rich_console = Console()
     rich_console.print(rich_table)
     total_length = type_counter[0] + type_counter[1] + type_counter[2]
-    rich_console.print("[blue]████████████████[yellow]████████████████[red]██████████████████")
-    rich_console.print(f"Info: %{round(type_counter[0]/total_length*100, 2)}\tWarning: %{round(type_counter[1]/total_length*100, 2)}\tError: %{round(type_counter[2]/total_length*100, 2)}")
+    rich_console.print(
+        "[blue]████████████████[yellow]████████████████[red]██████████████████")
+    rich_console.print(
+        f"Info: %{round(type_counter[0]/total_length*100, 2)}\tWarning: %{round(type_counter[1]/total_length*100, 2)}\tError: %{round(type_counter[2]/total_length*100, 2)}")
 
 
 def to_pdf(script_name: str, saving_path: str) -> None:
@@ -175,7 +184,8 @@ def to_pdf(script_name: str, saving_path: str) -> None:
         uysaltext = 'All right reserved 2022 &copy;&nbsp;<a href="https://github.com/uysalserkan/Logges">Logges</a> - \
 <strong><a href="https://github.com/uysalserkan">uysalserkan</a></strong> & \
 <strong><a href="https://github.com/ozkanuysal">Ozkan</a></strong>'
-        copyright_style = ParagraphStyle("copyright_style", fontSize=8, alignment=TA_CENTER)
+        copyright_style = ParagraphStyle(
+            "copyright_style", fontSize=8, alignment=TA_CENTER)
         uysaltext_p = Paragraph(uysaltext, copyright_style)
         return uysaltext_p
 
@@ -186,7 +196,8 @@ def to_pdf(script_name: str, saving_path: str) -> None:
     }
     dir_path = get_saving_path()
 
-    log_dir = os.path.join(dir_path, get_daily_log_file_name(filename=script_name))
+    log_dir = os.path.join(
+        dir_path, get_daily_log_file_name(filename=script_name))
     filename = f"{log_dir}"
 
     # Burada eklemeler yapılıyor..
@@ -207,14 +218,16 @@ def to_pdf(script_name: str, saving_path: str) -> None:
     if not os.path.exists(f'{saving_path}/pie_chart.png'):
         info_, warn_, err_ = (0, 0, 0)
         for each_log in logs[::-1]:
-            log_type = each_log.split("\t")[0].split(" ")[0].replace('[', '').replace(']', '')
+            log_type = each_log.split("\t")[0].split(
+                " ")[0].replace('[', '').replace(']', '')
             if log_type == list(type_colors.keys())[0]:
                 info_ += 1
             elif log_type == list(type_colors.keys())[1]:
                 warn_ += 1
             elif log_type == list(type_colors.keys())[2]:
                 err_ += 1
-        create_pie_chart(saving_path=saving_path, info_size=info_, warning_size=warn_, error_size=err_)
+        create_pie_chart(saving_path=saving_path, info_size=info_,
+                         warning_size=warn_, error_size=err_)
     png_path = os.path.join(saving_path, 'pie_chart.png')
     img = Image(f'{png_path}')
     img.drawHeight = 3.5 * inch
@@ -237,8 +250,10 @@ def to_pdf(script_name: str, saving_path: str) -> None:
 
     # Reading data bitiyor..
     for each_log in logs[::-1]:
-        log_type = each_log.split("\t")[0].split(" ")[0].replace('[', '').replace(']', '')
-        log_time = each_log.split("\t")[0].split(" ")[1].replace('[', '').replace(']', '')[0:-1]
+        log_type = each_log.split("\t")[0].split(
+            " ")[0].replace('[', '').replace(']', '')
+        log_time = each_log.split("\t")[0].split(
+            " ")[1].replace('[', '').replace(']', '')[0:-1]
         log_msg = each_log.split("\t")[1]
         log_msg.replace("\n", '')
 
@@ -266,6 +281,7 @@ def to_pdf(script_name: str, saving_path: str) -> None:
 
     page_elements.append(copyright_text())
     page_elements.append(PageBreak())
-    to_pdf_path = os.path.join(saving_path, get_daily_log_file_name(filename=script_name, pdf=True))
+    to_pdf_path = os.path.join(
+        saving_path, get_daily_log_file_name(filename=script_name, pdf=True))
     pdf_doc = SimpleDocTemplate(to_pdf_path, pagesize=LETTER)
     pdf_doc.multiBuild(page_elements)
