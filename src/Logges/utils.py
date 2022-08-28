@@ -98,7 +98,7 @@ def get_current_time_HM() -> str:
         hour_min_sec `str`: Current hour:minute:second.
     """
     hour_min_sec = datetime.datetime.today().strftime('%H:%M:%S')
-    return f"[{hour_min_sec}]: "
+    return f"{hour_min_sec}"
 
 
 def console_data(script_name: str) -> None:
@@ -172,7 +172,9 @@ def to_pdf(script_name: str, saving_path: str) -> None:
 
     def copyright_text() -> Paragraph:
         """We are add a text on the page."""
-        uysaltext = 'All right reserved 2022 &copy;&nbsp;<a href="https://github.com/uysalserkan/Logges">Logges</a> - <strong><a href="https://github.com/uysalserkan">uysalserkan</a></strong> & <strong><a href="https://github.com/ozkanuysal">Ozkan</a></strong>'
+        uysaltext = 'All right reserved 2022 &copy;&nbsp;<a href="https://github.com/uysalserkan/Logges">Logges</a> - \
+<strong><a href="https://github.com/uysalserkan">uysalserkan</a></strong> & \
+<strong><a href="https://github.com/ozkanuysal">Ozkan</a></strong>'
         copyright_style = ParagraphStyle("copyright_style", fontSize=8, alignment=TA_CENTER)
         uysaltext_p = Paragraph(uysaltext, copyright_style)
         return uysaltext_p
