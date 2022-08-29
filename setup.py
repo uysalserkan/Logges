@@ -28,4 +28,8 @@ setup(
     install_requires=[
         "matplotlib==3.5.3", "rich==10.16.2", "reportlab==3.5.67", "click==8.0.4"
     ],
+    entry_points="""
+        [console_scripts]
+        logges:cli:Logges_cli
+    """,
 )
