@@ -5,6 +5,9 @@ from typing import Union
 
 import click
 
+from Logges import Logges
+from .utils import console_data
+
 
 def validate_file(_, __, value):
     """VALIDATE."""
@@ -97,10 +100,15 @@ def list_logs(max_date: str, min_date: str):
 )
 def show_log_file(file: Union[str, any]) -> None:
     """SHOW."""
-    file = open(
-        os.path.join(os.path.split(__file__)[0], file)
-    ).readlines()
-    print(file)
+    # file = open(
+    #     os.path.join(os.path.split(__file__)[0], file)
+    # ).readlines()
+
+    console_data(
+        script_name=file,
+        status_dict=Logges.LogStatus.get_blank_dict(),
+        statuc_icon_dict=Logges.LogStatus.get_icon_dict()
+    )
 
 
 if __name__ == "__main__":

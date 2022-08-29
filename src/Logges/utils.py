@@ -124,73 +124,76 @@ def get_current_time_HM() -> str:
     return f"{hour_min_sec}"
 
 
-def console_data(script_name: str) -> None:
+def console_data(script_name: str, status_dict: Dict[str, int], statuc_icon_dict: Dict[str, str]) -> None:
     """We are printing our logs on console with beauty of rich.
 
     Params:
         script_name (str): That contains the script name which is running on console.
+        stats_dict `Dict`:  Define status counter.
 
     Return:
         None
     """
     dir_path = get_saving_path()
+    log_dir = os.path.join(dir_path, script_name)
 
-    log_dir = os.path.join(dir_path,
-                           get_daily_log_file_name(filename=script_name))
-    filename = f"{log_dir}"
+    file = open(log_dir, "r")
+
+    (
+        _date_list,
+        _status_list,
+        _filename_list,
+        _functname_list,
+        _log_message_list,
+    ) = extract_logs(logs=file)
+
+    type_colors = {
+        "DEBUG": "[bright_black]",
+        "INFO": "[blue]",
+        "WARNING": "[bright_yellow]",
+        "ERROR": "[red]",
+        "CRITICAL": "[bold red]",
+    }
 
     rich_table = Table(
         title=
-        f"{filename.split('/')[-1]} :see_no_evil: :hear_no_evil: :speak_no_evil:"
+        f"{log_dir.split('/')[-1]} :see_no_evil: :hear_no_evil: :speak_no_evil:"
     )
 
-    rich_table.add_column("Type", justify="left", style="white", no_wrap=True)
-    rich_table.add_column("Message", justify="left", style="magenta")
-    rich_table.add_column("Log Date", justify="center", style="green")
+    rich_table.add_column("DATE", justify="center")
+    rich_table.add_column("STATUS", justify="center", no_wrap=True)
+    rich_table.add_column("FILE", justify="center")
+    rich_table.add_column("FUNCTION", justify="center")
+    rich_table.add_column("MESSAGE", justify="left", no_wrap=False, max_width=250)
 
-    icons = {"INFO": ":passport_control:", "WARNING": ":vs:", "ERROR": ":sos:"}
+    # TODO: xxx
+    print(_filename_list)
 
-    with open(f"{filename}", "r") as file:
-        logs = file.readlines()
-        file.close()
+    for index, _ in enumerate(_log_message_list):
+        log_status_clear = _status_list[index].replace("[", "")\
+            .replace("]", "")
+        status_dict[log_status_clear] += 1
+        rich_table.add_row(
+            f"[bold]{_date_list[index]}",
+            f"{type_colors[log_status_clear]}[{log_status_clear} {statuc_icon_dict[log_status_clear]}][white]",
+            f"[bold]{_filename_list[index].replace('[', '').replace(']', '')}",
+            f"[italic]{_functname_list[index].replace('[', '').replace(']', '')}",
+            f"{_log_message_list[index]}",
+        )
 
-    type_counter = [0, 0, 0]
-    for each_log in logs[::-1]:
-        color = ""
-        log_type = (each_log.split("\t")[0].split(" ")[0].replace("[",
-                                                                  "").replace(
-                                                                      "]", ""))
-        if log_type == list(icons.keys())[0]:
-            color = "cyan"
-            type_counter[0] += 1
-        elif log_type == list(icons.keys())[1]:
-            color = "yellow"
-            type_counter[1] += 1
-        elif log_type == list(icons.keys())[2]:
-            color = "red"
-            type_counter[2] += 1
-
-        log_time = (each_log.split("\t")[0].split(" ")[1].replace(
-            "[", "").replace("]", "")[0:-1])
-        log_msg = each_log.split("\t")[1]
-        log_msg.replace("\n", "")
-        try:
-            rich_table.add_row(
-                f"[bold]{icons[log_type]} {log_type}",
-                f"[{color}]{log_msg}",
-                f"[italic]{log_time}",
-            )
-        except KeyError:
-            raise ("Please check your icon.")
     rich_console = Console()
     rich_console.print(rich_table)
-    total_length = type_counter[0] + type_counter[1] + type_counter[2]
+    total_length = sum(list(status_dict.values()))
     rich_console.print(
-        "[blue]████████████████[yellow]████████████████[red]██████████████████"
+        "[bright_black]████████████████[blue]████████████████[bright_yellow]████████████████[red]█████████████████[dark_red]██████████████████"
     )
     rich_console.print(
-        f"Info: %{round(type_counter[0]/total_length*100, 2)}\tWarning: %{round(type_counter[1]/total_length*100, 2)}\
-\tError: %{round(type_counter[2]/total_length*100, 2)}")
+        f"DEBUG: %{round(status_dict['DEBUG']/total_length*100, 2)}" +
+        f"\tINFO: %{round(status_dict['INFO']/total_length*100, 2)}" +
+        f"\tWARNING: %{round(status_dict['WARNING']/total_length*100, 2)}" + 
+        f"\tERROR: %{round(status_dict['ERROR']/total_length*100, 2)}" + 
+        f"\tCRITICAL: %{round(status_dict['CRITICAL']/total_length*100, 2)}"
+    )
 
 
 def to_pdf(script_name: str, saving_path: str, status_dict: Dict[str,
