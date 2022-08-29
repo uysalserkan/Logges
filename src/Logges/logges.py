@@ -18,9 +18,9 @@ from .utils import create_pie_chart
 from .utils import get_current_platform_name
 from .utils import get_current_time_HM
 from .utils import get_daily_log_file_name
+from .utils import get_log_info
 from .utils import get_saving_path
 from .utils import to_pdf
-from .utils import get_log_info
 
 FILENAME = None
 SAVINGPATH = None
@@ -159,7 +159,8 @@ class Logges:
 
         filepath, funct = get_log_info()
 
-        if any(True if each_ignored in filepath else False for each_ignored in IGNORE_FILES_AND_DIRS):
+        if any(True if each_ignored in filepath else False
+               for each_ignored in IGNORE_FILES_AND_DIRS):
             return
 
         filename = os.path.split(filepath)[1]
