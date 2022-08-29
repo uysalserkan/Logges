@@ -22,10 +22,18 @@ setup(
     package_dir={"": "src"},
     include_package_data=True,
     url="https://github.com/uysalserkan/Logges",
-    description="A simple Logging tool can extract as Markdown, PDF, or print console.",
+    description=
+    "A simple Logging tool can extract as Markdown, PDF, or print console.",
     long_description=long_description,
     keywords="Log, Logging, Logges, Logger",
     install_requires=[
-        "matplotlib==3.5.3", "rich==10.16.2", "reportlab==3.5.67", "click==8.0.4"
+        "matplotlib==3.5.3",
+        "rich==10.16.2",
+        "reportlab==3.5.67",
+        "click==8.0.4",
     ],
+    entry_points="""
+        [console_scripts]
+        logges:cli:Logges_cli
+    """,
 )
