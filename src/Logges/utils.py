@@ -8,6 +8,8 @@
 import datetime
 import os
 import platform
+import sys
+from typing import Tuple
 
 import matplotlib.pyplot as plt
 from reportlab.lib.colors import Color
@@ -314,3 +316,12 @@ def to_pdf(script_name: str, saving_path: str) -> None:
         saving_path, get_daily_log_file_name(filename=script_name, pdf=True))
     pdf_doc = SimpleDocTemplate(to_pdf_path, pagesize=LETTER)
     pdf_doc.multiBuild(page_elements)
+
+
+def get_log_info() -> Tuple[str, str]:
+    """We are getting calling file path and function name:line nuber."""
+    frame = sys._getframe().f_back.f_back
+    filepath = frame.f_code.co_filename
+    funct_name = frame.f_code.co_name
+    line_num = frame.f_lineno
+    return (filepath, f"{funct_name}:{line_num}")
