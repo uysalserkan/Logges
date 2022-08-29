@@ -138,8 +138,7 @@ def console_data(script_name: str) -> None:
     filename = f"{log_dir}"
 
     rich_table = Table(
-        title=
-        f"{filename.split('/')[-1]} :see_no_evil: :hear_no_evil: :speak_no_evil:"
+        title=f"{filename.split('/')[-1]} :see_no_evil: :hear_no_evil: :speak_no_evil:"
     )
 
     rich_table.add_column("Type", justify="left", style="white", no_wrap=True)
