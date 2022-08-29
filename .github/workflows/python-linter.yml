@@ -1,0 +1,34 @@
+# Python Linting
+name: 'Python Linting'
+on: [pull_request]
+
+permissions:
+  contents: read
+
+jobs:
+  python-linting:
+   runs-on: ubuntu-latest
+   steps:
+    - name: Python Linter
+      # You may pin to the exact commit or the version.
+      # uses: sunnysid3up/python-linter@93076bd8f740f062069291d738fc70c1b4171c1d
+      uses: sunnysid3up/python-linter@v0.1-beta.7
+      with:
+        # Source file or directory
+        source: . # optional, default is .
+        # Set strictness for lint [low, medium, high]
+        strict: medium # optional, default is medium
+        # Pylint options
+        pylint-options: True # optional, default is 
+        # Black options
+        black-options: True # optional, default is 
+
+    - name: python-flake8
+      # You may pin to the exact commit or the version.
+      # uses: julianwachholz/flake8-action@75749239077651dfd0ecbe405899cdcb0673ee8f
+      uses: julianwachholz/flake8-action@v2.0.2
+      with:
+        # The name of the check to add annotations to. Generally the same as the job that uses this action
+        checkName: Flake8 
+        # Path to use for flake8
+        path: ../src/Logges # optional, default is .

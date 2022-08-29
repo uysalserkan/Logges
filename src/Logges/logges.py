@@ -13,8 +13,8 @@ from typing import Dict
 from typing import List
 from typing import Union
 
-from .utils import console_data
 from .utils import create_pie_chart
+from .utils import extract_logs
 from .utils import get_current_platform_name
 from .utils import get_current_time_HM
 from .utils import get_daily_log_file_name
@@ -52,14 +52,14 @@ class Logges:
         CRITICAL = 4
 
         @staticmethod
-        def get_int_dict() -> Dict[str, int]:
+        def get_blank_dict() -> Dict[str, int]:
             """Convert Types to dictionary version."""
             int_status_dict = {
                 "DEBUG": 0,
-                "INFO": 1,
-                "WARNING": 2,
-                "ERROR": 3,
-                "CRITICAL": 4,
+                "INFO": 0,
+                "WARNING": 0,
+                "ERROR": 0,
+                "CRITICAL": 0,
             }
             return int_status_dict
 
@@ -179,13 +179,17 @@ class Logges:
                pdf: bool = False,
                log: bool = True) -> None:
         """EXPORT."""
+        global SAVINGPATH, FILENAME
+        lib_path = get_saving_path()
+        full_filename = get_daily_log_file_name(filename=FILENAME)
+        copy2(
+            src=os.path.join(SAVINGPATH, full_filename),
+            dst=os.path.join(lib_path, full_filename),
+        )
         if markdown:
             Logges._to_markdown()
         if pdf:
             Logges._to_pdf()
-        lib_path = get_saving_path()
-        copy2(src=os.path.join(SAVINGPATH, FILENAME),
-              dst=os.path.join(lib_path, FILENAME))
         if not log:
             # Preserve log file at library directory
             os.remove(os.path.join(SAVINGPATH, FILENAME))
@@ -193,72 +197,81 @@ class Logges:
     @staticmethod
     def _to_markdown() -> None:
         """Convert days logs as markdown file.."""
-        global FILENAME
+        global FILENAME, SAVINGPATH
 
-        icons = Logges.LogStatus.get_icon_dict()
-        type_counter = [0, 0, 0, 0, 0]
+        status_icons = Logges.LogStatus.get_icon_dict()
         md_file = os.path.join(
             SAVINGPATH,
             get_daily_log_file_name(filename=FILENAME, markdown=True))
         markdown_file = open(md_file, "w")
 
         filename = get_daily_log_file_name(filename=FILENAME)
-        file_dir = get_saving_path()
-        log_path = os.path.join(file_dir, filename)
-        with open(log_path, "r") as file:
-            logs = file.readlines()
-            file.close()
+        file_dir = SAVINGPATH
+        full_logfile_path = os.path.join(file_dir, filename)
+
         only_filename = "_".join(filename.split("_")[1:]) + ".py".replace(
             ".log", "")
         file_date = filename.split("_")[0]
 
+        # Fix Windows Problems.
         if get_current_platform_name() == "Windows":
             only_filename = os.path.split(only_filename)[1]
+
         markdown_file.writelines(
             f"# {only_filename} {file_date} Logs :see_no_evil: :hear_no_evil: :speak_no_evil:\n"
         )
         markdown_file.writelines("![](pie_chart.png)\n")
         markdown_file.writelines(
-            "|TYPE|TIME|MESSAGE|\n| :--: | :--: | :--: |\n")
-        for each_log in logs[::-1]:
-            log_type = (each_log.split("\t")[0].split(" ")[0].replace(
-                "[", "").replace("]", ""))
-            if log_type == list(icons.keys())[0]:
-                type_counter[0] += 1
-            elif log_type == list(icons.keys())[1]:
-                type_counter[1] += 1
-            elif log_type == list(icons.keys())[2]:
-                type_counter[2] += 1
+            "|TIME|STATUS|FILENAME|FUNCTION|MESSAGE|\n| :--: | :--: | :--: | :--: | :--: |\n"
+        )
 
-            log_time = (each_log.split("\t")[0].split(" ")[1].replace(
-                "[", "").replace("]", "")[0:-1])
-            log_msg = each_log.split("\t")[1]
-            log_msg.replace("\n", "")
+        # Split Strings.
+        file = open(full_logfile_path, "r")
+        (
+            _date_list,
+            _status_list,
+            _filename_list,
+            _functname_list,
+            _log_message_list,
+        ) = extract_logs(logs=file)
+
+        status_dict = Logges.LogStatus.get_blank_dict()
+        # Write logs in markdown file.
+        for index, _ in enumerate(_log_message_list):
+            log_status_clear = _status_list[index].replace("[", "").replace(
+                "]", "")
+            status_dict[log_status_clear] += 1
+
             try:
-                markdown_file.writelines(
-                    f"|{icons[log_type]} | {log_time} | {log_msg.strip()}| ")
-                markdown_file.writelines("\n")
+                markdown_file.writelines("|{}|{}|{}|{}|{}|".format(
+                    _date_list[index],
+                    status_icons[log_status_clear],
+                    _filename_list[index],
+                    _functname_list[index],
+                    _log_message_list[index].replace("\n", " "),
+                ))
+                markdown_file.write("\n")
             except KeyError:
                 raise ("Please check your icon.")
+
+        # Write signature
         markdown_file.writelines(
             "All right reserved 2022 &copy;&nbsp; [Logges](https://github.com/uysalserkan/Logges) - \
 *[uysalserkan](https://github.com/uysalserkan/) & [Ozkan](https://github.com/ozkanuysal)*\n"
         )
+
+        # Create chart
         create_pie_chart(
             saving_path=SAVINGPATH,
-            info_size=type_counter[0],
-            warning_size=type_counter[1],
-            error_size=type_counter[2],
+            status_dict=status_dict,
         )
-
-    @staticmethod
-    def console_data() -> None:
-        """Fill the beautiful table with days logs."""
-        global FILENAME
-        console_data(script_name=FILENAME)
 
     @staticmethod
     def _to_pdf() -> None:
         """Convert logs to pdf file with day logs."""
-        global FILENAME
-        to_pdf(script_name=FILENAME, saving_path=SAVINGPATH)
+        global FILENAME, SAVINGPATH
+        to_pdf(
+            script_name=FILENAME,
+            saving_path=SAVINGPATH,
+            status_dict=Logges.LogStatus.get_blank_dict(),
+        )
