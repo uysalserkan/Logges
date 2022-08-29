@@ -9,7 +9,7 @@ import os
 import sys
 from enum import Enum
 from shutil import copy2
-from typing import Dict
+from typing import Dict, Union
 
 from .utils import console_data
 from .utils import create_pie_chart
@@ -115,7 +115,7 @@ class Logges:
         log_file.close()
 
     @staticmethod
-    def log(msg: str,
+    def log(msg: Union[str, any],
             status: LogStatus = LogStatus.DEBUG,
             print_log: bool = False) -> None:
         r"""Log a string with status message, please do not use `\n` character in your strigs.
@@ -129,6 +129,9 @@ class Logges:
             None
         """
         cur_time = get_current_time_HM()
+        if not isinstance(msg, str):
+            msg = str(msg)
+
         msg = f"[{cur_time}] [{status.name:8s}]: {msg}"
 
         if print_log:
