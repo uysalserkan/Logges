@@ -179,13 +179,15 @@ class Logges:
                pdf: bool = False,
                log: bool = True) -> None:
         """EXPORT."""
+        global SAVINGPATH, FILENAME
+        lib_path = get_saving_path()
+        full_filename = get_daily_log_file_name(filename=FILENAME)
+        copy2(src=os.path.join(SAVINGPATH, full_filename),
+              dst=os.path.join(lib_path, full_filename))
         if markdown:
             Logges._to_markdown()
         if pdf:
             Logges._to_pdf()
-        lib_path = get_saving_path()
-        copy2(src=os.path.join(SAVINGPATH, FILENAME),
-              dst=os.path.join(lib_path, FILENAME))
         if not log:
             # Preserve log file at library directory
             os.remove(os.path.join(SAVINGPATH, FILENAME))
