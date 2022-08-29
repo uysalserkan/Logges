@@ -9,7 +9,8 @@ import os
 import sys
 from enum import Enum
 from shutil import copy2
-from typing import Dict, Union
+from typing import Dict
+from typing import Union
 
 from .utils import console_data
 from .utils import create_pie_chart
@@ -72,7 +73,8 @@ class Logges:
             return icon_status_dict
 
     @staticmethod
-    def setup(logname: str = None, status_level: LogStatus = LogStatus.ERROR) -> None:
+    def setup(logname: str = None,
+              status_level: LogStatus = LogStatus.ERROR) -> None:
         """Set the environment.
 
         Set up environment and setting the logfile name.
@@ -115,9 +117,11 @@ class Logges:
         log_file.close()
 
     @staticmethod
-    def log(msg: Union[str, any],
-            status: LogStatus = LogStatus.DEBUG,
-            print_log: bool = False) -> None:
+    def log(
+        msg: Union[str, any],
+        status: LogStatus = LogStatus.DEBUG,
+        print_log: bool = False,
+    ) -> None:
         r"""Log a string with status message, please do not use `\n` character in your strigs.
 
         Parameters:
