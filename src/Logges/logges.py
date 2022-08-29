@@ -8,6 +8,7 @@
 import os
 import sys
 from enum import Enum
+from shutil import copy2
 from typing import Dict
 
 from .utils import console_data
@@ -100,10 +101,11 @@ class Logges:
         """
         global FILENAME
         filename = get_daily_log_file_name(filename=FILENAME)
-        saving_dir = get_saving_path()
-        log_dir = os.path.join(saving_dir, filename)
+        # saving_dir = get_saving_path()
+        log_dir = os.path.join(SAVINGPATH, filename)
         log_file = open(f"{log_dir}", "a")
         log_file.writelines(msg + "\n")
+        log_file.close()
 
     @staticmethod
     def log(msg: str,
@@ -128,7 +130,23 @@ class Logges:
         Logges._write_logs(msg=msg)
 
     @staticmethod
-    def to_markdown() -> None:
+    def export(markdown: bool = False,
+               pdf: bool = False,
+               log: bool = True) -> None:
+        """EXPORT."""
+        if markdown:
+            Logges._to_markdown()
+        if pdf:
+            Logges._to_pdf()
+        lib_path = get_saving_path()
+        copy2(src=os.path.join(SAVINGPATH, FILENAME),
+              dst=os.path.join(lib_path, FILENAME))
+        if not log:
+            # Preserve log file at library directory
+            os.remove(os.path.join(SAVINGPATH, FILENAME))
+
+    @staticmethod
+    def _to_markdown() -> None:
         """Convert days logs as markdown file.."""
         global FILENAME
 
@@ -195,7 +213,7 @@ class Logges:
         console_data(script_name=FILENAME)
 
     @staticmethod
-    def to_pdf() -> None:
+    def _to_pdf() -> None:
         """Convert logs to pdf file with day logs."""
         global FILENAME
         to_pdf(script_name=FILENAME, saving_path=SAVINGPATH)

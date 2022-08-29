@@ -90,7 +90,10 @@ def create_pie_chart(saving_path: str,
 def get_daily_log_file_name(filename: str,
                             markdown: bool = False,
                             pdf: bool = False) -> str:
-    """get_daily_log_file_name method returns a filename, which will be name of the saving file, priority sequence is: pdf, markdown and log file.
+    """get_daily_log_file_name.
+
+    get_daily_log_file_name method returns a filename, which will be name of the saving file,
+    priority sequence is: pdf, markdown and log file.
 
     Parameters:
         filename `str`: Running script name.
@@ -175,7 +178,7 @@ def console_data(script_name: str) -> None:
                 f"[{color}]{log_msg}",
                 f"[italic]{log_time}",
             )
-        except:
+        except KeyError:
             raise ("Please check your icon.")
     rich_console = Console()
     rich_console.print(rich_table)
@@ -184,8 +187,8 @@ def console_data(script_name: str) -> None:
         "[blue]████████████████[yellow]████████████████[red]██████████████████"
     )
     rich_console.print(
-        f"Info: %{round(type_counter[0]/total_length*100, 2)}\tWarning: %{round(type_counter[1]/total_length*100, 2)}\tError: %{round(type_counter[2]/total_length*100, 2)}"
-    )
+        f"Info: %{round(type_counter[0]/total_length*100, 2)}\tWarning: %{round(type_counter[1]/total_length*100, 2)}\
+\tError: %{round(type_counter[2]/total_length*100, 2)}")
 
 
 def to_pdf(script_name: str, saving_path: str) -> None:
