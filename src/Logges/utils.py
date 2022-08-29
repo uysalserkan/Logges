@@ -138,7 +138,8 @@ def console_data(script_name: str) -> None:
     filename = f"{log_dir}"
 
     rich_table = Table(
-        title=f"{filename.split('/')[-1]} :see_no_evil: :hear_no_evil: :speak_no_evil:"
+        title=
+        f"{filename.split('/')[-1]} :see_no_evil: :hear_no_evil: :speak_no_evil:"
     )
 
     rich_table.add_column("Type", justify="left", style="white", no_wrap=True)
@@ -187,8 +188,7 @@ def console_data(script_name: str) -> None:
     )
     rich_console.print(
         f"Info: %{round(type_counter[0]/total_length*100, 2)}\tWarning: %{round(type_counter[1]/total_length*100, 2)}\
-\tError: %{round(type_counter[2]/total_length*100, 2)}"
-    )
+\tError: %{round(type_counter[2]/total_length*100, 2)}")
 
 
 def to_pdf(script_name: str, saving_path: str) -> None:

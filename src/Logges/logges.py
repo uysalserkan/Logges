@@ -7,10 +7,9 @@
 """
 import os
 import sys
-
 from enum import Enum
-from typing import Dict
 from shutil import copy2
+from typing import Dict
 
 from .utils import console_data
 from .utils import create_pie_chart
@@ -131,17 +130,17 @@ class Logges:
         Logges._write_logs(msg=msg)
 
     @staticmethod
-    def export(markdown: bool = False, pdf: bool = False, log: bool = True) -> None:
+    def export(markdown: bool = False,
+               pdf: bool = False,
+               log: bool = True) -> None:
         """EXPORT."""
         if markdown:
             Logges._to_markdown()
         if pdf:
             Logges._to_pdf()
         lib_path = get_saving_path()
-        copy2(
-            src=os.path.join(SAVINGPATH, FILENAME),
-            dst=os.path.join(lib_path, FILENAME)
-        )
+        copy2(src=os.path.join(SAVINGPATH, FILENAME),
+              dst=os.path.join(lib_path, FILENAME))
         if not log:
             # Preserve log file at library directory
             os.remove(os.path.join(SAVINGPATH, FILENAME))
