@@ -10,7 +10,7 @@ from io import TextIOWrapper
 import os
 import platform
 import sys
-from typing import List, Tuple
+from typing import Dict, List, Tuple
 
 import matplotlib.pyplot as plt
 from reportlab.lib.colors import Color
@@ -57,9 +57,7 @@ def get_saving_path(log_dir: bool = False) -> str:
 
 
 def create_pie_chart(saving_path: str,
-                     info_size: int = 0,
-                     warning_size: int = 0,
-                     error_size: int = 0) -> None:
+                     status_dict: Dict[str, int]) -> None:
     """We are creating and saving a plot that show us the rate of log types.
 
     Parameters:
@@ -71,11 +69,11 @@ def create_pie_chart(saving_path: str,
     Return:
         None
     """
-    chart_labels = ["INFO", "WARNING", "ERROR"]
-    chart_explode = [0, 0.01, 0.01]
-    chart_colors = ["blue", "yellow", "red"]
+    chart_labels = list(status_dict.keys())
+    chart_explode = [0, 0.01, 0.01, 0.01, 0.01]
+    chart_colors = ["gray", "blue", "yellow", "red", "darkred"]
 
-    logs_size = [info_size, warning_size, error_size]
+    logs_size = list(status_dict.values())
 
     plt.pie(
         logs_size,
