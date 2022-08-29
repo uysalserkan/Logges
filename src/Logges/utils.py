@@ -89,9 +89,9 @@ def create_pie_chart(saving_path: str, status_dict: Dict[str, int]) -> None:
     plt.savefig(f"{png_path}")
 
 
-def get_daily_log_file_name(
-    filename: str, markdown: bool = False, pdf: bool = False
-) -> str:
+def get_daily_log_file_name(filename: str,
+                            markdown: bool = False,
+                            pdf: bool = False) -> str:
     """get_daily_log_file_name.
 
     get_daily_log_file_name method returns a filename, which will be name of the saving file,
@@ -124,9 +124,8 @@ def get_current_time_HM() -> str:
     return f"{hour_min_sec}"
 
 
-def console_data(
-    script_name: str, status_dict: Dict[str, int], statuc_icon_dict: Dict[str, str]
-) -> None:
+def console_data(script_name: str, status_dict: Dict[str, int],
+                 statuc_icon_dict: Dict[str, str]) -> None:
     """We are printing our logs on console with beauty of rich.
 
     Params:
@@ -158,20 +157,25 @@ def console_data(
     }
 
     rich_table = Table(
-        title=f"{log_dir.split('/')[-1]} :see_no_evil: :hear_no_evil: :speak_no_evil:"
+        title=
+        f"{log_dir.split('/')[-1]} :see_no_evil: :hear_no_evil: :speak_no_evil:"
     )
 
     rich_table.add_column("DATE", justify="center")
     rich_table.add_column("STATUS", justify="center", no_wrap=True)
     rich_table.add_column("FILE", justify="center")
     rich_table.add_column("FUNCTION", justify="center")
-    rich_table.add_column("MESSAGE", justify="left", no_wrap=False, max_width=250)
+    rich_table.add_column("MESSAGE",
+                          justify="left",
+                          no_wrap=False,
+                          max_width=250)
 
     # TODO: xxx
     print(_filename_list)
 
     for index, _ in enumerate(_log_message_list):
-        log_status_clear = _status_list[index].replace("[", "").replace("]", "")
+        log_status_clear = _status_list[index].replace("[",
+                                                       "").replace("]", "")
         status_dict[log_status_clear] += 1
         rich_table.add_row(
             f"[bold]{_date_list[index]}",
@@ -188,15 +192,15 @@ def console_data(
         "[bright_black]████████████████[blue]████████████████[bright_yellow]████████████████[red]█████████████████[dark_red]██████████████████"
     )
     rich_console.print(
-        f"DEBUG: %{round(status_dict['DEBUG']/total_length*100, 2)}"
-        + f"\tINFO: %{round(status_dict['INFO']/total_length*100, 2)}"
-        + f"\tWARNING: %{round(status_dict['WARNING']/total_length*100, 2)}"
-        + f"\tERROR: %{round(status_dict['ERROR']/total_length*100, 2)}"
-        + f"\tCRITICAL: %{round(status_dict['CRITICAL']/total_length*100, 2)}"
-    )
+        f"DEBUG: %{round(status_dict['DEBUG']/total_length*100, 2)}" +
+        f"\tINFO: %{round(status_dict['INFO']/total_length*100, 2)}" +
+        f"\tWARNING: %{round(status_dict['WARNING']/total_length*100, 2)}" +
+        f"\tERROR: %{round(status_dict['ERROR']/total_length*100, 2)}" +
+        f"\tCRITICAL: %{round(status_dict['CRITICAL']/total_length*100, 2)}")
 
 
-def to_pdf(script_name: str, saving_path: str, status_dict: Dict[str, int]) -> None:
+def to_pdf(script_name: str, saving_path: str, status_dict: Dict[str,
+                                                                 int]) -> None:
     """Export the logs to a file with `.pdf` format.
 
     Parameters:
@@ -214,9 +218,9 @@ def to_pdf(script_name: str, saving_path: str, status_dict: Dict[str, int]) -> N
 <strong><a href="https://github.com/uysalserkan">uysalserkan</a></strong> & \
 <strong><a href="https://github.com/ozkanuysal">Ozkan</a></strong>'
 
-        copyright_style = ParagraphStyle(
-            "copyright_style", fontSize=8, alignment=TA_CENTER
-        )
+        copyright_style = ParagraphStyle("copyright_style",
+                                         fontSize=8,
+                                         alignment=TA_CENTER)
         uysaltext_p = Paragraph(uysaltext, copyright_style)
         return uysaltext_p
 
@@ -228,7 +232,8 @@ def to_pdf(script_name: str, saving_path: str, status_dict: Dict[str, int]) -> N
         "CRITICAL": "darkred",
     }
 
-    log_dir = os.path.join(saving_path, get_daily_log_file_name(filename=script_name))
+    log_dir = os.path.join(saving_path,
+                           get_daily_log_file_name(filename=script_name))
 
     # Burada eklemeler yapılıyor..
     page_elements = []
@@ -255,7 +260,8 @@ def to_pdf(script_name: str, saving_path: str, status_dict: Dict[str, int]) -> N
 
     if not os.path.exists(os.path.join(saving_path, "pie_chart.png")):
         for index, _ in enumerate(_status_list):
-            log_status_clear = _status_list[index].replace("[", "").replace("]", "")
+            log_status_clear = _status_list[index].replace("[", "").replace(
+                "]", "")
             status_dict[log_status_clear] += 1
 
         create_pie_chart(
@@ -289,7 +295,8 @@ def to_pdf(script_name: str, saving_path: str, status_dict: Dict[str, int]) -> N
     # Write logs into pdf.
     for index, _ in enumerate(_log_message_list):
         # Log message color
-        log_status_clear = _status_list[index].replace("[", "").replace("]", "")
+        log_status_clear = _status_list[index].replace("[",
+                                                       "").replace("]", "")
         color = type_colors[log_status_clear]
 
         # Extract values of log data.
@@ -301,8 +308,7 @@ def to_pdf(script_name: str, saving_path: str, status_dict: Dict[str, int]) -> N
 
         row_data = []
         for index, item in enumerate(
-            [_date, _log_status, _filename, _functname, _log_msg]
-        ):
+            [_date, _log_status, _filename, _functname, _log_msg]):
             if index == 1:
                 table_text = f"<font color='{color}'>{item}</font>"
             else:
@@ -312,22 +318,20 @@ def to_pdf(script_name: str, saving_path: str, status_dict: Dict[str, int]) -> N
         table_data.append(row_data)
 
     table = reportlabTable(table_data, colWidths=[70, 100, 100, 100, 200])
-    tStyle = TableStyle(
-        [
-            ("ALIGN", (0, -1), (-1, -1), "LEFT"),
-            ("ALIGN", (1, 0), (1, -1), "RIGHT"),
-            ("LINEABOVE", (0, 0), (-1, -1), 1, Color(0.2, 0.3, 0.4)),
-            ("BACKGROUND", (0, 0), (-1, 0), Color(102 / 255, 191 / 255, 191 / 255)),
-        ]
-    )
+    tStyle = TableStyle([
+        ("ALIGN", (0, -1), (-1, -1), "LEFT"),
+        ("ALIGN", (1, 0), (1, -1), "RIGHT"),
+        ("LINEABOVE", (0, 0), (-1, -1), 1, Color(0.2, 0.3, 0.4)),
+        ("BACKGROUND", (0, 0), (-1, 0), Color(102 / 255, 191 / 255,
+                                              191 / 255)),
+    ])
     table.setStyle(tStyle)
     page_elements.append(table)
 
     page_elements.append(copyright_text())
     page_elements.append(PageBreak())
     to_pdf_path = os.path.join(
-        saving_path, get_daily_log_file_name(filename=script_name, pdf=True)
-    )
+        saving_path, get_daily_log_file_name(filename=script_name, pdf=True))
     pdf_doc = SimpleDocTemplate(to_pdf_path, pagesize=LETTER)
     pdf_doc.multiBuild(page_elements)
 
@@ -374,8 +378,10 @@ def extract_logs(
             date_list.append(info_str[0:10])
             status_list.append(info_str[11:21].replace(" ", ""))
             filename_list.append(f"[{info_str[22:].split('[')[1][:-2]}]")
-            function_and_lineno_list.append(f"[{info_str[22:].split('[')[2][:-1]}]")
+            function_and_lineno_list.append(
+                f"[{info_str[22:].split('[')[2][:-1]}]")
         else:
             msg_list[len(msg_list) - 1] += each_line
 
-    return (date_list, status_list, filename_list, function_and_lineno_list, msg_list)
+    return (date_list, status_list, filename_list, function_and_lineno_list,
+            msg_list)
