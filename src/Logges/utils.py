@@ -139,8 +139,7 @@ def console_data(script_name: str) -> None:
     filename = f"{log_dir}"
 
     rich_table = Table(
-        title=
-        f"{filename.split('/')[-1]} :see_no_evil: :hear_no_evil: :speak_no_evil:"
+        title=f"{filename.split('/')[-1]} :see_no_evil: :hear_no_evil: :speak_no_evil:"
     )
 
     rich_table.add_column("Type", justify="left", style="white", no_wrap=True)
@@ -216,7 +215,8 @@ def to_pdf(script_name: str, saving_path: str, status_dict: Dict[str, int]) -> N
         uysaltext_p = Paragraph(uysaltext, copyright_style)
         return uysaltext_p
 
-    type_colors = {'DEBUG': 'gray', "INFO": "blue", "WARNING": "orange", "ERROR": "red", "CRITICAL": 'darkred'}
+    type_colors = {'DEBUG': 'gray', "INFO": "blue",
+                   "WARNING": "orange", "ERROR": "red", "CRITICAL": 'darkred'}
 
     log_dir = os.path.join(saving_path,
                            get_daily_log_file_name(filename=script_name))
@@ -227,7 +227,8 @@ def to_pdf(script_name: str, saving_path: str, status_dict: Dict[str, int]) -> N
     # Reading data başlıyor..
     file = open(log_dir, "r")
 
-    _date_list, _status_list, _filename_list, _functname_list, _log_message_list = extract_logs(logs=file)
+    _date_list, _status_list, _filename_list, _functname_list, _log_message_list = extract_logs(
+        logs=file)
 
     # Header Başlığı Ekleniyor.
     header_text = (
@@ -242,7 +243,8 @@ def to_pdf(script_name: str, saving_path: str, status_dict: Dict[str, int]) -> N
         os.path.join(saving_path, 'pie_chart.png')
     ):
         for index, _ in enumerate(_status_list):
-            log_status_clear = _status_list[index].replace('[', '').replace(']', '')
+            log_status_clear = _status_list[index].replace(
+                '[', '').replace(']', '')
             status_dict[log_status_clear] += 1
 
         create_pie_chart(
@@ -276,7 +278,8 @@ def to_pdf(script_name: str, saving_path: str, status_dict: Dict[str, int]) -> N
     # Write logs into pdf.
     for index, _ in enumerate(_log_message_list):
         # Log message color
-        log_status_clear = _status_list[index].replace('[', '').replace(']', '')
+        log_status_clear = _status_list[index].replace(
+            '[', '').replace(']', '')
         color = type_colors[log_status_clear]
 
         # Extract values of log data.
@@ -355,7 +358,8 @@ def extract_logs(logs: TextIOWrapper) -> Tuple[List[str], List[str], List[str], 
             date_list.append(info_str[0:10])
             status_list.append(info_str[11:21].replace(' ', ''))
             filename_list.append(f"[{info_str[22:].split('[')[1][:-2]}]")
-            function_and_lineno_list.append(f"[{info_str[22:].split('[')[2][:-1]}]")
+            function_and_lineno_list.append(
+                f"[{info_str[22:].split('[')[2][:-1]}]")
         else:
             msg_list[len(msg_list) - 1] += each_line
 
