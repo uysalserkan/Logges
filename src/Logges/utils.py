@@ -6,10 +6,11 @@
 @mails: uysalserkan08@gmail.com, ozkan.uysal.2009@hotmail.com
 """
 import datetime
+from io import TextIOWrapper
 import os
 import platform
 import sys
-from typing import Tuple
+from typing import List, Tuple
 
 import matplotlib.pyplot as plt
 from reportlab.lib.colors import Color
@@ -325,3 +326,41 @@ def get_log_info() -> Tuple[str, str]:
     funct_name = frame.f_code.co_name
     line_num = frame.f_lineno
     return (filepath, f"{funct_name}:{line_num}")
+
+
+def extract_logs(logs: TextIOWrapper) -> Tuple[List[str], List[str], List[str], List[str], List[str]]:
+    """Extract logs meta-data and messages.
+
+    Parameters:
+        logs `TextIOWrapper`: An object that comes with open method.
+
+    Return:
+        Tuple `List of str`: Meta-data and messages.
+
+        `(date_list, status_list, filename_list, function_and_lineno_list, msg_list)`
+    """
+    date_list = []
+    status_list = []
+    filename_list = []
+    function_and_lineno_list = []
+    msg_list = []
+    for each_line in logs.readlines():
+        if not each_line.startswith('[') and len(msg_list) <= 0:
+            continue
+        elif each_line.startswith('['):
+            # Get Meta-Data
+            info_str = ":".join(each_line.split(':')[:4]).strip()
+            msg_str = ":".join(each_line.split(':')[4:])
+
+            # Append Log message
+            msg_list.append(msg_str)
+
+            # Extract Infos
+            date_list.append(info_str[0:10])
+            status_list.append(info_str[11:21].replace(' ', ''))
+            filename_list.append(f"[{info_str[22:].split('[')[1][:-2]}]")
+            function_and_lineno_list.append(f"[{info_str[22:].split('[')[2][:-1]}]")
+        else:
+            msg_list[len(msg_list) - 1] += each_line
+
+    return (date_list, status_list, filename_list, function_and_lineno_list, msg_list)
