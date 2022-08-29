@@ -156,15 +156,15 @@ def console_data(script_name: str, status_dict: Dict[str, int], statuc_icon_dict
     }
 
     rich_table = Table(
-        title=
-        f"{log_dir.split('/')[-1]} :see_no_evil: :hear_no_evil: :speak_no_evil:"
+        title=f"{log_dir.split('/')[-1]} :see_no_evil: :hear_no_evil: :speak_no_evil:"
     )
 
     rich_table.add_column("DATE", justify="center")
     rich_table.add_column("STATUS", justify="center", no_wrap=True)
     rich_table.add_column("FILE", justify="center")
     rich_table.add_column("FUNCTION", justify="center")
-    rich_table.add_column("MESSAGE", justify="left", no_wrap=False, max_width=250)
+    rich_table.add_column("MESSAGE", justify="left",
+                          no_wrap=False, max_width=250)
 
     # TODO: xxx
     print(_filename_list)
@@ -190,8 +190,8 @@ def console_data(script_name: str, status_dict: Dict[str, int], statuc_icon_dict
     rich_console.print(
         f"DEBUG: %{round(status_dict['DEBUG']/total_length*100, 2)}" +
         f"\tINFO: %{round(status_dict['INFO']/total_length*100, 2)}" +
-        f"\tWARNING: %{round(status_dict['WARNING']/total_length*100, 2)}" + 
-        f"\tERROR: %{round(status_dict['ERROR']/total_length*100, 2)}" + 
+        f"\tWARNING: %{round(status_dict['WARNING']/total_length*100, 2)}" +
+        f"\tERROR: %{round(status_dict['ERROR']/total_length*100, 2)}" +
         f"\tCRITICAL: %{round(status_dict['CRITICAL']/total_length*100, 2)}"
     )
 
@@ -305,7 +305,7 @@ def to_pdf(script_name: str, saving_path: str, status_dict: Dict[str,
 
         row_data = []
         for index, item in enumerate(
-            [_date, _log_status, _filename, _functname, _log_msg]):
+                [_date, _log_status, _filename, _functname, _log_msg]):
             if index == 1:
                 table_text = f"<font color='{color}'>{item}</font>"
             else:
