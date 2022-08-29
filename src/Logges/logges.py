@@ -5,24 +5,13 @@
 @date: 2022
 @mails: uysalserkan08@gmail.com, ozkan.uysal.2009@hotmail.com
 """
+
 import os
-import sys
-from enum import Enum
-from shutil import copy2
-from typing import Dict
-from typing import Union
+from .utils import (create_pie_chart, console_data, get_saving_path, get_current_time_HM, get_daily_log_file_name, to_pdf, get_current_platform_name)
 
-from .utils import console_data
-from .utils import create_pie_chart
-from .utils import get_current_platform_name
-from .utils import get_current_time_HM
-from .utils import get_daily_log_file_name
-from .utils import get_saving_path
-from .utils import to_pdf
-
+STATUS = ["INFO", "WARNING", "ERROR"]
 FILENAME = None
 SAVINGPATH = None
-STATUS_LEVEL = None
 
 
 class Logges:
@@ -32,74 +21,23 @@ class Logges:
 
     Main method is `log` and that have 3 argument, please check its docstring.
 
-    You can export you logs with `to_pdf()` and `to_markdown()`,
-    if you want to just print the logs, use `console_data()` method.
+    You can export you logs with `to_pdf()` and `to_markdown()`, if you want to just print the logs, use `console_data()` method.
     """
 
-    class LogStatus(Enum):
-        """Log types.
-
-        `DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL`
-        """
-
-        DEBUG = 0
-        INFO = 1
-        WARNING = 2
-        ERROR = 3
-        CRITICAL = 4
-
-        @staticmethod
-        def get_int_dict() -> Dict[str, int]:
-            """Convert Types to dictionary version."""
-            int_status_dict = {
-                "DEBUG": 0,
-                "INFO": 1,
-                "WARNING": 2,
-                "ERROR": 3,
-                "CRITICAL": 4,
-            }
-            return int_status_dict
-
-        @staticmethod
-        def get_icon_dict() -> Dict[str, str]:
-            """Convert Types to dictionary version."""
-            icon_status_dict = {
-                "DEBUG": ":bulb:",
-                "INFO": ":passport_control:",
-                "WARNING": ":vs:",
-                "ERROR": ":sos:",
-                "CRITICAL": ":cop:",
-            }
-            return icon_status_dict
-
     @staticmethod
-    def setup(logname: str = None,
-              status_level: LogStatus = LogStatus.ERROR) -> None:
-        """Set the environment.
-
-        Set up environment and setting the logfile name.
-        If you don't enter any name, the log name will be executing script name.
-
-        Parameters:
-            logname `str`: It defines your log file name.
-            status_level `LogStatus`: If status equal or greater than parameter, automatically print it.
-            Default value is `LogStatus.ERROR`
+    def setup(filepath) -> None:
+        """You need to enter just `__file__` input to filepath argument. This method will name your logs as running script name.
 
         Return:
             None
         """
-        global FILENAME, SAVINGPATH, STATUS_LEVEL
-        STATUS_LEVEL = status_level.value
-        filepath = sys._getframe().f_back.f_code.co_filename
-        abs_filepath = os.path.abspath(filepath)
-        if logname:
-            FILENAME = logname
-        else:
-            FILENAME = os.path.split(abs_filepath)[1].split(".py")[0]
-        SAVINGPATH = os.path.split(abs_filepath)[0]
+        global FILENAME, SAVINGPATH
+        path = os.path.abspath(filepath)
+        FILENAME = os.path.split(path)[1].split(".py")[0]
+        SAVINGPATH = os.path.split(path)[0]
 
     @staticmethod
-    def _write_logs(msg: str) -> None:
+    def write_logs(msg: str) -> None:
         """write_logs method called by `logs` method for writting all logs to a file. You do not need this method.
 
         Parameters:
@@ -108,92 +46,79 @@ class Logges:
         Return:
             None
         """
-        global FILENAME, STATUS_LEVEL
-        filename = get_daily_log_file_name(filename=FILENAME)
-        # saving_dir = get_saving_path()
-        log_dir = os.path.join(SAVINGPATH, filename)
-        log_file = open(f"{log_dir}", "a")
+        filename = get_daily_log_file_name(filename=Logges.get_log_name())
+        saving_dir = get_saving_path()
+        log_dir = os.path.join(saving_dir, filename)
+        log_file = open(f"{log_dir}", 'a')
         log_file.writelines(msg + "\n")
-        log_file.close()
+
+    def get_status_message(status: int) -> str:
+        """Hidden internal method, that returns the status to text.
+
+        Parameters:
+            status `int`: Status number 0 to 2.
+
+        Return:
+            status_text `str`: What is status name.
+        """
+        status_text = f"[{STATUS[status]}] "
+        return status_text
 
     @staticmethod
-    def log(
-        msg: Union[str, any],
-        status: LogStatus = LogStatus.DEBUG,
-        print_log: bool = False,
-    ) -> None:
+    def get_log_name() -> str:
+        """Actually this method do nothing."""
+        global FILENAME
+        return FILENAME
+
+    @staticmethod
+    def log(log: str, status: int = 0, print_log: bool = True) -> None:
         r"""Log a string with status message, please do not use `\n` character in your strigs.
 
         Parameters:
-            msg `str`: A string, showing on your report.
-            status `LogStatus`: `Default is `DEBUG`.
+            logs `str`: A string, showing on your report.
+            status `int`: `0` is info, `1` is warning and `2` is error, default is 0.
             print_log `bool`: If you set that parameter True, print that log, default is False.
 
         Return:
             None
         """
         cur_time = get_current_time_HM()
-        if not isinstance(msg, str):
-            msg = str(msg)
-
-        msg = f"[{cur_time}] [{status.name:8s}]: {msg}"
+        status = Logges.get_status_message(status=status)
+        msg = f"{status}{cur_time}\t{log}"
 
         if print_log:
             print(msg)
-        elif status.value >= STATUS_LEVEL:
-            print(msg)
 
-        Logges._write_logs(msg=msg)
+        Logges.write_logs(msg=msg)
 
     @staticmethod
-    def export(markdown: bool = False,
-               pdf: bool = False,
-               log: bool = True) -> None:
-        """EXPORT."""
-        if markdown:
-            Logges._to_markdown()
-        if pdf:
-            Logges._to_pdf()
-        lib_path = get_saving_path()
-        copy2(src=os.path.join(SAVINGPATH, FILENAME),
-              dst=os.path.join(lib_path, FILENAME))
-        if not log:
-            # Preserve log file at library directory
-            os.remove(os.path.join(SAVINGPATH, FILENAME))
-
-    @staticmethod
-    def _to_markdown() -> None:
+    def to_markdown() -> None:
         """Convert days logs as markdown file.."""
-        global FILENAME
+        icons = {
+            "INFO": ":passport_control:",
+            "WARNING": ":vs:",
+            "ERROR": ":sos:"
+        }
+        type_counter = [0, 0, 0]
+        md_file = os.path.join(SAVINGPATH, get_daily_log_file_name(filename=Logges.get_log_name(), markdown=True))
+        markdown_file = open(md_file, 'w')
 
-        icons = Logges.LogStatus.get_icon_dict()
-        type_counter = [0, 0, 0, 0, 0]
-        md_file = os.path.join(
-            SAVINGPATH,
-            get_daily_log_file_name(filename=FILENAME, markdown=True))
-        markdown_file = open(md_file, "w")
-
-        filename = get_daily_log_file_name(filename=FILENAME)
+        filename = get_daily_log_file_name(filename=Logges.get_log_name())
         file_dir = get_saving_path()
         log_path = os.path.join(file_dir, filename)
-        with open(log_path, "r") as file:
+        with open(log_path, 'r') as file:
             logs = file.readlines()
             file.close()
-        only_filename = "_".join(filename.split("_")[1:]) + ".py".replace(
-            ".log", "")
-        file_date = filename.split("_")[0]
+        only_filename = "_".join(filename.split('_')[1:]) + ".py".replace(".log", '')
+        file_date = filename.split('_')[0]
 
         if get_current_platform_name() == "Windows":
             only_filename = os.path.split(only_filename)[1]
-        markdown_file.writelines(
-            f"# {only_filename} {file_date} Logs :see_no_evil: :hear_no_evil: :speak_no_evil:\n"
-        )
+        markdown_file.writelines(f"# {only_filename} {file_date} Logs :see_no_evil: :hear_no_evil: :speak_no_evil:\n")
         markdown_file.writelines("![](pie_chart.png)\n")
-        markdown_file.writelines(
-            "|TYPE|TIME|MESSAGE|\n| :--: | :--: | :--: |\n")
+        markdown_file.writelines("|TYPE|TIME|MESSAGE|\n| :--: | :--: | :--: |\n")
         for each_log in logs[::-1]:
-            log_type = (each_log.split("\t")[0].split(" ")[0].replace(
-                "[", "").replace("]", ""))
+            log_type = each_log.split("\t")[0].split(" ")[0].replace('[', '').replace(']', '')
             if log_type == list(icons.keys())[0]:
                 type_counter[0] += 1
             elif log_type == list(icons.keys())[1]:
@@ -201,35 +126,23 @@ class Logges:
             elif log_type == list(icons.keys())[2]:
                 type_counter[2] += 1
 
-            log_time = (each_log.split("\t")[0].split(" ")[1].replace(
-                "[", "").replace("]", "")[0:-1])
+            log_time = each_log.split("\t")[0].split(" ")[1].replace('[', '').replace(']', '')[0:-1]
             log_msg = each_log.split("\t")[1]
-            log_msg.replace("\n", "")
+            log_msg.replace("\n", '')
             try:
-                markdown_file.writelines(
-                    f"|{icons[log_type]} | {log_time} | {log_msg.strip()}| ")
+                markdown_file.writelines(f"|{icons[log_type]} | {log_time} | {log_msg.strip()}| ")
                 markdown_file.writelines("\n")
-            except KeyError:
-                raise ("Please check your icon.")
-        markdown_file.writelines(
-            "All right reserved 2022 &copy;&nbsp; [Logges](https://github.com/uysalserkan/Logges) - \
-*[uysalserkan](https://github.com/uysalserkan/) & [Ozkan](https://github.com/ozkanuysal)*\n"
-        )
-        create_pie_chart(
-            saving_path=SAVINGPATH,
-            info_size=type_counter[0],
-            warning_size=type_counter[1],
-            error_size=type_counter[2],
-        )
+            except:
+                raise("Please check your icon.")
+        markdown_file.writelines("All right reserved 2022 &copy;&nbsp; [Logges](https://github.com/uysalserkan/Logges) - *[uysalserkan](https://github.com/uysalserkan/) & [Ozkan](https://github.com/ozkanuysal)*\n")
+        create_pie_chart(saving_path=SAVINGPATH, info_size=type_counter[0], warning_size=type_counter[1], error_size=type_counter[2])
 
     @staticmethod
     def console_data() -> None:
         """Fill the beautiful table with days logs."""
-        global FILENAME
-        console_data(script_name=FILENAME)
+        console_data(script_name=Logges.get_log_name())
 
     @staticmethod
-    def _to_pdf() -> None:
+    def to_pdf() -> None:
         """Convert logs to pdf file with day logs."""
-        global FILENAME
-        to_pdf(script_name=FILENAME, saving_path=SAVINGPATH)
+        to_pdf(script_name=Logges.get_log_name(), saving_path=SAVINGPATH)
