@@ -6,11 +6,13 @@
 @mails: uysalserkan08@gmail.com, ozkan.uysal.2009@hotmail.com
 """
 import datetime
-from io import TextIOWrapper
 import os
 import platform
 import sys
-from typing import Dict, List, Tuple
+from io import TextIOWrapper
+from typing import Dict
+from typing import List
+from typing import Tuple
 
 import matplotlib.pyplot as plt
 from reportlab.lib.colors import Color
@@ -56,8 +58,7 @@ def get_saving_path(log_dir: bool = False) -> str:
     return dir_path
 
 
-def create_pie_chart(saving_path: str,
-                     status_dict: Dict[str, int]) -> None:
+def create_pie_chart(saving_path: str, status_dict: Dict[str, int]) -> None:
     """We are creating and saving a plot that show us the rate of log types.
 
     Parameters:
@@ -192,7 +193,8 @@ def console_data(script_name: str) -> None:
 \tError: %{round(type_counter[2]/total_length*100, 2)}")
 
 
-def to_pdf(script_name: str, saving_path: str, status_dict: Dict[str, int]) -> None:
+def to_pdf(script_name: str, saving_path: str, status_dict: Dict[str,
+                                                                 int]) -> None:
     """Export the logs to a file with `.pdf` format.
 
     Parameters:
@@ -216,7 +218,13 @@ def to_pdf(script_name: str, saving_path: str, status_dict: Dict[str, int]) -> N
         uysaltext_p = Paragraph(uysaltext, copyright_style)
         return uysaltext_p
 
-    type_colors = {'DEBUG': 'gray', "INFO": "blue", "WARNING": "orange", "ERROR": "red", "CRITICAL": 'darkred'}
+    type_colors = {
+        "DEBUG": "gray",
+        "INFO": "blue",
+        "WARNING": "orange",
+        "ERROR": "red",
+        "CRITICAL": "darkred",
+    }
 
     log_dir = os.path.join(saving_path,
                            get_daily_log_file_name(filename=script_name))
@@ -227,7 +235,13 @@ def to_pdf(script_name: str, saving_path: str, status_dict: Dict[str, int]) -> N
     # Reading data başlıyor..
     file = open(log_dir, "r")
 
-    _date_list, _status_list, _filename_list, _functname_list, _log_message_list = extract_logs(logs=file)
+    (
+        _date_list,
+        _status_list,
+        _filename_list,
+        _functname_list,
+        _log_message_list,
+    ) = extract_logs(logs=file)
 
     # Header Başlığı Ekleniyor.
     header_text = (
@@ -238,11 +252,10 @@ def to_pdf(script_name: str, saving_path: str, status_dict: Dict[str, int]) -> N
     page_elements.append(header)
     page_elements.append(Spacer(10, 20))
 
-    if not os.path.exists(
-        os.path.join(saving_path, 'pie_chart.png')
-    ):
+    if not os.path.exists(os.path.join(saving_path, "pie_chart.png")):
         for index, _ in enumerate(_status_list):
-            log_status_clear = _status_list[index].replace('[', '').replace(']', '')
+            log_status_clear = _status_list[index].replace("[", "").replace(
+                "]", "")
             status_dict[log_status_clear] += 1
 
         create_pie_chart(
@@ -261,7 +274,7 @@ def to_pdf(script_name: str, saving_path: str, status_dict: Dict[str, int]) -> N
 
     column_styled_list = []
     centered = ParagraphStyle(name="centered", alignment=TA_CENTER)
-    columns = ["TIME", "STATUS", "FILE", 'FUNCTION', 'MESSAGE']
+    columns = ["TIME", "STATUS", "FILE", "FUNCTION", "MESSAGE"]
 
     for each in columns:
         column_text = f"<font size='8'><b>{each}</b></font>"
@@ -276,7 +289,8 @@ def to_pdf(script_name: str, saving_path: str, status_dict: Dict[str, int]) -> N
     # Write logs into pdf.
     for index, _ in enumerate(_log_message_list):
         # Log message color
-        log_status_clear = _status_list[index].replace('[', '').replace(']', '')
+        log_status_clear = _status_list[index].replace("[",
+                                                       "").replace("]", "")
         color = type_colors[log_status_clear]
 
         # Extract values of log data.
@@ -287,7 +301,8 @@ def to_pdf(script_name: str, saving_path: str, status_dict: Dict[str, int]) -> N
         _log_msg = _log_message_list[index]
 
         row_data = []
-        for index, item in enumerate([_date, _log_status, _filename, _functname, _log_msg]):
+        for index, item in enumerate(
+            [_date, _log_status, _filename, _functname, _log_msg]):
             if index == 1:
                 table_text = f"<font color='{color}'>{item}</font>"
             else:
@@ -324,7 +339,9 @@ def get_log_info() -> Tuple[str, str]:
     return (filepath, f"{funct_name}:{line_num}")
 
 
-def extract_logs(logs: TextIOWrapper) -> Tuple[List[str], List[str], List[str], List[str], List[str]]:
+def extract_logs(
+    logs: TextIOWrapper,
+) -> Tuple[List[str], List[str], List[str], List[str], List[str]]:
     """Extract logs meta-data and messages.
 
     Parameters:
@@ -341,22 +358,24 @@ def extract_logs(logs: TextIOWrapper) -> Tuple[List[str], List[str], List[str], 
     function_and_lineno_list = []
     msg_list = []
     for each_line in logs.readlines():
-        if not each_line.startswith('[') and len(msg_list) <= 0:
+        if not each_line.startswith("[") and len(msg_list) <= 0:
             continue
-        elif each_line.startswith('['):
+        elif each_line.startswith("["):
             # Get Meta-Data
-            info_str = ":".join(each_line.split(':')[:4]).strip()
-            msg_str = ":".join(each_line.split(':')[4:])
+            info_str = ":".join(each_line.split(":")[:4]).strip()
+            msg_str = ":".join(each_line.split(":")[4:])
 
             # Append Log message
             msg_list.append(msg_str)
 
             # Extract Infos
             date_list.append(info_str[0:10])
-            status_list.append(info_str[11:21].replace(' ', ''))
+            status_list.append(info_str[11:21].replace(" ", ""))
             filename_list.append(f"[{info_str[22:].split('[')[1][:-2]}]")
-            function_and_lineno_list.append(f"[{info_str[22:].split('[')[2][:-1]}]")
+            function_and_lineno_list.append(
+                f"[{info_str[22:].split('[')[2][:-1]}]")
         else:
             msg_list[len(msg_list) - 1] += each_line
 
-    return (date_list, status_list, filename_list, function_and_lineno_list, msg_list)
+    return (date_list, status_list, filename_list, function_and_lineno_list,
+            msg_list)

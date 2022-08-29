@@ -182,8 +182,10 @@ class Logges:
         global SAVINGPATH, FILENAME
         lib_path = get_saving_path()
         full_filename = get_daily_log_file_name(filename=FILENAME)
-        copy2(src=os.path.join(SAVINGPATH, full_filename),
-              dst=os.path.join(lib_path, full_filename))
+        copy2(
+            src=os.path.join(SAVINGPATH, full_filename),
+            dst=os.path.join(lib_path, full_filename),
+        )
         if markdown:
             Logges._to_markdown()
         if pdf:
@@ -220,24 +222,35 @@ class Logges:
         )
         markdown_file.writelines("![](pie_chart.png)\n")
         markdown_file.writelines(
-            "|TIME|STATUS|FILENAME|FUNCTION|MESSAGE|\n| :--: | :--: | :--: | :--: | :--: |\n")
+            "|TIME|STATUS|FILENAME|FUNCTION|MESSAGE|\n| :--: | :--: | :--: | :--: | :--: |\n"
+        )
 
         # Split Strings.
-        file = open(full_logfile_path, 'r')
-        _date_list, _status_list, _filename_list, _functname_list, _log_message_list = extract_logs(logs=file)
+        file = open(full_logfile_path, "r")
+        (
+            _date_list,
+            _status_list,
+            _filename_list,
+            _functname_list,
+            _log_message_list,
+        ) = extract_logs(logs=file)
 
         status_dict = Logges.LogStatus.get_blank_dict()
         # Write logs in markdown file.
         for index, _ in enumerate(_log_message_list):
-            log_status_clear = _status_list[index].replace('[', '').replace(']', '')
+            log_status_clear = _status_list[index].replace("[", "").replace(
+                "]", "")
             status_dict[log_status_clear] += 1
 
             try:
                 markdown_file.writelines("|{}|{}|{}|{}|{}|".format(
-                    _date_list[index], status_icons[log_status_clear], _filename_list[index],
-                    _functname_list[index], _log_message_list[index].replace('\n', ' ')
-                    ))
-                markdown_file.write('\n')
+                    _date_list[index],
+                    status_icons[log_status_clear],
+                    _filename_list[index],
+                    _functname_list[index],
+                    _log_message_list[index].replace("\n", " "),
+                ))
+                markdown_file.write("\n")
             except KeyError:
                 raise ("Please check your icon.")
 
@@ -251,10 +264,14 @@ class Logges:
         create_pie_chart(
             saving_path=SAVINGPATH,
             status_dict=status_dict,
-            )
+        )
 
     @staticmethod
     def _to_pdf() -> None:
         """Convert logs to pdf file with day logs."""
         global FILENAME, SAVINGPATH
-        to_pdf(script_name=FILENAME, saving_path=SAVINGPATH, status_dict=Logges.LogStatus.get_blank_dict())
+        to_pdf(
+            script_name=FILENAME,
+            saving_path=SAVINGPATH,
+            status_dict=Logges.LogStatus.get_blank_dict(),
+        )
