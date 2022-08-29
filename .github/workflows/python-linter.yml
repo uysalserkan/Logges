@@ -31,4 +31,4 @@ jobs:
         # The name of the check to add annotations to. Generally the same as the job that uses this action
         checkName: Flake8 
         # Path to use for flake8
-        path: . # optional, default is .
+        path: ../src/Logges # optional, default is .
