@@ -10,6 +10,7 @@ import sys
 from enum import Enum
 from shutil import copy2
 from typing import Dict
+from typing import List
 from typing import Union
 
 from .utils import console_data
@@ -24,6 +25,7 @@ from .utils import get_log_info
 FILENAME = None
 SAVINGPATH = None
 STATUS_LEVEL = None
+IGNORE_FILES_AND_DIRS = []
 
 
 class Logges:
@@ -118,6 +120,23 @@ class Logges:
         log_file.close()
 
     @staticmethod
+    def ignore_files(name: Union[str, List[str]]) -> None:
+        """Ignore logs at files or directories. BE CAREFUL WHEN YOU IGNORE A FILE.
+
+        Parameters:
+            name `str or List`: Script name or directory of scripts.
+        """
+        global IGNORE_FILES_AND_DIRS
+        if isinstance(name, List):
+            for each_name in name:
+                tmp = each_name.lower()
+                if tmp not in IGNORE_FILES_AND_DIRS:
+                    IGNORE_FILES_AND_DIRS.append(tmp)
+        else:
+            if name.lower() not in IGNORE_FILES_AND_DIRS:
+                IGNORE_FILES_AND_DIRS.append(name.lower())
+
+    @staticmethod
     def log(
         msg: Union[str, any],
         status: LogStatus = LogStatus.DEBUG,
@@ -133,11 +152,17 @@ class Logges:
         Return:
             None
         """
+        global IGNORE_FILES_AND_DIRS
         cur_time = get_current_time_HM()
         if not isinstance(msg, str):
             msg = str(msg)
 
-        filename, funct = get_log_info()
+        filepath, funct = get_log_info()
+
+        if any(True if each_ignored in filepath else False for each_ignored in IGNORE_FILES_AND_DIRS):
+            return
+
+        filename = os.path.split(filepath)[1]
 
         msg = f"[{cur_time}] [{status.name:8s}] [{filename}] [{funct}]: {msg}"
 

@@ -319,9 +319,9 @@ def to_pdf(script_name: str, saving_path: str) -> None:
 
 
 def get_log_info() -> Tuple[str, str]:
-    """We are getting calling file name and function name:line nuber."""
+    """We are getting calling file path and function name:line nuber."""
     frame = sys._getframe().f_back.f_back
-    filename = os.path.split(frame.f_code.co_filename)[1]
+    filepath = (frame.f_code.co_filename)
     funct_name = frame.f_code.co_name
     line_num = frame.f_lineno
-    return (filename, f"{funct_name}:{line_num}")
+    return (filepath, f"{funct_name}:{line_num}")
