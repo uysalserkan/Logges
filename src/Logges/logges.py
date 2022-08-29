@@ -13,7 +13,6 @@ from typing import Dict
 from typing import List
 from typing import Union
 
-from .utils import console_data
 from .utils import create_pie_chart
 from .utils import extract_logs
 from .utils import get_current_platform_name
@@ -255,13 +254,7 @@ class Logges:
             )
 
     @staticmethod
-    def console_data() -> None:
-        """Fill the beautiful table with days logs."""
-        global FILENAME
-        console_data(script_name=FILENAME)
-
-    @staticmethod
     def _to_pdf() -> None:
         """Convert logs to pdf file with day logs."""
-        global FILENAME
-        to_pdf(script_name=FILENAME, saving_path=SAVINGPATH)
+        global FILENAME, SAVINGPATH
+        to_pdf(script_name=FILENAME, saving_path=SAVINGPATH, status_dict=Logges.LogStatus.get_blank_dict())

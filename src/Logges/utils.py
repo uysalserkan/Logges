@@ -192,12 +192,13 @@ def console_data(script_name: str) -> None:
 \tError: %{round(type_counter[2]/total_length*100, 2)}")
 
 
-def to_pdf(script_name: str, saving_path: str) -> None:
+def to_pdf(script_name: str, saving_path: str, status_dict: Dict[str, int]) -> None:
     """Export the logs to a file with `.pdf` format.
 
     Parameters:
         script_name `str`: Save the pdf file as that string.
         saving_path `str`:  Save the pdf file to the that path.
+        stats_dict `Dict`:  Define status counter.
 
     Return:
         None
@@ -215,20 +216,18 @@ def to_pdf(script_name: str, saving_path: str) -> None:
         uysaltext_p = Paragraph(uysaltext, copyright_style)
         return uysaltext_p
 
-    type_colors = {"INFO": "blue", "WARNING": "orange", "ERROR": "red"}
-    dir_path = get_saving_path()
+    type_colors = {'DEBUG': 'gray', "INFO": "blue", "WARNING": "orange", "ERROR": "red", "CRITICAL": 'darkred'}
 
-    log_dir = os.path.join(dir_path,
+    log_dir = os.path.join(saving_path,
                            get_daily_log_file_name(filename=script_name))
-    filename = f"{log_dir}"
 
     # Burada eklemeler yapılıyor..
     page_elements = []
 
     # Reading data başlıyor..
-    with open(f"{filename}", "r") as file:
-        logs = file.readlines()
-        file.close()
+    file = open(log_dir, "r")
+
+    _date_list, _status_list, _filename_list, _functname_list, _log_message_list = extract_logs(logs=file)
 
     # Header Başlığı Ekleniyor.
     header_text = (
@@ -239,23 +238,19 @@ def to_pdf(script_name: str, saving_path: str) -> None:
     page_elements.append(header)
     page_elements.append(Spacer(10, 20))
 
-    if not os.path.exists(f"{saving_path}/pie_chart.png"):
-        info_, warn_, err_ = (0, 0, 0)
-        for each_log in logs[::-1]:
-            log_type = (each_log.split("\t")[0].split(" ")[0].replace(
-                "[", "").replace("]", ""))
-            if log_type == list(type_colors.keys())[0]:
-                info_ += 1
-            elif log_type == list(type_colors.keys())[1]:
-                warn_ += 1
-            elif log_type == list(type_colors.keys())[2]:
-                err_ += 1
+    if not os.path.exists(
+        os.path.join(saving_path, 'pie_chart.png')
+    ):
+        for index, _ in enumerate(_status_list):
+            log_status_clear = _status_list[index].replace('[', '').replace(']', '')
+            status_dict[log_status_clear] += 1
+
         create_pie_chart(
             saving_path=saving_path,
-            info_size=info_,
-            warning_size=warn_,
-            error_size=err_,
+            status_dict=status_dict,
         )
+
+    # Append image to PDF file.
     png_path = os.path.join(saving_path, "pie_chart.png")
     img = Image(f"{png_path}")
     img.drawHeight = 3.5 * inch
@@ -266,10 +261,10 @@ def to_pdf(script_name: str, saving_path: str) -> None:
 
     column_styled_list = []
     centered = ParagraphStyle(name="centered", alignment=TA_CENTER)
-    columns = ["Status", "Time", "Message"]
+    columns = ["TIME", "STATUS", "FILE", 'FUNCTION', 'MESSAGE']
 
     for each in columns:
-        column_text = f"<font size='12'><b>{each}</b></font>"
+        column_text = f"<font size='8'><b>{each}</b></font>"
         styled_column = Paragraph(column_text, centered)
         column_styled_list.append(styled_column)
     table_data.append(column_styled_list)
@@ -277,28 +272,31 @@ def to_pdf(script_name: str, saving_path: str) -> None:
     alignStyle = ParagraphStyle(name="data", alignment=TA_CENTER)
 
     # Reading data bitiyor..
-    for each_log in logs[::-1]:
-        log_type = (each_log.split("\t")[0].split(" ")[0].replace("[",
-                                                                  "").replace(
-                                                                      "]", ""))
-        log_time = (each_log.split("\t")[0].split(" ")[1].replace(
-            "[", "").replace("]", "")[0:-1])
-        log_msg = each_log.split("\t")[1]
-        log_msg.replace("\n", "")
 
-        color = type_colors[log_type]
+    # Write logs into pdf.
+    for index, _ in enumerate(_log_message_list):
+        # Log message color
+        log_status_clear = _status_list[index].replace('[', '').replace(']', '')
+        color = type_colors[log_status_clear]
 
-        each_row = []
-        for index, each_item in enumerate([log_type, log_time, log_msg]):
-            if index == 2:
-                table_text = f"<font color='{color}'>{each_item}</font>"
+        # Extract values of log data.
+        _date = _date_list[index]
+        _log_status = log_status_clear
+        _filename = _filename_list[index]
+        _functname = _functname_list[index]
+        _log_msg = _log_message_list[index]
+
+        row_data = []
+        for index, item in enumerate([_date, _log_status, _filename, _functname, _log_msg]):
+            if index == 1:
+                table_text = f"<font color='{color}'>{item}</font>"
             else:
-                table_text = f"<b>{each_item}</b>"
+                table_text = f"<b>{item}</b>"
             ptext = Paragraph(table_text, alignStyle)
-            each_row.append(ptext)
-        table_data.append(each_row)
+            row_data.append(ptext)
+        table_data.append(row_data)
 
-    table = reportlabTable(table_data, colWidths=[70, 70, 350])
+    table = reportlabTable(table_data, colWidths=[70, 100, 100, 100, 200])
     tStyle = TableStyle([
         ("ALIGN", (0, -1), (-1, -1), "LEFT"),
         ("ALIGN", (1, 0), (1, -1), "RIGHT"),
