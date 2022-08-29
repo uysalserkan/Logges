@@ -19,6 +19,7 @@ from .utils import get_current_time_HM
 from .utils import get_daily_log_file_name
 from .utils import get_saving_path
 from .utils import to_pdf
+from .utils import get_log_info
 
 FILENAME = None
 SAVINGPATH = None
@@ -136,7 +137,9 @@ class Logges:
         if not isinstance(msg, str):
             msg = str(msg)
 
-        msg = f"[{cur_time}] [{status.name:8s}]: {msg}"
+        filename, funct = get_log_info()
+
+        msg = f"[{cur_time}] [{status.name:8s}] [{filename}] [{funct}]: {msg}"
 
         if print_log:
             print(msg)

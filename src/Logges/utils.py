@@ -5,11 +5,14 @@
 @date: 2022
 @mails: uysalserkan08@gmail.com, ozkan.uysal.2009@hotmail.com
 """
-import datetime
+import sys
 import os
+import datetime
 import platform
 
+from typing import Tuple
 import matplotlib.pyplot as plt
+
 from reportlab.lib.colors import Color
 from reportlab.lib.enums import TA_CENTER
 from reportlab.lib.enums import TA_LEFT
@@ -138,8 +141,7 @@ def console_data(script_name: str) -> None:
     filename = f"{log_dir}"
 
     rich_table = Table(
-        title=
-        f"{filename.split('/')[-1]} :see_no_evil: :hear_no_evil: :speak_no_evil:"
+        title=f"{filename.split('/')[-1]} :see_no_evil: :hear_no_evil: :speak_no_evil:"
     )
 
     rich_table.add_column("Type", justify="left", style="white", no_wrap=True)
@@ -314,3 +316,12 @@ def to_pdf(script_name: str, saving_path: str) -> None:
         saving_path, get_daily_log_file_name(filename=script_name, pdf=True))
     pdf_doc = SimpleDocTemplate(to_pdf_path, pagesize=LETTER)
     pdf_doc.multiBuild(page_elements)
+
+
+def get_log_info() -> Tuple[str, str]:
+    """We are getting calling file name and function name:line nuber."""
+    frame = sys._getframe().f_back.f_back
+    filename = os.path.split(frame.f_code.co_filename)[1]
+    funct_name = frame.f_code.co_name
+    line_num = frame.f_lineno
+    return (filename, f"{funct_name}:{line_num}")
