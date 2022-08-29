@@ -53,9 +53,10 @@ def get_saving_path(log_dir: bool = False) -> str:
     return dir_path
 
 
-def create_pie_chart(
-    saving_path: str, info_size: int = 0, warning_size: int = 0, error_size: int = 0
-) -> None:
+def create_pie_chart(saving_path: str,
+                     info_size: int = 0,
+                     warning_size: int = 0,
+                     error_size: int = 0) -> None:
     """We are creating and saving a plot that show us the rate of log types.
 
     Parameters:
@@ -86,9 +87,9 @@ def create_pie_chart(
     plt.savefig(f"{png_path}")
 
 
-def get_daily_log_file_name(
-    filename: str, markdown: bool = False, pdf: bool = False
-) -> str:
+def get_daily_log_file_name(filename: str,
+                            markdown: bool = False,
+                            pdf: bool = False) -> str:
     """get_daily_log_file_name.
 
     get_daily_log_file_name method returns a filename, which will be name of the saving file,
@@ -132,11 +133,13 @@ def console_data(script_name: str) -> None:
     """
     dir_path = get_saving_path()
 
-    log_dir = os.path.join(dir_path, get_daily_log_file_name(filename=script_name))
+    log_dir = os.path.join(dir_path,
+                           get_daily_log_file_name(filename=script_name))
     filename = f"{log_dir}"
 
     rich_table = Table(
-        title=f"{filename.split('/')[-1]} :see_no_evil: :hear_no_evil: :speak_no_evil:"
+        title=
+        f"{filename.split('/')[-1]} :see_no_evil: :hear_no_evil: :speak_no_evil:"
     )
 
     rich_table.add_column("Type", justify="left", style="white", no_wrap=True)
@@ -152,9 +155,9 @@ def console_data(script_name: str) -> None:
     type_counter = [0, 0, 0]
     for each_log in logs[::-1]:
         color = ""
-        log_type = (
-            each_log.split("\t")[0].split(" ")[0].replace("[", "").replace("]", "")
-        )
+        log_type = (each_log.split("\t")[0].split(" ")[0].replace("[",
+                                                                  "").replace(
+                                                                      "]", ""))
         if log_type == list(icons.keys())[0]:
             color = "cyan"
             type_counter[0] += 1
@@ -165,12 +168,8 @@ def console_data(script_name: str) -> None:
             color = "red"
             type_counter[2] += 1
 
-        log_time = (
-            each_log.split("\t")[0]
-            .split(" ")[1]
-            .replace("[", "")
-            .replace("]", "")[0:-1]
-        )
+        log_time = (each_log.split("\t")[0].split(" ")[1].replace(
+            "[", "").replace("]", "")[0:-1])
         log_msg = each_log.split("\t")[1]
         log_msg.replace("\n", "")
         try:
@@ -189,8 +188,7 @@ def console_data(script_name: str) -> None:
     )
     rich_console.print(
         f"Info: %{round(type_counter[0]/total_length*100, 2)}\tWarning: %{round(type_counter[1]/total_length*100, 2)}\
-\tError: %{round(type_counter[2]/total_length*100, 2)}"
-    )
+\tError: %{round(type_counter[2]/total_length*100, 2)}")
 
 
 def to_pdf(script_name: str, saving_path: str) -> None:
@@ -210,16 +208,17 @@ def to_pdf(script_name: str, saving_path: str) -> None:
 <strong><a href="https://github.com/uysalserkan">uysalserkan</a></strong> & \
 <strong><a href="https://github.com/ozkanuysal">Ozkan</a></strong>'
 
-        copyright_style = ParagraphStyle(
-            "copyright_style", fontSize=8, alignment=TA_CENTER
-        )
+        copyright_style = ParagraphStyle("copyright_style",
+                                         fontSize=8,
+                                         alignment=TA_CENTER)
         uysaltext_p = Paragraph(uysaltext, copyright_style)
         return uysaltext_p
 
     type_colors = {"INFO": "blue", "WARNING": "orange", "ERROR": "red"}
     dir_path = get_saving_path()
 
-    log_dir = os.path.join(dir_path, get_daily_log_file_name(filename=script_name))
+    log_dir = os.path.join(dir_path,
+                           get_daily_log_file_name(filename=script_name))
     filename = f"{log_dir}"
 
     # Burada eklemeler yapılıyor..
@@ -242,9 +241,8 @@ def to_pdf(script_name: str, saving_path: str) -> None:
     if not os.path.exists(f"{saving_path}/pie_chart.png"):
         info_, warn_, err_ = (0, 0, 0)
         for each_log in logs[::-1]:
-            log_type = (
-                each_log.split("\t")[0].split(" ")[0].replace("[", "").replace("]", "")
-            )
+            log_type = (each_log.split("\t")[0].split(" ")[0].replace(
+                "[", "").replace("]", ""))
             if log_type == list(type_colors.keys())[0]:
                 info_ += 1
             elif log_type == list(type_colors.keys())[1]:
@@ -279,15 +277,11 @@ def to_pdf(script_name: str, saving_path: str) -> None:
 
     # Reading data bitiyor..
     for each_log in logs[::-1]:
-        log_type = (
-            each_log.split("\t")[0].split(" ")[0].replace("[", "").replace("]", "")
-        )
-        log_time = (
-            each_log.split("\t")[0]
-            .split(" ")[1]
-            .replace("[", "")
-            .replace("]", "")[0:-1]
-        )
+        log_type = (each_log.split("\t")[0].split(" ")[0].replace("[",
+                                                                  "").replace(
+                                                                      "]", ""))
+        log_time = (each_log.split("\t")[0].split(" ")[1].replace(
+            "[", "").replace("]", "")[0:-1])
         log_msg = each_log.split("\t")[1]
         log_msg.replace("\n", "")
 
@@ -304,21 +298,19 @@ def to_pdf(script_name: str, saving_path: str) -> None:
         table_data.append(each_row)
 
     table = reportlabTable(table_data, colWidths=[70, 70, 350])
-    tStyle = TableStyle(
-        [
-            ("ALIGN", (0, -1), (-1, -1), "LEFT"),
-            ("ALIGN", (1, 0), (1, -1), "RIGHT"),
-            ("LINEABOVE", (0, 0), (-1, -1), 1, Color(0.2, 0.3, 0.4)),
-            ("BACKGROUND", (0, 0), (-1, 0), Color(102 / 255, 191 / 255, 191 / 255)),
-        ]
-    )
+    tStyle = TableStyle([
+        ("ALIGN", (0, -1), (-1, -1), "LEFT"),
+        ("ALIGN", (1, 0), (1, -1), "RIGHT"),
+        ("LINEABOVE", (0, 0), (-1, -1), 1, Color(0.2, 0.3, 0.4)),
+        ("BACKGROUND", (0, 0), (-1, 0), Color(102 / 255, 191 / 255,
+                                              191 / 255)),
+    ])
     table.setStyle(tStyle)
     page_elements.append(table)
 
     page_elements.append(copyright_text())
     page_elements.append(PageBreak())
     to_pdf_path = os.path.join(
-        saving_path, get_daily_log_file_name(filename=script_name, pdf=True)
-    )
+        saving_path, get_daily_log_file_name(filename=script_name, pdf=True))
     pdf_doc = SimpleDocTemplate(to_pdf_path, pagesize=LETTER)
     pdf_doc.multiBuild(page_elements)
