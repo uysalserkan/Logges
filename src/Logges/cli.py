@@ -2,6 +2,7 @@
 import os
 from types import NoneType
 from typing import Union
+
 import click
 
 
