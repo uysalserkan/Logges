@@ -34,6 +34,6 @@ setup(
     ],
     entry_points="""
         [console_scripts]
-        logges:cli:Logges_cli
+        logges=Logges.cli:Logges_cli
     """,
 )
