@@ -124,7 +124,8 @@ def get_current_time_HM() -> str:
     return f"{hour_min_sec}"
 
 
-def console_data(script_name: str, status_dict: Dict[str, int], statuc_icon_dict: Dict[str, str]) -> None:
+def console_data(script_name: str, status_dict: Dict[str, int],
+                 statuc_icon_dict: Dict[str, str]) -> None:
     """We are printing our logs on console with beauty of rich.
 
     Params:
@@ -164,14 +165,17 @@ def console_data(script_name: str, status_dict: Dict[str, int], statuc_icon_dict
     rich_table.add_column("STATUS", justify="center", no_wrap=True)
     rich_table.add_column("FILE", justify="center")
     rich_table.add_column("FUNCTION", justify="center")
-    rich_table.add_column("MESSAGE", justify="left", no_wrap=False, max_width=250)
+    rich_table.add_column("MESSAGE",
+                          justify="left",
+                          no_wrap=False,
+                          max_width=250)
 
     # TODO: xxx
     print(_filename_list)
 
     for index, _ in enumerate(_log_message_list):
-        log_status_clear = _status_list[index].replace("[", "")\
-            .replace("]", "")
+        log_status_clear = _status_list[index].replace("[",
+                                                       "").replace("]", "")
         status_dict[log_status_clear] += 1
         rich_table.add_row(
             f"[bold]{_date_list[index]}",
@@ -190,10 +194,9 @@ def console_data(script_name: str, status_dict: Dict[str, int], statuc_icon_dict
     rich_console.print(
         f"DEBUG: %{round(status_dict['DEBUG']/total_length*100, 2)}" +
         f"\tINFO: %{round(status_dict['INFO']/total_length*100, 2)}" +
-        f"\tWARNING: %{round(status_dict['WARNING']/total_length*100, 2)}" + 
-        f"\tERROR: %{round(status_dict['ERROR']/total_length*100, 2)}" + 
-        f"\tCRITICAL: %{round(status_dict['CRITICAL']/total_length*100, 2)}"
-    )
+        f"\tWARNING: %{round(status_dict['WARNING']/total_length*100, 2)}" +
+        f"\tERROR: %{round(status_dict['ERROR']/total_length*100, 2)}" +
+        f"\tCRITICAL: %{round(status_dict['CRITICAL']/total_length*100, 2)}")
 
 
 def to_pdf(script_name: str, saving_path: str, status_dict: Dict[str,
