@@ -56,8 +56,7 @@ def get_saving_path(log_dir: bool = False) -> str:
     return dir_path
 
 
-def create_pie_chart(saving_path: str,
-                     status_dict: Dict[str, int]) -> None:
+def create_pie_chart(saving_path: str, status_dict: Dict[str, int]) -> None:
     """We are creating and saving a plot that show us the rate of log types.
 
     Parameters:
@@ -88,9 +87,9 @@ def create_pie_chart(saving_path: str,
     plt.savefig(f"{png_path}")
 
 
-def get_daily_log_file_name(filename: str,
-                            markdown: bool = False,
-                            pdf: bool = False) -> str:
+def get_daily_log_file_name(
+    filename: str, markdown: bool = False, pdf: bool = False
+) -> str:
     """get_daily_log_file_name.
 
     get_daily_log_file_name method returns a filename, which will be name of the saving file,
@@ -134,8 +133,7 @@ def console_data(script_name: str) -> None:
     """
     dir_path = get_saving_path()
 
-    log_dir = os.path.join(dir_path,
-                           get_daily_log_file_name(filename=script_name))
+    log_dir = os.path.join(dir_path, get_daily_log_file_name(filename=script_name))
     filename = f"{log_dir}"
 
     rich_table = Table(
@@ -155,9 +153,9 @@ def console_data(script_name: str) -> None:
     type_counter = [0, 0, 0]
     for each_log in logs[::-1]:
         color = ""
-        log_type = (each_log.split("\t")[0].split(" ")[0].replace("[",
-                                                                  "").replace(
-                                                                      "]", ""))
+        log_type = (
+            each_log.split("\t")[0].split(" ")[0].replace("[", "").replace("]", "")
+        )
         if log_type == list(icons.keys())[0]:
             color = "cyan"
             type_counter[0] += 1
@@ -168,8 +166,12 @@ def console_data(script_name: str) -> None:
             color = "red"
             type_counter[2] += 1
 
-        log_time = (each_log.split("\t")[0].split(" ")[1].replace(
-            "[", "").replace("]", "")[0:-1])
+        log_time = (
+            each_log.split("\t")[0]
+            .split(" ")[1]
+            .replace("[", "")
+            .replace("]", "")[0:-1]
+        )
         log_msg = each_log.split("\t")[1]
         log_msg.replace("\n", "")
         try:
@@ -188,7 +190,8 @@ def console_data(script_name: str) -> None:
     )
     rich_console.print(
         f"Info: %{round(type_counter[0]/total_length*100, 2)}\tWarning: %{round(type_counter[1]/total_length*100, 2)}\
-\tError: %{round(type_counter[2]/total_length*100, 2)}")
+\tError: %{round(type_counter[2]/total_length*100, 2)}"
+    )
 
 
 def to_pdf(script_name: str, saving_path: str, status_dict: Dict[str, int]) -> None:
@@ -209,17 +212,21 @@ def to_pdf(script_name: str, saving_path: str, status_dict: Dict[str, int]) -> N
 <strong><a href="https://github.com/uysalserkan">uysalserkan</a></strong> & \
 <strong><a href="https://github.com/ozkanuysal">Ozkan</a></strong>'
 
-        copyright_style = ParagraphStyle("copyright_style",
-                                         fontSize=8,
-                                         alignment=TA_CENTER)
+        copyright_style = ParagraphStyle(
+            "copyright_style", fontSize=8, alignment=TA_CENTER
+        )
         uysaltext_p = Paragraph(uysaltext, copyright_style)
         return uysaltext_p
 
-    type_colors = {'DEBUG': 'gray', "INFO": "blue",
-                   "WARNING": "orange", "ERROR": "red", "CRITICAL": 'darkred'}
+    type_colors = {
+        "DEBUG": "gray",
+        "INFO": "blue",
+        "WARNING": "orange",
+        "ERROR": "red",
+        "CRITICAL": "darkred",
+    }
 
-    log_dir = os.path.join(saving_path,
-                           get_daily_log_file_name(filename=script_name))
+    log_dir = os.path.join(saving_path, get_daily_log_file_name(filename=script_name))
 
     # Burada eklemeler yapılıyor..
     page_elements = []
@@ -227,8 +234,13 @@ def to_pdf(script_name: str, saving_path: str, status_dict: Dict[str, int]) -> N
     # Reading data başlıyor..
     file = open(log_dir, "r")
 
-    _date_list, _status_list, _filename_list, _functname_list, _log_message_list = extract_logs(
-        logs=file)
+    (
+        _date_list,
+        _status_list,
+        _filename_list,
+        _functname_list,
+        _log_message_list,
+    ) = extract_logs(logs=file)
 
     # Header Başlığı Ekleniyor.
     header_text = (
@@ -239,12 +251,9 @@ def to_pdf(script_name: str, saving_path: str, status_dict: Dict[str, int]) -> N
     page_elements.append(header)
     page_elements.append(Spacer(10, 20))
 
-    if not os.path.exists(
-        os.path.join(saving_path, 'pie_chart.png')
-    ):
+    if not os.path.exists(os.path.join(saving_path, "pie_chart.png")):
         for index, _ in enumerate(_status_list):
-            log_status_clear = _status_list[index].replace(
-                '[', '').replace(']', '')
+            log_status_clear = _status_list[index].replace("[", "").replace("]", "")
             status_dict[log_status_clear] += 1
 
         create_pie_chart(
@@ -263,7 +272,7 @@ def to_pdf(script_name: str, saving_path: str, status_dict: Dict[str, int]) -> N
 
     column_styled_list = []
     centered = ParagraphStyle(name="centered", alignment=TA_CENTER)
-    columns = ["TIME", "STATUS", "FILE", 'FUNCTION', 'MESSAGE']
+    columns = ["TIME", "STATUS", "FILE", "FUNCTION", "MESSAGE"]
 
     for each in columns:
         column_text = f"<font size='8'><b>{each}</b></font>"
@@ -278,8 +287,7 @@ def to_pdf(script_name: str, saving_path: str, status_dict: Dict[str, int]) -> N
     # Write logs into pdf.
     for index, _ in enumerate(_log_message_list):
         # Log message color
-        log_status_clear = _status_list[index].replace(
-            '[', '').replace(']', '')
+        log_status_clear = _status_list[index].replace("[", "").replace("]", "")
         color = type_colors[log_status_clear]
 
         # Extract values of log data.
@@ -290,7 +298,9 @@ def to_pdf(script_name: str, saving_path: str, status_dict: Dict[str, int]) -> N
         _log_msg = _log_message_list[index]
 
         row_data = []
-        for index, item in enumerate([_date, _log_status, _filename, _functname, _log_msg]):
+        for index, item in enumerate(
+            [_date, _log_status, _filename, _functname, _log_msg]
+        ):
             if index == 1:
                 table_text = f"<font color='{color}'>{item}</font>"
             else:
@@ -300,20 +310,22 @@ def to_pdf(script_name: str, saving_path: str, status_dict: Dict[str, int]) -> N
         table_data.append(row_data)
 
     table = reportlabTable(table_data, colWidths=[70, 100, 100, 100, 200])
-    tStyle = TableStyle([
-        ("ALIGN", (0, -1), (-1, -1), "LEFT"),
-        ("ALIGN", (1, 0), (1, -1), "RIGHT"),
-        ("LINEABOVE", (0, 0), (-1, -1), 1, Color(0.2, 0.3, 0.4)),
-        ("BACKGROUND", (0, 0), (-1, 0), Color(102 / 255, 191 / 255,
-                                              191 / 255)),
-    ])
+    tStyle = TableStyle(
+        [
+            ("ALIGN", (0, -1), (-1, -1), "LEFT"),
+            ("ALIGN", (1, 0), (1, -1), "RIGHT"),
+            ("LINEABOVE", (0, 0), (-1, -1), 1, Color(0.2, 0.3, 0.4)),
+            ("BACKGROUND", (0, 0), (-1, 0), Color(102 / 255, 191 / 255, 191 / 255)),
+        ]
+    )
     table.setStyle(tStyle)
     page_elements.append(table)
 
     page_elements.append(copyright_text())
     page_elements.append(PageBreak())
     to_pdf_path = os.path.join(
-        saving_path, get_daily_log_file_name(filename=script_name, pdf=True))
+        saving_path, get_daily_log_file_name(filename=script_name, pdf=True)
+    )
     pdf_doc = SimpleDocTemplate(to_pdf_path, pagesize=LETTER)
     pdf_doc.multiBuild(page_elements)
 
@@ -327,7 +339,9 @@ def get_log_info() -> Tuple[str, str]:
     return (filepath, f"{funct_name}:{line_num}")
 
 
-def extract_logs(logs: TextIOWrapper) -> Tuple[List[str], List[str], List[str], List[str], List[str]]:
+def extract_logs(
+    logs: TextIOWrapper,
+) -> Tuple[List[str], List[str], List[str], List[str], List[str]]:
     """Extract logs meta-data and messages.
 
     Parameters:
@@ -344,22 +358,21 @@ def extract_logs(logs: TextIOWrapper) -> Tuple[List[str], List[str], List[str], 
     function_and_lineno_list = []
     msg_list = []
     for each_line in logs.readlines():
-        if not each_line.startswith('[') and len(msg_list) <= 0:
+        if not each_line.startswith("[") and len(msg_list) <= 0:
             continue
-        elif each_line.startswith('['):
+        elif each_line.startswith("["):
             # Get Meta-Data
-            info_str = ":".join(each_line.split(':')[:4]).strip()
-            msg_str = ":".join(each_line.split(':')[4:])
+            info_str = ":".join(each_line.split(":")[:4]).strip()
+            msg_str = ":".join(each_line.split(":")[4:])
 
             # Append Log message
             msg_list.append(msg_str)
 
             # Extract Infos
             date_list.append(info_str[0:10])
-            status_list.append(info_str[11:21].replace(' ', ''))
+            status_list.append(info_str[11:21].replace(" ", ""))
             filename_list.append(f"[{info_str[22:].split('[')[1][:-2]}]")
-            function_and_lineno_list.append(
-                f"[{info_str[22:].split('[')[2][:-1]}]")
+            function_and_lineno_list.append(f"[{info_str[22:].split('[')[2][:-1]}]")
         else:
             msg_list[len(msg_list) - 1] += each_line
 
