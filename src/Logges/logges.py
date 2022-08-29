@@ -7,8 +7,15 @@
 """
 
 import os
-from .utils import (create_pie_chart, console_data, get_saving_path,
-                    get_current_time_HM, get_daily_log_file_name, to_pdf, get_current_platform_name)
+from .utils import (
+    create_pie_chart,
+    console_data,
+    get_saving_path,
+    get_current_time_HM,
+    get_daily_log_file_name,
+    to_pdf,
+    get_current_platform_name,
+)
 
 STATUS = ["INFO", "WARNING", "ERROR"]
 FILENAME = None
@@ -50,7 +57,7 @@ class Logges:
         filename = get_daily_log_file_name(filename=Logges.get_log_name())
         saving_dir = get_saving_path()
         log_dir = os.path.join(saving_dir, filename)
-        log_file = open(f"{log_dir}", 'a')
+        log_file = open(f"{log_dir}", "a")
         log_file.writelines(msg + "\n")
 
     def get_status_message(status: int) -> str:
@@ -95,36 +102,34 @@ class Logges:
     @staticmethod
     def to_markdown() -> None:
         """Convert days logs as markdown file.."""
-        icons = {
-            "INFO": ":passport_control:",
-            "WARNING": ":vs:",
-            "ERROR": ":sos:"
-        }
+        icons = {"INFO": ":passport_control:", "WARNING": ":vs:", "ERROR": ":sos:"}
         type_counter = [0, 0, 0]
-        md_file = os.path.join(SAVINGPATH, get_daily_log_file_name(
-            filename=Logges.get_log_name(), markdown=True))
-        markdown_file = open(md_file, 'w')
+        md_file = os.path.join(
+            SAVINGPATH,
+            get_daily_log_file_name(filename=Logges.get_log_name(), markdown=True),
+        )
+        markdown_file = open(md_file, "w")
 
         filename = get_daily_log_file_name(filename=Logges.get_log_name())
         file_dir = get_saving_path()
         log_path = os.path.join(file_dir, filename)
-        with open(log_path, 'r') as file:
+        with open(log_path, "r") as file:
             logs = file.readlines()
             file.close()
-        only_filename = "_".join(filename.split(
-            '_')[1:]) + ".py".replace(".log", '')
-        file_date = filename.split('_')[0]
+        only_filename = "_".join(filename.split("_")[1:]) + ".py".replace(".log", "")
+        file_date = filename.split("_")[0]
 
         if get_current_platform_name() == "Windows":
             only_filename = os.path.split(only_filename)[1]
         markdown_file.writelines(
-            f"# {only_filename} {file_date} Logs :see_no_evil: :hear_no_evil: :speak_no_evil:\n")
+            f"# {only_filename} {file_date} Logs :see_no_evil: :hear_no_evil: :speak_no_evil:\n"
+        )
         markdown_file.writelines("![](pie_chart.png)\n")
-        markdown_file.writelines(
-            "|TYPE|TIME|MESSAGE|\n| :--: | :--: | :--: |\n")
+        markdown_file.writelines("|TYPE|TIME|MESSAGE|\n| :--: | :--: | :--: |\n")
         for each_log in logs[::-1]:
-            log_type = each_log.split("\t")[0].split(
-                " ")[0].replace('[', '').replace(']', '')
+            log_type = (
+                each_log.split("\t")[0].split(" ")[0].replace("[", "").replace("]", "")
+            )
             if log_type == list(icons.keys())[0]:
                 type_counter[0] += 1
             elif log_type == list(icons.keys())[1]:
@@ -132,20 +137,30 @@ class Logges:
             elif log_type == list(icons.keys())[2]:
                 type_counter[2] += 1
 
-            log_time = each_log.split("\t")[0].split(
-                " ")[1].replace('[', '').replace(']', '')[0:-1]
+            log_time = (
+                each_log.split("\t")[0]
+                .split(" ")[1]
+                .replace("[", "")
+                .replace("]", "")[0:-1]
+            )
             log_msg = each_log.split("\t")[1]
-            log_msg.replace("\n", '')
+            log_msg.replace("\n", "")
             try:
                 markdown_file.writelines(
-                    f"|{icons[log_type]} | {log_time} | {log_msg.strip()}| ")
+                    f"|{icons[log_type]} | {log_time} | {log_msg.strip()}| "
+                )
                 markdown_file.writelines("\n")
             except:
-                raise("Please check your icon.")
+                raise ("Please check your icon.")
         markdown_file.writelines(
-            "All right reserved 2022 &copy;&nbsp; [Logges](https://github.com/uysalserkan/Logges) - *[uysalserkan](https://github.com/uysalserkan/) & [Ozkan](https://github.com/ozkanuysal)*\n")
-        create_pie_chart(saving_path=SAVINGPATH,
-                         info_size=type_counter[0], warning_size=type_counter[1], error_size=type_counter[2])
+            "All right reserved 2022 &copy;&nbsp; [Logges](https://github.com/uysalserkan/Logges) - *[uysalserkan](https://github.com/uysalserkan/) & [Ozkan](https://github.com/ozkanuysal)*\n"
+        )
+        create_pie_chart(
+            saving_path=SAVINGPATH,
+            info_size=type_counter[0],
+            warning_size=type_counter[1],
+            error_size=type_counter[2],
+        )
 
     @staticmethod
     def console_data() -> None:
