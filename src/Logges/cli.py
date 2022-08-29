@@ -30,7 +30,8 @@ def validate_date(_, __, value):
         return (date_str[:4] + "-" + date_str[4:6] + "-" + date_str[6:])
     else:
         raise click.BadParameter(
-            message="Please enter date format as: " + click.style("1998-25-08", fg='red', blink=True)
+            message="Please enter date format as: " +
+            click.style("1998-25-08", fg='red', blink=True)
         )
 
 
@@ -57,7 +58,8 @@ def list_logs(_max: str, _min: str):
               "-f",
               required=True,
               help="Log file name. If you don't know please use "
-                   + click.style("show", fg='blue', underline=True, reverse=True)
+                   + click.style("show", fg='blue',
+                                 underline=True, reverse=True)
                    + " parameter.", callback=validate_file)
 def show_log_file(file: Union[str, any]) -> None:
     """SHOW."""
