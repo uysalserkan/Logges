@@ -4,7 +4,6 @@ from types import NoneType
 from typing import Union
 
 import click
-
 from Logges import Logges
 
 from .utils import console_data
