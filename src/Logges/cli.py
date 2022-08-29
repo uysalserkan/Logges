@@ -14,10 +14,9 @@ def validate_file(_, __, value):
             log_files.append(each_file)
     if value not in log_files:
         raise click.BadParameter(
-            message="Please enter a "
-            + click.style("valid", fg="red", reverse=True, underline=True)
-            + " log filename."
-        )
+            message="Please enter a " +
+            click.style("valid", fg="red", reverse=True, underline=True) +
+            " log filename.")
     else:
         return value
 
@@ -33,25 +32,28 @@ def validate_date(_, __, value):
         return date_str[:4] + "-" + date_str[4:6] + "-" + date_str[6:]
     else:
         raise click.BadParameter(
-            message="Please enter date format as: "
-            + click.style("1998-25-08", fg="red", blink=True)
-        )
+            message="Please enter date format as: " +
+            click.style("1998-25-08", fg="red", blink=True))
 
 
 @click.group(name="Logges-cli")
-@click.version_option(version="2.0.0", package_name="Logges", prog_name="Logges")
+@click.version_option(version="2.0.0",
+                      package_name="Logges",
+                      prog_name="Logges")
 def Logges_cli():
     """Base of group of options."""
     pass
 
 
 @Logges_cli.command(name="list", help="List all log files.")
-@click.option(
-    "--max", required=False, help="Show logs of maximum date.", callback=validate_date
-)
-@click.option(
-    "--min", required=False, help="Show logs of minimum date.", callback=validate_date
-)
+@click.option("--max",
+              required=False,
+              help="Show logs of maximum date.",
+              callback=validate_date)
+@click.option("--min",
+              required=False,
+              help="Show logs of minimum date.",
+              callback=validate_date)
 def list_logs(_max: str, _min: str):
     """LIST."""
     for each_file in os.listdir(os.path.split(__file__)[0]):
@@ -68,9 +70,9 @@ def list_logs(_max: str, _min: str):
     "--file",
     "-f",
     required=True,
-    help="Log file name. If you don't know please use "
-    + click.style("show", fg="blue", underline=True, reverse=True)
-    + " parameter.",
+    help="Log file name. If you don't know please use " +
+    click.style("show", fg="blue", underline=True, reverse=True) +
+    " parameter.",
     callback=validate_file,
 )
 def show_log_file(file: Union[str, any]) -> None:
