@@ -12,9 +12,11 @@ def validate_file(_, __, value):
         if ".log" in each_file:
             log_files.append(each_file)
     if value not in log_files:
-        raise click.BadParameter(message="Please enter a " +
-                                         click.style("valid", fg='red', reverse=True, underline=True) +
-                                         " log filename.")
+        raise click.BadParameter(
+            message="Please enter a "
+            + click.style("valid", fg="red", reverse=True, underline=True)
+            + " log filename."
+        )
     else:
         return value
 
@@ -23,15 +25,15 @@ def validate_date(_, __, value):
     """VALIDATE."""
     if isinstance(value, NoneType):
         return value
-    if value[4] == ':' and value[7] == ':':
-        return value.replace(':', '-')
+    if value[4] == ":" and value[7] == ":":
+        return value.replace(":", "-")
     elif len(str(value)) == 8:
         date_str = str(value)
-        return (date_str[:4] + "-" + date_str[4:6] + "-" + date_str[6:])
+        return date_str[:4] + "-" + date_str[4:6] + "-" + date_str[6:]
     else:
         raise click.BadParameter(
-            message="Please enter date format as: " +
-            click.style("1998-25-08", fg='red', blink=True)
+            message="Please enter date format as: "
+            + click.style("1998-25-08", fg="red", blink=True)
         )
 
 
@@ -43,8 +45,12 @@ def Logges_cli():
 
 
 @Logges_cli.command(name="list", help="List all log files.")
-@click.option("--max", required=False, help="Show logs of maximum date.", callback=validate_date)
-@click.option("--min", required=False, help="Show logs of minimum date.", callback=validate_date)
+@click.option(
+    "--max", required=False, help="Show logs of maximum date.", callback=validate_date
+)
+@click.option(
+    "--min", required=False, help="Show logs of minimum date.", callback=validate_date
+)
 def list_logs(_max: str, _min: str):
     """LIST."""
     for each_file in os.listdir(os.path.split(__file__)[0]):
@@ -53,19 +59,24 @@ def list_logs(_max: str, _min: str):
                 print(each_file)
 
 
-@click.command(name="show", help="Show entered log file if exists.", )
-@click.option("--file",
-              "-f",
-              required=True,
-              help="Log file name. If you don't know please use "
-                   + click.style("show", fg='blue',
-                                 underline=True, reverse=True)
-                   + " parameter.", callback=validate_file)
+@click.command(
+    name="show",
+    help="Show entered log file if exists.",
+)
+@click.option(
+    "--file",
+    "-f",
+    required=True,
+    help="Log file name. If you don't know please use "
+    + click.style("show", fg="blue", underline=True, reverse=True)
+    + " parameter.",
+    callback=validate_file,
+)
 def show_log_file(file: Union[str, any]) -> None:
     """SHOW."""
     file = open(file).readlines()
     print(file)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     Logges_cli()
