@@ -6,25 +6,21 @@
 @mails: uysalserkan08@gmail.com, ozkan.uysal.2009@hotmail.com
 """
 
-import os
 import datetime
+import os
 import platform
+
 import matplotlib.pyplot as plt
+from reportlab.lib.colors import Color
+from reportlab.lib.enums import TA_CENTER, TA_LEFT
+from reportlab.lib.pagesizes import LETTER, inch
+from reportlab.lib.styles import ParagraphStyle
+from reportlab.platypus import (Image, PageBreak, Paragraph, SimpleDocTemplate,
+                                Spacer)
+from reportlab.platypus import Table as reportlabTable
+from reportlab.platypus import TableStyle
 from rich.console import Console
 from rich.table import Table
-from reportlab.lib.enums import TA_LEFT, TA_CENTER
-from reportlab.lib.styles import ParagraphStyle
-from reportlab.lib.pagesizes import LETTER, inch
-from reportlab.platypus import (
-    SimpleDocTemplate,
-    Paragraph,
-    PageBreak,
-    Image,
-    Spacer,
-    TableStyle,
-)
-from reportlab.platypus import Table as reportlabTable
-from reportlab.lib.colors import Color
 
 
 def get_current_platform_name() -> str:
