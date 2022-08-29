@@ -25,15 +25,26 @@ def validate_date(_, __, value):
     """VALIDATE."""
     if isinstance(value, NoneType):
         return value
+
+    elif len(str(value)) < 8:
+        raise click.BadParameter(
+            message="Please enter date format as: " +
+            click.style("1998-08-25", fg="red", blink=True))
+
     if value[4] == ":" and value[7] == ":":
-        return value.replace(":", "-")
+        return str(value).replace(":", "-")
+
+    elif value[4] == "-" and value[7] == "-":
+        return str(value)
+
     elif len(str(value)) == 8:
         date_str = str(value)
         return date_str[:4] + "-" + date_str[4:6] + "-" + date_str[6:]
+
     else:
         raise click.BadParameter(
             message="Please enter date format as: " +
-            click.style("1998-25-08", fg="red", blink=True))
+            click.style("1998-08-25", fg="red", blink=True))
 
 
 @click.group(name="Logges-cli")
@@ -46,23 +57,32 @@ def Logges_cli():
 
 
 @Logges_cli.command(name="list", help="List all log files.")
-@click.option("--max",
+@click.option("--max_date",
               required=False,
               help="Show logs of maximum date.",
               callback=validate_date)
-@click.option("--min",
+@click.option("--min_date",
               required=False,
               help="Show logs of minimum date.",
               callback=validate_date)
-def list_logs(_max: str, _min: str):
+def list_logs(max_date: str, min_date: str):
     """LIST."""
     for each_file in os.listdir(os.path.split(__file__)[0]):
         if ".log" in each_file:
-            if (each_file >= _min) or (each_file <= _max):
+            if (not isinstance(min_date, NoneType)) and (not isinstance(max_date, NoneType)):
+                if (each_file[:10] >= min_date) and (each_file[:10] <= max_date):
+                    print(each_file)
+            elif (not isinstance(min_date, NoneType)):
+                if (each_file[:10] >= min_date):
+                    print(each_file)
+            elif (not isinstance(max_date, NoneType)):
+                if (each_file[:10] <= max_date):
+                    print(each_file)
+            else:
                 print(each_file)
 
 
-@click.command(
+@Logges_cli.command(
     name="show",
     help="Show entered log file if exists.",
 )
@@ -77,7 +97,9 @@ def list_logs(_max: str, _min: str):
 )
 def show_log_file(file: Union[str, any]) -> None:
     """SHOW."""
-    file = open(file).readlines()
+    file = open(
+        os.path.join(os.path.split(__file__)[0], file)
+    ).readlines()
     print(file)
 
 
