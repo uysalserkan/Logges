@@ -21,6 +21,7 @@ from .utils import to_pdf
 
 FILENAME = None
 SAVINGPATH = None
+STATUS_LEVEL = None
 
 
 class Logges:
@@ -40,11 +41,11 @@ class Logges:
         `DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL`
         """
 
-        DEBUG = "DEBUG"
-        INFO = "INFO"
-        WARNING = "WARNING"
-        ERROR = "ERROR"
-        CRITICAL = "CRITICAL"
+        DEBUG = 0
+        INFO = 1
+        WARNING = 2
+        ERROR = 3
+        CRITICAL = 4
 
         @staticmethod
         def get_int_dict() -> Dict[str, int]:
@@ -71,16 +72,22 @@ class Logges:
             return icon_status_dict
 
     @staticmethod
-    def setup(logname: str = None) -> None:
+    def setup(logname: str = None, status_level: LogStatus = LogStatus.ERROR) -> None:
         """Set the environment.
 
         Set up environment and setting the logfile name.
         If you don't enter any name, the log name will be executing script name.
 
+        Parameters:
+            logname `str`: It defines your log file name.
+            status_level `LogStatus`: If status equal or greater than parameter, automatically print it.
+            Default value is `LogStatus.ERROR`
+
         Return:
             None
         """
-        global FILENAME, SAVINGPATH
+        global FILENAME, SAVINGPATH, STATUS_LEVEL
+        STATUS_LEVEL = status_level.value
         filepath = sys._getframe().f_back.f_code.co_filename
         abs_filepath = os.path.abspath(filepath)
         if logname:
@@ -99,7 +106,7 @@ class Logges:
         Return:
             None
         """
-        global FILENAME
+        global FILENAME, STATUS_LEVEL
         filename = get_daily_log_file_name(filename=FILENAME)
         # saving_dir = get_saving_path()
         log_dir = os.path.join(SAVINGPATH, filename)
@@ -110,7 +117,7 @@ class Logges:
     @staticmethod
     def log(msg: str,
             status: LogStatus = LogStatus.DEBUG,
-            print_log: bool = True) -> None:
+            print_log: bool = False) -> None:
         r"""Log a string with status message, please do not use `\n` character in your strigs.
 
         Parameters:
@@ -122,9 +129,11 @@ class Logges:
             None
         """
         cur_time = get_current_time_HM()
-        msg = f"[{cur_time}] [{status.value:8s}]: {msg}"
+        msg = f"[{cur_time}] [{status.name:8s}]: {msg}"
 
         if print_log:
+            print(msg)
+        elif status.value >= STATUS_LEVEL:
             print(msg)
 
         Logges._write_logs(msg=msg)
