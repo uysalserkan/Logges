@@ -5,9 +5,11 @@
 @date: 2022
 @mails: uysalserkan08@gmail.com, ozkan.uysal.2009@hotmail.com
 """
-import datetime
+
 import os
+import datetime
 import platform
+
 import sys
 from io import TextIOWrapper
 from typing import Dict
@@ -15,21 +17,14 @@ from typing import List
 from typing import Tuple
 
 import matplotlib.pyplot as plt
-from reportlab.lib.colors import Color
-from reportlab.lib.enums import TA_CENTER
-from reportlab.lib.enums import TA_LEFT
-from reportlab.lib.pagesizes import inch
-from reportlab.lib.pagesizes import LETTER
-from reportlab.lib.styles import ParagraphStyle
-from reportlab.platypus import Image
-from reportlab.platypus import PageBreak
-from reportlab.platypus import Paragraph
-from reportlab.platypus import SimpleDocTemplate
-from reportlab.platypus import Spacer
-from reportlab.platypus import Table as reportlabTable
-from reportlab.platypus import TableStyle
 from rich.console import Console
 from rich.table import Table
+from reportlab.lib.enums import TA_LEFT, TA_CENTER
+from reportlab.lib.styles import ParagraphStyle
+from reportlab.lib.pagesizes import LETTER, inch
+from reportlab.platypus import (SimpleDocTemplate, Paragraph, PageBreak, Image, Spacer, TableStyle)
+from reportlab.platypus import Table as reportlabTable
+from reportlab.lib.colors import Color
 
 
 def get_current_platform_name() -> str:
@@ -74,28 +69,18 @@ def create_pie_chart(saving_path: str, status_dict: Dict[str, int]) -> None:
     chart_explode = [0, 0.01, 0.01, 0.01, 0.01]
     chart_colors = ["gray", "blue", "yellow", "red", "darkred"]
 
+
     logs_size = list(status_dict.values())
 
-    plt.pie(
-        logs_size,
-        labels=chart_labels,
-        explode=chart_explode,
-        colors=chart_colors,
-        autopct="%1.1f%%",
-    )
+    plt.pie(logs_size, labels=chart_labels, explode=chart_explode, colors=chart_colors, autopct='%1.1f%%')
 
     png_path = os.path.join(saving_path, "pie_chart.png")
 
     plt.savefig(f"{png_path}")
 
 
-def get_daily_log_file_name(filename: str,
-                            markdown: bool = False,
-                            pdf: bool = False) -> str:
-    """get_daily_log_file_name.
-
-    get_daily_log_file_name method returns a filename, which will be name of the saving file,
-    priority sequence is: pdf, markdown and log file.
+def get_daily_log_file_name(filename: str, markdown: bool = False, pdf: bool = False) -> str:
+    """get_daily_log_file_name method returns a filename, which will be name of the saving file, priority sequence is: pdf, markdown and log file.
 
     Parameters:
         filename `str`: Running script name.
@@ -120,8 +105,8 @@ def get_current_time_HM() -> str:
     Return:
         hour_min_sec `str`: Current hour:minute:second.
     """
-    hour_min_sec = datetime.datetime.today().strftime("%H:%M:%S")
-    return f"{hour_min_sec}"
+    hour_min_sec = datetime.datetime.today().strftime('%H:%M:%S')
+    return f"[{hour_min_sec}]: "
 
 
 def console_data(script_name: str, status_dict: Dict[str, int],
@@ -136,6 +121,7 @@ def console_data(script_name: str, status_dict: Dict[str, int],
         None
     """
     dir_path = get_saving_path()
+
     log_dir = os.path.join(dir_path, script_name)
 
     file = open(log_dir, "r")
@@ -195,7 +181,6 @@ def console_data(script_name: str, status_dict: Dict[str, int],
         f"\tERROR: %{round(status_dict['ERROR']/total_length*100, 2)}" +
         f"\tCRITICAL: %{round(status_dict['CRITICAL']/total_length*100, 2)}")
 
-
 def to_pdf(script_name: str, saving_path: str, status_dict: Dict[str,
                                                                  int]) -> None:
     """Export the logs to a file with `.pdf` format.
@@ -211,17 +196,13 @@ def to_pdf(script_name: str, saving_path: str, status_dict: Dict[str,
 
     def copyright_text() -> Paragraph:
         """We are add a text on the page."""
-        uysaltext = 'All right reserved 2022 &copy;&nbsp;<a href="https://github.com/uysalserkan/Logges">Logges</a> - \
-<strong><a href="https://github.com/uysalserkan">uysalserkan</a></strong> & \
-<strong><a href="https://github.com/ozkanuysal">Ozkan</a></strong>'
-
-        copyright_style = ParagraphStyle("copyright_style",
-                                         fontSize=8,
-                                         alignment=TA_CENTER)
+        uysaltext = 'All right reserved 2022 &copy;&nbsp;<a href="https://github.com/uysalserkan/Logges">Logges</a> - <strong><a href="https://github.com/uysalserkan">uysalserkan</a></strong> & <strong><a href="https://github.com/ozkanuysal">Ozkan</a></strong>'
+        copyright_style = ParagraphStyle("copyright_style", fontSize=8, alignment=TA_CENTER)
         uysaltext_p = Paragraph(uysaltext, copyright_style)
         return uysaltext_p
 
     type_colors = {
+
         "DEBUG": "gray",
         "INFO": "blue",
         "WARNING": "orange",
@@ -236,6 +217,7 @@ def to_pdf(script_name: str, saving_path: str, status_dict: Dict[str,
     page_elements = []
 
     # Reading data başlıyor..
+
     file = open(log_dir, "r")
 
     (
@@ -247,9 +229,7 @@ def to_pdf(script_name: str, saving_path: str, status_dict: Dict[str,
     ) = extract_logs(logs=file)
 
     # Header Başlığı Ekleniyor.
-    header_text = (
-        f"{script_name}.py {datetime.datetime.today().strftime('%Y-%m-%d')} Logs"
-    )
+    header_text = f"{script_name}.py {datetime.datetime.today().strftime('%Y-%m-%d')} Logs"
     header_style = ParagraphStyle("H1", fontSize=18, alignment=TA_LEFT)
     header = Paragraph(header_text, header_style)
     page_elements.append(header)
@@ -308,6 +288,7 @@ def to_pdf(script_name: str, saving_path: str, status_dict: Dict[str,
             [_date, _log_status, _filename, _functname, _log_msg]):
             if index == 1:
                 table_text = f"<font color='{color}'>{item}</font>"
+
             else:
                 table_text = f"<b>{item}</b>"
             ptext = Paragraph(table_text, alignStyle)
@@ -316,19 +297,17 @@ def to_pdf(script_name: str, saving_path: str, status_dict: Dict[str,
 
     table = reportlabTable(table_data, colWidths=[70, 100, 100, 100, 200])
     tStyle = TableStyle([
-        ("ALIGN", (0, -1), (-1, -1), "LEFT"),
-        ("ALIGN", (1, 0), (1, -1), "RIGHT"),
-        ("LINEABOVE", (0, 0), (-1, -1), 1, Color(0.2, 0.3, 0.4)),
-        ("BACKGROUND", (0, 0), (-1, 0), Color(102 / 255, 191 / 255,
-                                              191 / 255)),
+        ('ALIGN', (0, -1), (-1, -1), 'LEFT'),
+        ("ALIGN", (1, 0), (1, -1), 'RIGHT'),
+        ('LINEABOVE', (0, 0), (-1, -1), 1, Color(0.2, 0.3, 0.4)),
+        ('BACKGROUND', (0, 0), (-1, 0), Color(102 / 255, 191 / 255, 191 / 255)),
     ])
     table.setStyle(tStyle)
     page_elements.append(table)
 
     page_elements.append(copyright_text())
     page_elements.append(PageBreak())
-    to_pdf_path = os.path.join(
-        saving_path, get_daily_log_file_name(filename=script_name, pdf=True))
+    to_pdf_path = os.path.join(saving_path, get_daily_log_file_name(filename=script_name, pdf=True))
     pdf_doc = SimpleDocTemplate(to_pdf_path, pagesize=LETTER)
     pdf_doc.multiBuild(page_elements)
 

@@ -5,7 +5,9 @@
 @date: 2022
 @mails: uysalserkan08@gmail.com, ozkan.uysal.2009@hotmail.com
 """
+
 import os
+
 import sys
 from enum import Enum
 from shutil import copy2
@@ -22,8 +24,10 @@ from .utils import get_log_info
 from .utils import get_saving_path
 from .utils import to_pdf
 
+
 FILENAME = None
 SAVINGPATH = None
+
 STATUS_LEVEL = None
 IGNORE_FILES_AND_DIRS = []
 
@@ -35,8 +39,7 @@ class Logges:
 
     Main method is `log` and that have 3 argument, please check its docstring.
 
-    You can export you logs with `to_pdf()` and `to_markdown()`,
-    if you want to just print the logs, use `console_data()` method.
+    You can export you logs with `to_pdf()` and `to_markdown()`, if you want to just print the logs, use `console_data()` method.
     """
 
     class LogStatus(Enum):
@@ -76,33 +79,19 @@ class Logges:
             return icon_status_dict
 
     @staticmethod
-    def setup(logname: str = None,
-              status_level: LogStatus = LogStatus.ERROR) -> None:
-        """Set the environment.
-
-        Set up environment and setting the logfile name.
-        If you don't enter any name, the log name will be executing script name.
-
-        Parameters:
-            logname `str`: It defines your log file name.
-            status_level `LogStatus`: If status equal or greater than parameter, automatically print it.
-            Default value is `LogStatus.ERROR`
+    def setup(filepath) -> None:
+        """You need to enter just `__file__` input to filepath argument. This method will name your logs as running script name.
 
         Return:
             None
         """
-        global FILENAME, SAVINGPATH, STATUS_LEVEL
-        STATUS_LEVEL = status_level.value
-        filepath = sys._getframe().f_back.f_code.co_filename
-        abs_filepath = os.path.abspath(filepath)
-        if logname:
-            FILENAME = logname
-        else:
-            FILENAME = os.path.split(abs_filepath)[1].split(".py")[0]
-        SAVINGPATH = os.path.split(abs_filepath)[0]
+        global FILENAME, SAVINGPATH
+        path = os.path.abspath(filepath)
+        FILENAME = os.path.split(path)[1].split(".py")[0]
+        SAVINGPATH = os.path.split(path)[0]
 
     @staticmethod
-    def _write_logs(msg: str) -> None:
+    def write_logs(msg: str) -> None:
         """write_logs method called by `logs` method for writting all logs to a file. You do not need this method.
 
         Parameters:
@@ -111,13 +100,29 @@ class Logges:
         Return:
             None
         """
-        global FILENAME, STATUS_LEVEL
-        filename = get_daily_log_file_name(filename=FILENAME)
-        # saving_dir = get_saving_path()
-        log_dir = os.path.join(SAVINGPATH, filename)
-        log_file = open(f"{log_dir}", "a")
+        filename = get_daily_log_file_name(filename=Logges.get_log_name())
+        saving_dir = get_saving_path()
+        log_dir = os.path.join(saving_dir, filename)
+        log_file = open(f"{log_dir}", 'a')
         log_file.writelines(msg + "\n")
-        log_file.close()
+
+    def get_status_message(status: int) -> str:
+        """Hidden internal method, that returns the status to text.
+
+        Parameters:
+            status `int`: Status number 0 to 2.
+
+        Return:
+            status_text `str`: What is status name.
+        """
+        status_text = f"[{STATUS[status]}] "
+        return status_text
+
+    @staticmethod
+    def get_log_name() -> str:
+        """Actually this method do nothing."""
+        global FILENAME
+        return FILENAME
 
     @staticmethod
     def ignore_files(name: Union[str, List[str]]) -> None:
@@ -142,11 +147,12 @@ class Logges:
         status: LogStatus = LogStatus.DEBUG,
         print_log: bool = False,
     ) -> None:
+
         r"""Log a string with status message, please do not use `\n` character in your strigs.
 
         Parameters:
-            msg `str`: A string, showing on your report.
-            status `LogStatus`: `Default is `DEBUG`.
+            logs `str`: A string, showing on your report.
+            status `int`: `0` is info, `1` is warning and `2` is error, default is 0.
             print_log `bool`: If you set that parameter True, print that log, default is False.
 
         Return:
@@ -154,6 +160,7 @@ class Logges:
         """
         global IGNORE_FILES_AND_DIRS
         cur_time = get_current_time_HM()
+
         if not isinstance(msg, str):
             msg = str(msg)
 
@@ -167,12 +174,11 @@ class Logges:
 
         msg = f"[{cur_time}] [{status.name:8s}] [{filename}] [{funct}]: {msg}"
 
+
         if print_log:
             print(msg)
-        elif status.value >= STATUS_LEVEL:
-            print(msg)
 
-        Logges._write_logs(msg=msg)
+        Logges.write_logs(msg=msg)
 
     @staticmethod
     def export(markdown: bool = False,
