@@ -1,8 +1,8 @@
 """CLI app."""
 import os
-from typing import Union
-
 import click
+
+from typing import Union
 from Logges import Logges
 
 from .utils import console_data
@@ -52,7 +52,7 @@ def validate_date(_, __, value):
 @click.group(name="Logges-cli")
 @click.version_option(version="2.0", package_name="Logges", prog_name="Logges")
 def Logges_cli():
-    """Base of group of options."""
+    """ALL Base of group of options."""
     pass
 
 
@@ -79,24 +79,24 @@ def list_logs(max_date: str, min_date: str):
                 if (each_file[:10] >= min_date) and (each_file[:10] <=
                                                      max_date):
                     log_file_list.append(
-                        click.style(text=f"*: ", fg="bright_green", bold=True)
+                        click.style(text="*: ", fg="bright_green", bold=True)
                         + click.style(
                             text=each_file, fg="bright_cyan", italic=True))
             elif not isinstance(min_date, None):
                 if each_file[:10] >= min_date:
                     log_file_list.append(
-                        click.style(text=f"*: ", fg="bright_green", bold=True)
+                        click.style(text="*: ", fg="bright_green", bold=True)
                         + click.style(
                             text=each_file, fg="bright_cyan", italic=True))
             elif not isinstance(max_date, None):
                 if each_file[:10] <= max_date:
                     log_file_list.append(
-                        click.style(text=f"*: ", fg="bright_green", bold=True)
+                        click.style(text="*: ", fg="bright_green", bold=True)
                         + click.style(
                             text=each_file, fg="bright_cyan", italic=True))
             else:
                 log_file_list.append(
-                    click.style(text=f"*: ", fg="bright_green", bold=True) +
+                    click.style(text="*: ", fg="bright_green", bold=True) +
                     click.style(text=each_file, fg="bright_cyan", italic=True))
     click.echo_via_pager("\n".join(log_file_list))
 
@@ -116,7 +116,6 @@ def list_logs(max_date: str, min_date: str):
 )
 def show_log_file(file: Union[str, any]) -> None:
     """SHOW."""
-
     console_data(
         script_name=file,
         status_dict=Logges.LogStatus.get_blank_dict(),
