@@ -147,7 +147,6 @@ class Logges:
         status: LogStatus = LogStatus.DEBUG,
         print_log: bool = False,
     ) -> None:
-
         r"""Log a string with status message, please do not use `\n` character in your strigs.
 
         Parameters:
@@ -173,7 +172,6 @@ class Logges:
         filename = os.path.split(filepath)[1]
 
         msg = f"[{cur_time}] [{status.name:8s}] [{filename}] [{funct}]: {msg}"
-
 
         if print_log:
             print(msg)

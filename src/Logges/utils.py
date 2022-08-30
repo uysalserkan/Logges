@@ -22,7 +22,8 @@ from rich.table import Table
 from reportlab.lib.enums import TA_LEFT, TA_CENTER
 from reportlab.lib.styles import ParagraphStyle
 from reportlab.lib.pagesizes import LETTER, inch
-from reportlab.platypus import (SimpleDocTemplate, Paragraph, PageBreak, Image, Spacer, TableStyle)
+from reportlab.platypus import (
+    SimpleDocTemplate, Paragraph, PageBreak, Image, Spacer, TableStyle)
 from reportlab.platypus import Table as reportlabTable
 from reportlab.lib.colors import Color
 
@@ -69,10 +70,10 @@ def create_pie_chart(saving_path: str, status_dict: Dict[str, int]) -> None:
     chart_explode = [0, 0.01, 0.01, 0.01, 0.01]
     chart_colors = ["gray", "blue", "yellow", "red", "darkred"]
 
-
     logs_size = list(status_dict.values())
 
-    plt.pie(logs_size, labels=chart_labels, explode=chart_explode, colors=chart_colors, autopct='%1.1f%%')
+    plt.pie(logs_size, labels=chart_labels, explode=chart_explode,
+            colors=chart_colors, autopct='%1.1f%%')
 
     png_path = os.path.join(saving_path, "pie_chart.png")
 
@@ -143,8 +144,7 @@ def console_data(script_name: str, status_dict: Dict[str, int],
     }
 
     rich_table = Table(
-        title=
-        f"{log_dir.split('/')[-1]} :see_no_evil: :hear_no_evil: :speak_no_evil:"
+        title=f"{log_dir.split('/')[-1]} :see_no_evil: :hear_no_evil: :speak_no_evil:"
     )
 
     rich_table.add_column("DATE", justify="center")
@@ -181,6 +181,7 @@ def console_data(script_name: str, status_dict: Dict[str, int],
         f"\tERROR: %{round(status_dict['ERROR']/total_length*100, 2)}" +
         f"\tCRITICAL: %{round(status_dict['CRITICAL']/total_length*100, 2)}")
 
+
 def to_pdf(script_name: str, saving_path: str, status_dict: Dict[str,
                                                                  int]) -> None:
     """Export the logs to a file with `.pdf` format.
@@ -197,7 +198,8 @@ def to_pdf(script_name: str, saving_path: str, status_dict: Dict[str,
     def copyright_text() -> Paragraph:
         """We are add a text on the page."""
         uysaltext = 'All right reserved 2022 &copy;&nbsp;<a href="https://github.com/uysalserkan/Logges">Logges</a> - <strong><a href="https://github.com/uysalserkan">uysalserkan</a></strong> & <strong><a href="https://github.com/ozkanuysal">Ozkan</a></strong>'
-        copyright_style = ParagraphStyle("copyright_style", fontSize=8, alignment=TA_CENTER)
+        copyright_style = ParagraphStyle(
+            "copyright_style", fontSize=8, alignment=TA_CENTER)
         uysaltext_p = Paragraph(uysaltext, copyright_style)
         return uysaltext_p
 
@@ -285,7 +287,7 @@ def to_pdf(script_name: str, saving_path: str, status_dict: Dict[str,
 
         row_data = []
         for index, item in enumerate(
-            [_date, _log_status, _filename, _functname, _log_msg]):
+                [_date, _log_status, _filename, _functname, _log_msg]):
             if index == 1:
                 table_text = f"<font color='{color}'>{item}</font>"
 
@@ -307,7 +309,8 @@ def to_pdf(script_name: str, saving_path: str, status_dict: Dict[str,
 
     page_elements.append(copyright_text())
     page_elements.append(PageBreak())
-    to_pdf_path = os.path.join(saving_path, get_daily_log_file_name(filename=script_name, pdf=True))
+    to_pdf_path = os.path.join(
+        saving_path, get_daily_log_file_name(filename=script_name, pdf=True))
     pdf_doc = SimpleDocTemplate(to_pdf_path, pagesize=LETTER)
     pdf_doc.multiBuild(page_elements)
 
