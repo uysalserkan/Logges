@@ -5,9 +5,7 @@
 @date: 2022
 @mails: uysalserkan08@gmail.com, ozkan.uysal.2009@hotmail.com
 """
-
 import os
-
 import sys
 from enum import Enum
 from shutil import copy2
@@ -23,7 +21,6 @@ from .utils import get_daily_log_file_name
 from .utils import get_log_info
 from .utils import get_saving_path
 from .utils import to_pdf
-
 
 FILENAME = None
 SAVINGPATH = None
@@ -103,7 +100,7 @@ class Logges:
         filename = get_daily_log_file_name(filename=Logges.get_log_name())
         saving_dir = get_saving_path()
         log_dir = os.path.join(saving_dir, filename)
-        log_file = open(f"{log_dir}", 'a')
+        log_file = open(f"{log_dir}", "a")
         log_file.writelines(msg + "\n")
 
     def get_status_message(status: int) -> str:
@@ -147,7 +144,6 @@ class Logges:
         status: LogStatus = LogStatus.DEBUG,
         print_log: bool = False,
     ) -> None:
-
         r"""Log a string with status message, please do not use `\n` character in your strigs.
 
         Parameters:
@@ -173,7 +169,6 @@ class Logges:
         filename = os.path.split(filepath)[1]
 
         msg = f"[{cur_time}] [{status.name:8s}] [{filename}] [{funct}]: {msg}"
-
 
         if print_log:
             print(msg)
