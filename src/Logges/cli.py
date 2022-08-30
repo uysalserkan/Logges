@@ -1,6 +1,5 @@
 """CLI app."""
 import os
-from types import NoneType
 from typing import Union
 
 import click
@@ -26,7 +25,7 @@ def validate_file(_, __, value):
 
 def validate_date(_, __, value):
     """VALIDATE."""
-    if isinstance(value, NoneType):
+    if isinstance(value, None):
         return value
 
     elif len(str(value)) < 8:
@@ -53,7 +52,7 @@ def validate_date(_, __, value):
 @click.group(name="Logges-cli")
 @click.version_option(version="2.0", package_name="Logges", prog_name="Logges")
 def Logges_cli():
-    """Base of group of options."""
+    """ALL Base of group of options."""
     pass
 
 
@@ -75,29 +74,29 @@ def list_logs(max_date: str, min_date: str):
     log_file_list = []
     for each_file in os.listdir(os.path.split(__file__)[0]):
         if ".log" in each_file:
-            if (not isinstance(min_date, NoneType)) and (not isinstance(
-                    max_date, NoneType)):
+            if (not isinstance(min_date, None)) and (not isinstance(
+                    max_date, None)):
                 if (each_file[:10] >= min_date) and (each_file[:10] <=
                                                      max_date):
                     log_file_list.append(
-                        click.style(text=f"*: ", fg="bright_green", bold=True)
-                        + click.style(
+                        click.style(text="*: ", fg="bright_green", bold=True) +
+                        click.style(
                             text=each_file, fg="bright_cyan", italic=True))
-            elif not isinstance(min_date, NoneType):
+            elif not isinstance(min_date, None):
                 if each_file[:10] >= min_date:
                     log_file_list.append(
-                        click.style(text=f"*: ", fg="bright_green", bold=True)
-                        + click.style(
+                        click.style(text="*: ", fg="bright_green", bold=True) +
+                        click.style(
                             text=each_file, fg="bright_cyan", italic=True))
-            elif not isinstance(max_date, NoneType):
+            elif not isinstance(max_date, None):
                 if each_file[:10] <= max_date:
                     log_file_list.append(
-                        click.style(text=f"*: ", fg="bright_green", bold=True)
-                        + click.style(
+                        click.style(text="*: ", fg="bright_green", bold=True) +
+                        click.style(
                             text=each_file, fg="bright_cyan", italic=True))
             else:
                 log_file_list.append(
-                    click.style(text=f"*: ", fg="bright_green", bold=True) +
+                    click.style(text="*: ", fg="bright_green", bold=True) +
                     click.style(text=each_file, fg="bright_cyan", italic=True))
     click.echo_via_pager("\n".join(log_file_list))
 
@@ -117,7 +116,6 @@ def list_logs(max_date: str, min_date: str):
 )
 def show_log_file(file: Union[str, any]) -> None:
     """SHOW."""
-
     console_data(
         script_name=file,
         status_dict=Logges.LogStatus.get_blank_dict(),
