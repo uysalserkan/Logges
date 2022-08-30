@@ -98,6 +98,7 @@ def list_logs(max_date: str, min_date: str):
                         click.style(text=each_file, fg='bright_cyan', italic=True)
                     )
             count += 1
+    click.echo_via_pager("\n".join(log_file_list))
 
 
 @Logges_cli.command(
