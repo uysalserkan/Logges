@@ -1,8 +1,9 @@
 """CLI app."""
 import os
+from typing import Union
+
 import click
 
-from typing import Union
 from Logges import Logges
 
 from .utils import console_data
