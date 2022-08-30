@@ -115,9 +115,6 @@ def list_logs(max_date: str, min_date: str):
 )
 def show_log_file(file: Union[str, any]) -> None:
     """SHOW."""
-    # file = open(
-    #     os.path.join(os.path.split(__file__)[0], file)
-    # ).readlines()
 
     console_data(
         script_name=file,
