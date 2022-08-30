@@ -12,6 +12,7 @@ from shutil import copy2
 from typing import Dict
 from typing import List
 from typing import Union
+from zipfile import ZipFile
 
 from .utils import create_pie_chart
 from .utils import extract_logs
@@ -177,7 +178,8 @@ class Logges:
     @staticmethod
     def export(markdown: bool = False,
                pdf: bool = False,
-               log: bool = True) -> None:
+               log: bool = True,
+               zip: bool = False,) -> None:
         """EXPORT."""
         global SAVINGPATH, FILENAME
         lib_path = get_saving_path()
@@ -190,6 +192,43 @@ class Logges:
             Logges._to_markdown()
         if pdf:
             Logges._to_pdf()
+        if zip:
+            zip_name = os.path.join(
+                SAVINGPATH,
+                FILENAME + '.zip'
+            )
+
+            with ZipFile(file=zip_name, mode='w') as zipfile:
+                if markdown:
+                    zipfile.write(
+                        os.path.join(
+                            SAVINGPATH,
+                            get_daily_log_file_name(
+                                filename=FILENAME,
+                                markdown=True,
+                            )
+                        )
+                    )
+                if markdown:
+                    zipfile.write(
+                        os.path.join(
+                            SAVINGPATH,
+                            get_daily_log_file_name(
+                                filename=FILENAME,
+                                pdf=True,
+                            )
+                        )
+                    )
+                if log:
+                    zipfile.write(
+                        os.path.join(
+                            SAVINGPATH,
+                            get_daily_log_file_name(
+                                filename=FILENAME,
+                            )
+                        )
+                    )
+
         if not log:
             # Preserve log file at library directory
             os.remove(os.path.join(SAVINGPATH, FILENAME))
