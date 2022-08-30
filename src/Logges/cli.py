@@ -1,8 +1,8 @@
 """CLI app."""
 import os
-import click
-
 from typing import Union
+
+import click
 from Logges import Logges
 
 from .utils import console_data
@@ -79,20 +79,20 @@ def list_logs(max_date: str, min_date: str):
                 if (each_file[:10] >= min_date) and (each_file[:10] <=
                                                      max_date):
                     log_file_list.append(
-                        click.style(text="*: ", fg="bright_green", bold=True)
-                        + click.style(
+                        click.style(text="*: ", fg="bright_green", bold=True) +
+                        click.style(
                             text=each_file, fg="bright_cyan", italic=True))
             elif not isinstance(min_date, None):
                 if each_file[:10] >= min_date:
                     log_file_list.append(
-                        click.style(text="*: ", fg="bright_green", bold=True)
-                        + click.style(
+                        click.style(text="*: ", fg="bright_green", bold=True) +
+                        click.style(
                             text=each_file, fg="bright_cyan", italic=True))
             elif not isinstance(max_date, None):
                 if each_file[:10] <= max_date:
                     log_file_list.append(
-                        click.style(text="*: ", fg="bright_green", bold=True)
-                        + click.style(
+                        click.style(text="*: ", fg="bright_green", bold=True) +
+                        click.style(
                             text=each_file, fg="bright_cyan", italic=True))
             else:
                 log_file_list.append(
