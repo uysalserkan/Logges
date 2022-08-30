@@ -9,19 +9,12 @@ import os
 import sys
 from enum import Enum
 from shutil import copy2
-from typing import Dict
-from typing import List
-from typing import Union
+from typing import Dict, List, Union
 from zipfile import ZipFile
 
-from .utils import create_pie_chart
-from .utils import extract_logs
-from .utils import get_current_platform_name
-from .utils import get_current_time_HM
-from .utils import get_daily_log_file_name
-from .utils import get_log_info
-from .utils import get_saving_path
-from .utils import to_pdf
+from .utils import (create_pie_chart, extract_logs, get_current_platform_name,
+                    get_current_time_HM, get_daily_log_file_name, get_log_info,
+                    get_saving_path, to_pdf)
 
 FILENAME = None
 SAVINGPATH = None
