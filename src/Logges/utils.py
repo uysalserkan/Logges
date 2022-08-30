@@ -92,7 +92,10 @@ def create_pie_chart(saving_path: str, status_dict: Dict[str, int]) -> None:
 def get_daily_log_file_name(filename: str,
                             markdown: bool = False,
                             pdf: bool = False) -> str:
-    """get_daily_log_file_name method returns a filename, which will be name of the saving file, priority sequence is: pdf, markdown and log file.
+    """get_daily_log_file_name.
+
+    get_daily_log_file_name method returns a filename, which will be name of the saving file,
+    priority sequence is: pdf, markdown and log file.
 
     Parameters:
         filename `str`: Running script name.
@@ -118,7 +121,7 @@ def get_current_time_HM() -> str:
         hour_min_sec `str`: Current hour:minute:second.
     """
     hour_min_sec = datetime.datetime.today().strftime("%H:%M:%S")
-    return f"[{hour_min_sec}]: "
+    return f"{hour_min_sec}"
 
 
 def console_data(script_name: str, status_dict: Dict[str, int],
@@ -133,7 +136,6 @@ def console_data(script_name: str, status_dict: Dict[str, int],
         None
     """
     dir_path = get_saving_path()
-
     log_dir = os.path.join(dir_path, script_name)
 
     file = open(log_dir, "r")
@@ -209,7 +211,10 @@ def to_pdf(script_name: str, saving_path: str, status_dict: Dict[str,
 
     def copyright_text() -> Paragraph:
         """We are add a text on the page."""
-        uysaltext = 'All right reserved 2022 &copy;&nbsp;<a href="https://github.com/uysalserkan/Logges">Logges</a> - <strong><a href="https://github.com/uysalserkan">uysalserkan</a></strong> & <strong><a href="https://github.com/ozkanuysal">Ozkan</a></strong>'
+        uysaltext = 'All right reserved 2022 &copy;&nbsp;<a href="https://github.com/uysalserkan/Logges">Logges</a> - \
+<strong><a href="https://github.com/uysalserkan">uysalserkan</a></strong> & \
+<strong><a href="https://github.com/ozkanuysal">Ozkan</a></strong>'
+
         copyright_style = ParagraphStyle("copyright_style",
                                          fontSize=8,
                                          alignment=TA_CENTER)
@@ -231,7 +236,6 @@ def to_pdf(script_name: str, saving_path: str, status_dict: Dict[str,
     page_elements = []
 
     # Reading data başlıyor..
-
     file = open(log_dir, "r")
 
     (
@@ -304,7 +308,6 @@ def to_pdf(script_name: str, saving_path: str, status_dict: Dict[str,
             [_date, _log_status, _filename, _functname, _log_msg]):
             if index == 1:
                 table_text = f"<font color='{color}'>{item}</font>"
-
             else:
                 table_text = f"<b>{item}</b>"
             ptext = Paragraph(table_text, alignStyle)
