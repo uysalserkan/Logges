@@ -162,10 +162,8 @@ class Logges:
 
         filepath, funct = get_log_info()
 
-        if any(
-            True if each_ignored in filepath else False
-            for each_ignored in IGNORE_FILES_AND_DIRS
-        ):
+        if any(True if each_ignored in filepath else False
+               for each_ignored in IGNORE_FILES_AND_DIRS):
             return
 
         filename = os.path.split(filepath)[1]
@@ -178,7 +176,9 @@ class Logges:
         Logges.write_logs(msg=msg)
 
     @staticmethod
-    def export(markdown: bool = False, pdf: bool = False, log: bool = True) -> None:
+    def export(markdown: bool = False,
+               pdf: bool = False,
+               log: bool = True) -> None:
         """EXPORT."""
         global SAVINGPATH, FILENAME
         lib_path = get_saving_path()
@@ -202,15 +202,16 @@ class Logges:
 
         status_icons = Logges.LogStatus.get_icon_dict()
         md_file = os.path.join(
-            SAVINGPATH, get_daily_log_file_name(filename=FILENAME, markdown=True)
-        )
+            SAVINGPATH,
+            get_daily_log_file_name(filename=FILENAME, markdown=True))
         markdown_file = open(md_file, "w")
 
         filename = get_daily_log_file_name(filename=FILENAME)
         file_dir = SAVINGPATH
         full_logfile_path = os.path.join(file_dir, filename)
 
-        only_filename = "_".join(filename.split("_")[1:]) + ".py".replace(".log", "")
+        only_filename = "_".join(filename.split("_")[1:]) + ".py".replace(
+            ".log", "")
         file_date = filename.split("_")[0]
 
         # Fix Windows Problems.
@@ -238,19 +239,18 @@ class Logges:
         status_dict = Logges.LogStatus.get_blank_dict()
         # Write logs in markdown file.
         for index, _ in enumerate(_log_message_list):
-            log_status_clear = _status_list[index].replace("[", "").replace("]", "")
+            log_status_clear = _status_list[index].replace("[", "").replace(
+                "]", "")
             status_dict[log_status_clear] += 1
 
             try:
-                markdown_file.writelines(
-                    "|{}|{}|{}|{}|{}|".format(
-                        _date_list[index],
-                        status_icons[log_status_clear],
-                        _filename_list[index],
-                        _functname_list[index],
-                        _log_message_list[index].replace("\n", " "),
-                    )
-                )
+                markdown_file.writelines("|{}|{}|{}|{}|{}|".format(
+                    _date_list[index],
+                    status_icons[log_status_clear],
+                    _filename_list[index],
+                    _functname_list[index],
+                    _log_message_list[index].replace("\n", " "),
+                ))
                 markdown_file.write("\n")
             except KeyError:
                 raise ("Please check your icon.")
