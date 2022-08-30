@@ -176,6 +176,44 @@ class Logges:
         Logges._write_logs(msg=msg)
 
     @staticmethod
+    def in_log(keyword: Union[str, List[str]]) -> bool:
+        """Check if keyword(s) is logged in log file or not.
+
+        Be aware of that, if log file has too many log row, this operation may take some time.
+
+        Parameters:
+            keyword `str or List of str`: It defines your searching keyword(s).
+
+        Return:
+            condition `bool`: Contains all True / not contains all False.
+        """
+        global FILENAME, SAVINGPATH
+        filename = get_daily_log_file_name(filename=FILENAME)
+        file_dir = SAVINGPATH
+        full_logfile_path = os.path.join(file_dir, filename)
+
+        file = open(full_logfile_path, "r")
+        (
+            _, _, _, _,
+            _log_message_list,
+        ) = extract_logs(logs=file)
+
+        if isinstance(keyword, str):
+            for each_log in _log_message_list:
+                if keyword in each_log:
+                    return True
+            return False
+        else:
+            for each_log in _log_message_list:
+                counter = 0
+                for each_keyword in keyword:
+                    if each_keyword in each_log:
+                        counter += 1
+                    if counter == len(keyword):
+                        return True
+            return False
+
+    @staticmethod
     def export(markdown: bool = False,
                pdf: bool = False,
                log: bool = True,
