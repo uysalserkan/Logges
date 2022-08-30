@@ -194,7 +194,10 @@ class Logges:
 
         file = open(full_logfile_path, "r")
         (
-            _, _, _, _,
+            _,
+            _,
+            _,
+            _,
             _log_message_list,
         ) = extract_logs(logs=file)
 
@@ -214,10 +217,12 @@ class Logges:
             return False
 
     @staticmethod
-    def export(markdown: bool = False,
-               pdf: bool = False,
-               log: bool = True,
-               zip: bool = False,) -> None:
+    def export(
+        markdown: bool = False,
+        pdf: bool = False,
+        log: bool = True,
+        zip: bool = False,
+    ) -> None:
         """EXPORT."""
         global SAVINGPATH, FILENAME
         lib_path = get_saving_path()
@@ -231,32 +236,23 @@ class Logges:
         if pdf:
             Logges._to_pdf()
         if zip:
-            zip_name = os.path.join(
-                SAVINGPATH,
-                FILENAME + '.zip'
-            )
+            zip_name = os.path.join(SAVINGPATH, FILENAME + ".zip")
 
-            with ZipFile(file=zip_name, mode='w') as zipfile:
+            with ZipFile(file=zip_name, mode="w") as zipfile:
                 if markdown:
                     zipfile.write(
                         get_daily_log_file_name(
                             filename=FILENAME,
                             markdown=True,
-                        )
-                    )
+                        ))
                 if markdown:
                     zipfile.write(
                         get_daily_log_file_name(
                             filename=FILENAME,
                             pdf=True,
-                        )
-                    )
+                        ))
                 if log:
-                    zipfile.write(
-                        get_daily_log_file_name(
-                            filename=FILENAME,
-                        )
-                    )
+                    zipfile.write(get_daily_log_file_name(filename=FILENAME, ))
 
         if not log:
             # Preserve log file at library director
