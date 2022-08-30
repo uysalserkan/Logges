@@ -1,4 +1,4 @@
 """init file."""
 from .logges import Logges
 
-__version__ = "1.0.7"
+__version__ = "2.0"
