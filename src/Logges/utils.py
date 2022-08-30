@@ -157,8 +157,7 @@ def console_data(script_name: str, status_dict: Dict[str, int],
     }
 
     rich_table = Table(
-        title=
-        f"{log_dir.split('/')[-1]} :see_no_evil: :hear_no_evil: :speak_no_evil:"
+        title=f"{log_dir.split('/')[-1]} :see_no_evil: :hear_no_evil: :speak_no_evil:"
     )
 
     rich_table.add_column("DATE", justify="center")
@@ -305,7 +304,7 @@ def to_pdf(script_name: str, saving_path: str, status_dict: Dict[str,
 
         row_data = []
         for index, item in enumerate(
-            [_date, _log_status, _filename, _functname, _log_msg]):
+                [_date, _log_status, _filename, _functname, _log_msg]):
             if index == 1:
                 table_text = f"<font color='{color}'>{item}</font>"
             else:
