@@ -71,33 +71,31 @@ def Logges_cli():
 def list_logs(max_date: str, min_date: str):
     """LIST."""
     log_file_list = []
-    count = 1
     for each_file in os.listdir(os.path.split(__file__)[0]):
         if ".log" in each_file:
             if (not isinstance(min_date, NoneType)) and (not isinstance(max_date, NoneType)):
                 if (each_file[:10] >= min_date) and (each_file[:10] <= max_date):
                     log_file_list.append(
-                        click.style(text=f"{count}: ", fg='bright_green', bold=True) +\
+                        click.style(text=f"*: ", fg='bright_green', bold=True) +\
                         click.style(text=each_file, fg='bright_cyan', italic=True)
                     )
             elif (not isinstance(min_date, NoneType)):
                 if (each_file[:10] >= min_date):
                     log_file_list.append(
-                        click.style(text=f"{count}: ", fg='bright_green', bold=True) +\
+                        click.style(text=f"*: ", fg='bright_green', bold=True) +\
                         click.style(text=each_file, fg='bright_cyan', italic=True)
                     )
             elif (not isinstance(max_date, NoneType)):
                 if (each_file[:10] <= max_date):
                     log_file_list.append(
-                        click.style(text=f"{count}: ", fg='bright_green', bold=True) +\
+                        click.style(text=f"*: ", fg='bright_green', bold=True) +\
                         click.style(text=each_file, fg='bright_cyan', italic=True)
                     )
             else:
                 log_file_list.append(
-                        click.style(text=f"{count}: ", fg='bright_green', bold=True) +\
+                        click.style(text=f"*: ", fg='bright_green', bold=True) +\
                         click.style(text=each_file, fg='bright_cyan', italic=True)
                     )
-            count += 1
     click.echo_via_pager("\n".join(log_file_list))
 
 
