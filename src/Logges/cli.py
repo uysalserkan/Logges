@@ -5,6 +5,7 @@ from typing import Union
 import click
 from Logges import Logges
 
+from .utils import extract_logs
 from .utils import console_data
 
 
@@ -25,7 +26,7 @@ def validate_file(_, __, value):
 
 def validate_date(_, __, value):
     """VALIDATE."""
-    if isinstance(value, None):
+    if isinstance(value, type(None)):
         return value
 
     elif len(str(value)) < 8:
@@ -74,21 +75,21 @@ def list_logs(max_date: str, min_date: str):
     log_file_list = []
     for each_file in os.listdir(os.path.split(__file__)[0]):
         if ".log" in each_file:
-            if (not isinstance(min_date, None)) and (not isinstance(
-                    max_date, None)):
+            if (not isinstance(min_date, type(None))) and (not isinstance(
+                    max_date, type(None))):
                 if (each_file[:10] >= min_date) and (each_file[:10] <=
                                                      max_date):
                     log_file_list.append(
                         click.style(text="*: ", fg="bright_green", bold=True) +
                         click.style(
                             text=each_file, fg="bright_cyan", italic=True))
-            elif not isinstance(min_date, None):
+            elif not isinstance(min_date, type(None)):
                 if each_file[:10] >= min_date:
                     log_file_list.append(
                         click.style(text="*: ", fg="bright_green", bold=True) +
                         click.style(
                             text=each_file, fg="bright_cyan", italic=True))
-            elif not isinstance(max_date, None):
+            elif not isinstance(max_date, type(None)):
                 if each_file[:10] <= max_date:
                     log_file_list.append(
                         click.style(text="*: ", fg="bright_green", bold=True) +
@@ -121,6 +122,72 @@ def show_log_file(file: Union[str, any]) -> None:
         status_dict=Logges.LogStatus.get_blank_dict(),
         statuc_icon_dict=Logges.LogStatus.get_icon_dict(),
     )
+
+
+@Logges_cli.command(name="search", help="Search and get file name which is contains given keyword(s)\
+ or Sentence(s), Sentences splitted with ','.")
+@click.option(
+    "--max_date",
+    required=False,
+    help="Show logs of maximum date.",
+    callback=validate_date,
+)
+@click.option(
+    "--min_date",
+    required=False,
+    help="Show logs of minimum date.",
+    callback=validate_date,
+)
+@click.option(
+    "--sentences",
+    "-s",
+    required=True,
+    help="Searching sentences, separated with ',' character.",
+)
+@click.option(
+    "--export",
+    "-e",
+    default=True,
+    required=False,
+    help="Export your log file as exported_... .",
+)
+def search_in_log_files(max_date: str, min_date: str, sentences: str, export: bool) -> None:
+    """Search keywords on log files."""
+    log_file_list = []
+    log_dir = os.path.split(__file__)[0]
+    for each_file in os.listdir(log_dir):
+        if ".log" in each_file:
+            if (not isinstance(min_date, None)) and (not isinstance(
+                    max_date, None)):
+                if (each_file[:10] >= min_date) and (each_file[:10] <=
+                                                     max_date):
+                    log_file_list.append(each_file)
+            elif not isinstance(min_date, None):
+                if each_file[:10] >= min_date:
+                    log_file_list.append(each_file)
+            elif not isinstance(max_date, None):
+                if each_file[:10] <= max_date:
+                    log_file_list.append(each_file)
+            else:
+                log_file_list.append(each_file)
+
+    sentence_list = sentences.split(',')
+    for each_log in log_file_list:
+        full_logfile_path = os.path.join(log_dir, each_log)
+        file = open(full_logfile_path, "r")
+        (
+            _date_list,
+            _status_list,
+            _filename_list,
+            _functname_list,
+            _log_message_list,
+        ) = extract_logs(logs=file)
+        for each_log_msg in _log_message_list:
+            for each_sentence in sentence_list:
+                if each_sentence in each_log_msg:
+                    pass
+
+    pass
 
 
 if __name__ == "__main__":
