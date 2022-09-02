@@ -125,7 +125,8 @@ def get_current_time_HM() -> str:
 
 
 def console_data(script_name: str, status_dict: Dict[str, int],
-                 statuc_icon_dict: Dict[str, str]) -> None:
+                 statuc_icon_dict: Dict[str, str],
+                 local_file: bool) -> None:
     """We are printing our logs on console with beauty of rich.
 
     Params:
@@ -135,8 +136,11 @@ def console_data(script_name: str, status_dict: Dict[str, int],
     Return:
         None
     """
-    dir_path = get_saving_path()
-    log_dir = os.path.join(dir_path, script_name)
+    if local_file:
+        log_dir = script_name
+    else:
+        dir_path = get_saving_path()
+        log_dir = os.path.join(dir_path, script_name)
 
     file = open(log_dir, "r")
 
@@ -189,11 +193,11 @@ def console_data(script_name: str, status_dict: Dict[str, int],
         "[bright_black]████████████████[blue]████████████████[bright_yellow]████████████████[red]█████████████████[dark_red]██████████████████"
     )
     rich_console.print(
-        f"DEBUG: %{round(status_dict['DEBUG']/total_length*100, 2)}" +
-        f"\tINFO: %{round(status_dict['INFO']/total_length*100, 2)}" +
-        f"\tWARNING: %{round(status_dict['WARNING']/total_length*100, 2)}" +
-        f"\tERROR: %{round(status_dict['ERROR']/total_length*100, 2)}" +
-        f"\tCRITICAL: %{round(status_dict['CRITICAL']/total_length*100, 2)}")
+        f"DEBUG: %{round(status_dict['DEBUG']/total_length*100 if total_length > 0 else 0, 2)}" +
+        f"\tINFO: %{round(status_dict['INFO']/total_length*100 if total_length > 0 else 0, 2)}" +
+        f"\tWARNING: %{round(status_dict['WARNING']/total_length*100 if total_length > 0 else 0, 2)}" +
+        f"\tERROR: %{round(status_dict['ERROR']/total_length*100 if total_length > 0 else 0, 2)}" +
+        f"\tCRITICAL: %{round(status_dict['CRITICAL']/total_length*100 if total_length > 0 else 0, 2)}")
 
 
 def to_pdf(script_name: str, saving_path: str, status_dict: Dict[str,
@@ -376,7 +380,8 @@ def extract_logs(
             status_list.append(info_str[11:21].replace(" ", ""))
             filename_list.append(f"[{info_str[22:].split('[')[1][:-2]}]")
             function_and_lineno_list.append(
-                f"[{info_str[22:].split('[')[2][:-1]}]")
+                f"[{info_str[22:].split('[')[2][:-1]}]"
+            )
         else:
             msg_list[len(msg_list) - 1] += each_line
 

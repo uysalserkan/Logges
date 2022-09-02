@@ -1,8 +1,9 @@
 """CLI app."""
 import os
-from typing import Union
-
 import click
+
+from datetime import datetime
+from typing import Union
 from Logges import Logges
 
 from .utils import extract_logs
@@ -113,14 +114,22 @@ def list_logs(max_date: str, min_date: str):
     help="Log file name. If you don't know please use " +
     click.style("show", fg="blue", underline=True, reverse=True) +
     " parameter.",
-    callback=validate_file,
 )
-def show_log_file(file: Union[str, any]) -> None:
+@click.option(
+    "--local_file",
+    default=False,
+)
+def show_log_file(file: Union[str, any], local_file: bool) -> None:
     """SHOW."""
+    if not local_file:
+        validate_file(_, _, value=file)
+    else:
+        file = os.path.abspath(file)
     console_data(
         script_name=file,
         status_dict=Logges.LogStatus.get_blank_dict(),
         statuc_icon_dict=Logges.LogStatus.get_icon_dict(),
+        local_file=local_file,
     )
 
 
@@ -149,28 +158,34 @@ def show_log_file(file: Union[str, any]) -> None:
     "-e",
     default=True,
     required=False,
-    help="Export your log file as exported_... .",
+    help="Export your log file as Export datetime type, default is True.",
 )
 def search_in_log_files(max_date: str, min_date: str, sentences: str, export: bool) -> None:
     """Search keywords on log files."""
+    # Writting in file
+    tmp_filename = datetime.now().strftime("Export %Y-%m-%d %H%M%S.log")
+    tmp_file = open(tmp_filename, "w")
+
+    # Log files
     log_file_list = []
     log_dir = os.path.split(__file__)[0]
     for each_file in os.listdir(log_dir):
         if ".log" in each_file:
-            if (not isinstance(min_date, None)) and (not isinstance(
-                    max_date, None)):
+            if (not isinstance(min_date, type(None))) and (not isinstance(
+                    max_date, type(None))):
                 if (each_file[:10] >= min_date) and (each_file[:10] <=
                                                      max_date):
                     log_file_list.append(each_file)
-            elif not isinstance(min_date, None):
+            elif not isinstance(min_date, type(None)):
                 if each_file[:10] >= min_date:
                     log_file_list.append(each_file)
-            elif not isinstance(max_date, None):
+            elif not isinstance(max_date, type(None)):
                 if each_file[:10] <= max_date:
                     log_file_list.append(each_file)
             else:
                 log_file_list.append(each_file)
 
+    counter = 0
     sentence_list = sentences.split(',')
     for each_log in log_file_list:
         full_logfile_path = os.path.join(log_dir, each_log)
@@ -182,12 +197,29 @@ def search_in_log_files(max_date: str, min_date: str, sentences: str, export: bo
             _functname_list,
             _log_message_list,
         ) = extract_logs(logs=file)
-        for each_log_msg in _log_message_list:
+        for index, each_log_msg in enumerate(_log_message_list):
             for each_sentence in sentence_list:
                 if each_sentence in each_log_msg:
-                    pass
+                    tmp_file.write(
+                        f"{_date_list[index]} [{_status_list[index].replace('[', '').replace(']', '') :8s}] " +
+                        f"{_filename_list[index]} {_functname_list[index]}:{_log_message_list[index]}"
+                    )
+                    counter += 1
 
-    pass
+    tmp_file.close()
+
+    if counter > 0:
+        console_data(
+            script_name=tmp_filename,
+            status_dict=Logges.LogStatus.get_blank_dict(),
+            statuc_icon_dict=Logges.LogStatus.get_icon_dict(),
+            local_file=True,
+        )
+        if not export:
+            os.remove(tmp_filename)
+    else:
+        click.echo("There is " + click.style("nothing", fg="red") + " about your searching keywords.")
+        os.remove(tmp_filename)
 
 
 if __name__ == "__main__":
