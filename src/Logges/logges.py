@@ -240,19 +240,23 @@ class Logges:
 
             with ZipFile(file=zip_name, mode="w") as zipfile:
                 if markdown:
-                    zipfile.write(
-                        get_daily_log_file_name(
+                    file = get_daily_log_file_name(
                             filename=FILENAME,
                             markdown=True,
-                        ))
+                        )
+                    zipfile.write(file)
+                    os.remove(file)
                 if markdown:
-                    zipfile.write(
-                        get_daily_log_file_name(
+                    file = get_daily_log_file_name(
                             filename=FILENAME,
                             pdf=True,
-                        ))
+                        )
+                    zipfile.write(file)
+                    os.remove(file)
                 if log:
-                    zipfile.write(get_daily_log_file_name(filename=FILENAME, ))
+                    file = get_daily_log_file_name(filename=FILENAME, )
+                    zipfile.write(file)
+                    os.remove(file)
 
         if not log:
             # Preserve log file at library director
