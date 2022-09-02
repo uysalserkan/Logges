@@ -4,11 +4,11 @@ from other_module import other_method
 
 
 if __name__ == '__main__':
-    Logges.setup(__file__)
-    Logges.log(log="A simple info method.", status=0, print_log=False)
-    Logges.log(log="A simple warning method.", status=1, print_log=False)
-    Logges.log(log="A simple error method.", status=2, print_log=False)
+    Logges.setup()
+    Logges.log(log="A simple DEBUG method.", status=Logges.LogStatus.DEBUG)
+    Logges.log(log="A simple INFO method.", status=Logges.LogStatus.INFO)
+    Logges.log(log="A simple WARNING method.", status=Logges.LogStatus.WARNING)
+    Logges.log(log="A simple ERROR method.", status=Logges.LogStatus.ERROR)
+    Logges.log(log="A simple CRITICAL method.", status=Logges.LogStatus.CRITICAL)
     other_method()
-    Logges.to_markdown()
-    Logges.to_pdf()
-    Logges.console_data()
+    Logges.export(markdown=True, pdf=True, log=True, zip=True)
