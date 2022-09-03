@@ -161,8 +161,7 @@ def console_data(script_name: str, status_dict: Dict[str, int],
     }
 
     rich_table = Table(
-        title=
-        f"{log_dir.split('/')[-1]} :see_no_evil: :hear_no_evil: :speak_no_evil:"
+        title=f"{log_dir.split('/')[-1]} :see_no_evil: :hear_no_evil: :speak_no_evil:"
     )
 
     rich_table.add_column("DATE", justify="center")
@@ -190,7 +189,8 @@ def console_data(script_name: str, status_dict: Dict[str, int],
     rich_console.print(rich_table)
     total_length = sum(list(status_dict.values()))
     rich_console.print(
-        "[bright_black]████████████████[blue]████████████████[bright_yellow]████████████████[red]█████████████████[dark_red]██████████████████"
+        "[bright_black]████████████████[blue]████████████████\
+[bright_yellow]████████████████[red]█████████████████[dark_red]██████████████████"
     )
     rich_console.print(
         f"DEBUG: %{round(status_dict['DEBUG']/total_length*100 if total_length > 0 else 0, 2)}" +
@@ -309,7 +309,8 @@ def to_pdf(script_name: str, saving_path: str, status_dict: Dict[str,
 
         row_data = []
         for index, item in enumerate(
-            [_date, _log_status, _filename, _functname, _log_msg]):
+            [_date, _log_status, _filename, _functname, _log_msg]
+        ):
             if index == 1:
                 table_text = f"<font color='{color}'>{item}</font>"
             else:
