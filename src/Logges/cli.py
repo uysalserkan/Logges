@@ -148,6 +148,11 @@ def show_log_file(file: Union[str, any], local_file: bool) -> None:
     callback=validate_date,
 )
 @click.option(
+    "--export_name",
+    required=False,
+    help="Set your export log file.",
+)
+@click.option(
     "--sentences",
     "-sen",
     required=True,
@@ -184,6 +189,7 @@ def show_log_file(file: Union[str, any], local_file: bool) -> None:
 def search_in_log_files(
     max_date: str,
     min_date: str,
+    export_name: str,
     sentences: str,
     functions: str,
     status: str,
@@ -192,7 +198,10 @@ def search_in_log_files(
 ) -> None:
     """Search keywords on log files."""
     # Writting in file
-    tmp_filename = datetime.now().strftime("Export %Y-%m-%d %H%M%S.log")
+    if export_name:
+        tmp_filename = f"{export_name}.log"
+    else:
+        tmp_filename = datetime.now().strftime("Export %Y-%m-%d %H%M%S.log")
     tmp_file = open(tmp_filename, "w")
 
     # Log files
@@ -227,12 +236,6 @@ def search_in_log_files(
     if files:
         files_list = files.split(',')
 
-    print("log_file_list " * 5)
-    print(log_file_list)
-
-    print("PARAMETRES")
-    print(sentences, status, functions, files)
-
     for each_log in log_file_list:
         full_logfile_path = os.path.join(log_dir, each_log)
         file = open(full_logfile_path, "r")
@@ -249,25 +252,16 @@ def search_in_log_files(
                     if each_sentence in each_log_msg:
                         if status:
                             if _status_list[index].replace('[', '').replace(']', '') not in status_list:
-                                print("NOT In Status")
                                 continue
-                            else:
-                                print("In STATUS")
 
                         if functions:
                             clear_funct_name = _functname_list[index].replace('[', '').replace(']', '').replace('<', '').replace('>', '').split(':')[0]
                             if clear_funct_name not in functions_list:
-                                print("NOT In function")
                                 continue
-                            else:
-                                print("In function")
 
                         if files:
                             if _filename_list[index].replace('[', '').replace(']', '') not in files_list:
-                                print("NOT In file", _filename_list[index], files_list)
                                 continue
-                            else:
-                                print("In file")
                         tmp_file.write(
                             f"{_date_list[index]} [{_status_list[index].replace('[', '').replace(']', '') :8s}] " +
                             f"{_filename_list[index]} {_functname_list[index]}:{_log_message_list[index]}"
