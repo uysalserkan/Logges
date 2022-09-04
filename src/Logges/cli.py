@@ -8,6 +8,7 @@ from Logges import Logges
 
 from .utils import extract_logs
 from .utils import console_data
+from .utils import to_markdown
 from .utils import to_pdf
 
 
@@ -308,13 +309,20 @@ def search_in_log_files(
         os.remove(tmp_filename)
     else:
         if export.lower() == 'md':
-            pass
+            to_markdown(
+                script_name=tmp_filename,
+                saving_path='.',
+                status_dict=Logges.LogStatus.get_blank_dict(),
+                status_icons=Logges.LogStatus.get_icon_dict(),
+                local_file=True,
+            )
+            os.remove(tmp_filename)
         elif export.lower() == 'pdf':
             to_pdf(
                 script_name=tmp_filename,
                 saving_path='.',
                 status_dict=Logges.LogStatus.get_blank_dict(),
-                local_file=True
+                local_file=True,
             )
             os.remove(tmp_filename)
             os.remove("pie_chart.png")
