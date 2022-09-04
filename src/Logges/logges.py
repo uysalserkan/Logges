@@ -240,9 +240,9 @@ class Logges:
             with ZipFile(file=zip_name, mode="w") as zipfile:
                 if markdown:
                     filename = get_daily_log_file_name(
-                            filename=FILENAME,
-                            markdown=True,
-                        )
+                        filename=FILENAME,
+                        markdown=True,
+                    )
                     file = os.path.join(
                         SAVINGPATH, filename
                     )
@@ -250,9 +250,9 @@ class Logges:
                     os.remove(file)
                 if markdown:
                     filename = get_daily_log_file_name(
-                            filename=FILENAME,
-                            pdf=True,
-                        )
+                        filename=FILENAME,
+                        pdf=True,
+                    )
                     file = os.path.join(
                         SAVINGPATH, filename
                     )

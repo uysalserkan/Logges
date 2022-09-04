@@ -204,8 +204,10 @@ def search_in_log_files(
         if export.lower() not in ["log", "pdf", "md"]:
             raise click.BadOptionUsage(
                 option_name="export",
-                message="Please enter a " + click.style(text="valid ", fg="red", blink=True)
-                + " export type like: " + click.style(text="log, md, pdf", underline=True)
+                message="Please enter a " +
+                click.style(text="valid ", fg="red", blink=True)
+                + " export type like: " +
+                click.style(text="log, md, pdf", underline=True)
             )
 
     if export_name:
