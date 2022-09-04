@@ -86,6 +86,9 @@ def create_pie_chart(saving_path: str, status_dict: Dict[str, int]) -> None:
 
     png_path = os.path.join(saving_path, "pie_chart.png")
 
+    if os.path.exists("pie_chart.png"):
+        os.remove(png_path)
+
     plt.savefig(f"{png_path}")
 
 
@@ -124,8 +127,12 @@ def get_current_time_HM() -> str:
     return f"{hour_min_sec}"
 
 
-def console_data(script_name: str, status_dict: Dict[str, int],
-                 statuc_icon_dict: Dict[str, str]) -> None:
+def console_data(
+    script_name: str,
+    status_dict: Dict[str, int],
+    statuc_icon_dict: Dict[str, str],
+    local_file: bool,
+) -> None:
     """We are printing our logs on console with beauty of rich.
 
     Params:
@@ -135,8 +142,11 @@ def console_data(script_name: str, status_dict: Dict[str, int],
     Return:
         None
     """
-    dir_path = get_saving_path()
-    log_dir = os.path.join(dir_path, script_name)
+    if local_file:
+        log_dir = script_name
+    else:
+        dir_path = get_saving_path()
+        log_dir = os.path.join(dir_path, script_name)
 
     file = open(log_dir, "r")
 
@@ -185,25 +195,129 @@ def console_data(script_name: str, status_dict: Dict[str, int],
     rich_console = Console()
     rich_console.print(rich_table)
     total_length = sum(list(status_dict.values()))
+    rich_console.print("[bright_black]████████████████[blue]████████████████\
+[bright_yellow]████████████████[red]█████████████████[dark_red]██████████████████"
+                       )
     rich_console.print(
-        "[bright_black]████████████████[blue]████████████████[bright_yellow]████████████████[red]█████████████████[dark_red]██████████████████"
+        f"DEBUG: %{round(status_dict['DEBUG']/total_length*100 if total_length > 0 else 0, 2)}"
+        +
+        f"\tINFO: %{round(status_dict['INFO']/total_length*100 if total_length > 0 else 0, 2)}"
+        +
+        f"\tWARNING: %{round(status_dict['WARNING']/total_length*100 if total_length > 0 else 0, 2)}"
+        +
+        f"\tERROR: %{round(status_dict['ERROR']/total_length*100 if total_length > 0 else 0, 2)}"
+        +
+        f"\tCRITICAL: %{round(status_dict['CRITICAL']/total_length*100 if total_length > 0 else 0, 2)}"
     )
-    rich_console.print(
-        f"DEBUG: %{round(status_dict['DEBUG']/total_length*100, 2)}" +
-        f"\tINFO: %{round(status_dict['INFO']/total_length*100, 2)}" +
-        f"\tWARNING: %{round(status_dict['WARNING']/total_length*100, 2)}" +
-        f"\tERROR: %{round(status_dict['ERROR']/total_length*100, 2)}" +
-        f"\tCRITICAL: %{round(status_dict['CRITICAL']/total_length*100, 2)}")
 
 
-def to_pdf(script_name: str, saving_path: str, status_dict: Dict[str,
-                                                                 int]) -> None:
+def to_markdown(
+    script_name: str,
+    saving_path: str,
+    status_dict: Dict[str, int],
+    status_icons: Dict[str, str],
+    local_file: bool = False,
+) -> None:
     """Export the logs to a file with `.pdf` format.
 
     Parameters:
         script_name `str`: Save the pdf file as that string.
         saving_path `str`:  Save the pdf file to the that path.
         stats_dict `Dict`:  Define status counter.
+        local_file: `bool`: Check load from root directory or local file. Default is False.
+
+    Return:
+        None
+    """
+    if local_file:
+        md_file = os.path.join(saving_path, script_name.replace(".log", ".md"))
+
+        markdown_file = open(md_file, "w")
+        filename = script_name
+
+    else:
+        md_file = os.path.join(
+            saving_path,
+            get_daily_log_file_name(filename=script_name, markdown=True))
+
+        markdown_file = open(md_file, "w")
+        filename = get_daily_log_file_name(filename=script_name)
+
+    file_dir = saving_path
+    full_logfile_path = os.path.join(file_dir, filename)
+
+    only_filename = "_".join(filename.split("_")[1:]) + ".py".replace(
+        ".log", "")
+    file_date = filename.split("_")[0]
+
+    # Fix Windows Problems.
+    if get_current_platform_name() == "Windows":
+        only_filename = os.path.split(only_filename)[1]
+
+    markdown_file.writelines(
+        f"# {only_filename} {file_date} Logs :see_no_evil: :hear_no_evil: :speak_no_evil:\n"
+    )
+    markdown_file.writelines("![](pie_chart.png)\n")
+    markdown_file.writelines(
+        "|TIME|STATUS|FILENAME|FUNCTION|MESSAGE|\n| :--: | :--: | :--: | :--: | :--: |\n"
+    )
+
+    # Split Strings.
+    file = open(full_logfile_path, "r")
+    (
+        _date_list,
+        _status_list,
+        _filename_list,
+        _functname_list,
+        _log_message_list,
+    ) = extract_logs(logs=file)
+
+    # Write logs in markdown file.
+    for index, _ in enumerate(_log_message_list):
+        log_status_clear = _status_list[index].replace("[",
+                                                       "").replace("]", "")
+        status_dict[log_status_clear] += 1
+
+        try:
+            markdown_file.writelines("|{}|{}|{}|{}|{}|".format(
+                _date_list[index],
+                status_icons[log_status_clear],
+                _filename_list[index],
+                _functname_list[index],
+                _log_message_list[index].replace("\n", " "),
+            ))
+            markdown_file.write("\n")
+        except KeyError:
+            raise ("Please check your icon.")
+
+    # Write signature
+    markdown_file.writelines(
+        "All right reserved 2022 &copy;&nbsp; [Logges](https://github.com/uysalserkan/Logges) - \
+*[uysalserkan](https://github.com/uysalserkan/) & [Ozkan](https://github.com/ozkanuysal)*\n"
+    )
+
+    # Create chart
+    create_pie_chart(
+        saving_path=saving_path,
+        status_dict=status_dict,
+    )
+
+    markdown_file.close()
+
+
+def to_pdf(
+    script_name: str,
+    saving_path: str,
+    status_dict: Dict[str, int],
+    local_file: bool = False,
+) -> None:
+    """Export the logs to a file with `.pdf` format.
+
+    Parameters:
+        script_name `str`: Save the pdf file as that string.
+        saving_path `str`:  Save the pdf file to the that path.
+        stats_dict `Dict`:  Define status counter.
+        local_file: `bool`: Check load from root directory or local file. Default is False.
 
     Return:
         None
@@ -229,8 +343,12 @@ def to_pdf(script_name: str, saving_path: str, status_dict: Dict[str,
         "CRITICAL": "darkred",
     }
 
-    log_dir = os.path.join(saving_path,
-                           get_daily_log_file_name(filename=script_name))
+    if local_file:
+        log_dir = script_name
+    else:
+
+        log_dir = os.path.join(saving_path,
+                               get_daily_log_file_name(filename=script_name))
 
     # Burada eklemeler yapılıyor..
     page_elements = []

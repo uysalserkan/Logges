@@ -14,13 +14,12 @@ from typing import List
 from typing import Union
 from zipfile import ZipFile
 
-from .utils import create_pie_chart
 from .utils import extract_logs
-from .utils import get_current_platform_name
 from .utils import get_current_time_HM
 from .utils import get_daily_log_file_name
 from .utils import get_log_info
 from .utils import get_saving_path
+from .utils import to_markdown
 from .utils import to_pdf
 
 FILENAME = None
@@ -240,19 +239,26 @@ class Logges:
 
             with ZipFile(file=zip_name, mode="w") as zipfile:
                 if markdown:
-                    zipfile.write(
-                        get_daily_log_file_name(
-                            filename=FILENAME,
-                            markdown=True,
-                        ))
+                    filename = get_daily_log_file_name(
+                        filename=FILENAME,
+                        markdown=True,
+                    )
+                    file = os.path.join(SAVINGPATH, filename)
+                    zipfile.write(file)
+                    os.remove(file)
                 if markdown:
-                    zipfile.write(
-                        get_daily_log_file_name(
-                            filename=FILENAME,
-                            pdf=True,
-                        ))
+                    filename = get_daily_log_file_name(
+                        filename=FILENAME,
+                        pdf=True,
+                    )
+                    file = os.path.join(SAVINGPATH, filename)
+                    zipfile.write(file)
+                    os.remove(file)
                 if log:
-                    zipfile.write(get_daily_log_file_name(filename=FILENAME, ))
+                    filename = get_daily_log_file_name(filename=FILENAME, )
+                    file = os.path.join(SAVINGPATH, filename)
+                    zipfile.write(file)
+                    os.remove(file)
 
         if not log:
             # Preserve log file at library director
@@ -262,72 +268,11 @@ class Logges:
     def _to_markdown() -> None:
         """Convert days logs as markdown file.."""
         global FILENAME, SAVINGPATH
-
-        status_icons = Logges.LogStatus.get_icon_dict()
-        md_file = os.path.join(
-            SAVINGPATH,
-            get_daily_log_file_name(filename=FILENAME, markdown=True))
-        markdown_file = open(md_file, "w")
-
-        filename = get_daily_log_file_name(filename=FILENAME)
-        file_dir = SAVINGPATH
-        full_logfile_path = os.path.join(file_dir, filename)
-
-        only_filename = "_".join(filename.split("_")[1:]) + ".py".replace(
-            ".log", "")
-        file_date = filename.split("_")[0]
-
-        # Fix Windows Problems.
-        if get_current_platform_name() == "Windows":
-            only_filename = os.path.split(only_filename)[1]
-
-        markdown_file.writelines(
-            f"# {only_filename} {file_date} Logs :see_no_evil: :hear_no_evil: :speak_no_evil:\n"
-        )
-        markdown_file.writelines("![](pie_chart.png)\n")
-        markdown_file.writelines(
-            "|TIME|STATUS|FILENAME|FUNCTION|MESSAGE|\n| :--: | :--: | :--: | :--: | :--: |\n"
-        )
-
-        # Split Strings.
-        file = open(full_logfile_path, "r")
-        (
-            _date_list,
-            _status_list,
-            _filename_list,
-            _functname_list,
-            _log_message_list,
-        ) = extract_logs(logs=file)
-
-        status_dict = Logges.LogStatus.get_blank_dict()
-        # Write logs in markdown file.
-        for index, _ in enumerate(_log_message_list):
-            log_status_clear = _status_list[index].replace("[", "").replace(
-                "]", "")
-            status_dict[log_status_clear] += 1
-
-            try:
-                markdown_file.writelines("|{}|{}|{}|{}|{}|".format(
-                    _date_list[index],
-                    status_icons[log_status_clear],
-                    _filename_list[index],
-                    _functname_list[index],
-                    _log_message_list[index].replace("\n", " "),
-                ))
-                markdown_file.write("\n")
-            except KeyError:
-                raise ("Please check your icon.")
-
-        # Write signature
-        markdown_file.writelines(
-            "All right reserved 2022 &copy;&nbsp; [Logges](https://github.com/uysalserkan/Logges) - \
-*[uysalserkan](https://github.com/uysalserkan/) & [Ozkan](https://github.com/ozkanuysal)*\n"
-        )
-
-        # Create chart
-        create_pie_chart(
+        to_markdown(
+            script_name=FILENAME,
             saving_path=SAVINGPATH,
-            status_dict=status_dict,
+            status_dict=Logges.LogStatus.get_blank_dict(),
+            status_icons=Logges.LogStatus.get_icon_dict(),
         )
 
     @staticmethod
