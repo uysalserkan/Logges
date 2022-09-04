@@ -7,25 +7,18 @@
 """
 import datetime
 import os
-import sys
 import platform
+import sys
 from io import TextIOWrapper
-from typing import Dict
-from typing import List
-from typing import Tuple
+from typing import Dict, List, Tuple
 
 import matplotlib.pyplot as plt
 from reportlab.lib.colors import Color
-from reportlab.lib.enums import TA_CENTER
-from reportlab.lib.enums import TA_LEFT
-from reportlab.lib.pagesizes import inch
-from reportlab.lib.pagesizes import LETTER
+from reportlab.lib.enums import TA_CENTER, TA_LEFT
+from reportlab.lib.pagesizes import LETTER, inch
 from reportlab.lib.styles import ParagraphStyle
-from reportlab.platypus import Image
-from reportlab.platypus import PageBreak
-from reportlab.platypus import Paragraph
-from reportlab.platypus import SimpleDocTemplate
-from reportlab.platypus import Spacer
+from reportlab.platypus import (Image, PageBreak, Paragraph, SimpleDocTemplate,
+                                Spacer)
 from reportlab.platypus import Table as reportlabTable
 from reportlab.platypus import TableStyle
 from rich.console import Console

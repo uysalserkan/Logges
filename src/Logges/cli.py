@@ -1,15 +1,13 @@
 """CLI app."""
 import os
-import click
-
 from datetime import datetime
 from typing import Union
+
+import click
+
 from Logges import Logges
 
-from .utils import extract_logs
-from .utils import console_data
-from .utils import to_markdown
-from .utils import to_pdf
+from .utils import console_data, extract_logs, to_markdown, to_pdf
 
 
 def validate_file(_, __, value):
