@@ -86,6 +86,8 @@ def create_pie_chart(saving_path: str, status_dict: Dict[str, int]) -> None:
 
     png_path = os.path.join(saving_path, "pie_chart.png")
 
+    os.remove(png_path)
+
     plt.savefig(f"{png_path}")
 
 
@@ -200,8 +202,12 @@ def console_data(script_name: str, status_dict: Dict[str, int],
         f"\tCRITICAL: %{round(status_dict['CRITICAL']/total_length*100 if total_length > 0 else 0, 2)}")
 
 
-def to_pdf(script_name: str, saving_path: str, status_dict: Dict[str,
-                                                                 int]) -> None:
+def to_pdf(
+    script_name: str,
+    saving_path: str,
+    status_dict: Dict[str, int],
+    local_file: bool = False,
+) -> None:
     """Export the logs to a file with `.pdf` format.
 
     Parameters:
@@ -233,8 +239,12 @@ def to_pdf(script_name: str, saving_path: str, status_dict: Dict[str,
         "CRITICAL": "darkred",
     }
 
-    log_dir = os.path.join(saving_path,
-                           get_daily_log_file_name(filename=script_name))
+    if local_file:
+        log_dir = script_name
+    else:
+
+        log_dir = os.path.join(saving_path,
+                               get_daily_log_file_name(filename=script_name))
 
     # Burada eklemeler yapılıyor..
     page_elements = []

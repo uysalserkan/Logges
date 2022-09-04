@@ -8,6 +8,7 @@ from Logges import Logges
 
 from .utils import extract_logs
 from .utils import console_data
+from .utils import to_pdf
 
 
 def validate_file(_, __, value):
@@ -148,11 +149,6 @@ def show_log_file(file: Union[str, any], local_file: bool) -> None:
     callback=validate_date,
 )
 @click.option(
-    "--export_name",
-    required=False,
-    help="Set your export log file.",
-)
-@click.option(
     "--sentences",
     "-sen",
     required=True,
@@ -180,24 +176,37 @@ def show_log_file(file: Union[str, any], local_file: bool) -> None:
     help="Searching status, separated with ',' character.",
 )
 @click.option(
+    "--export_name",
+    required=False,
+    help="Set your export log file.",
+)
+@click.option(
     "--export",
     "-e",
-    default=True,
+    default=None,
     required=False,
-    help="Export your log file as Export datetime type, default is True.",
+    help="You can export your search result as log, md and pdf (only one type).",
 )
 def search_in_log_files(
     max_date: str,
     min_date: str,
-    export_name: str,
     sentences: str,
     functions: str,
     status: str,
     files: str,
-    export: bool,
+    export_name: str,
+    export: str,
 ) -> None:
     """Search keywords on log files."""
     # Writting in file
+    if export:
+        if export.lower() not in ["log", "pdf", "md"]:
+            raise click.BadOptionUsage(
+                option_name="export",
+                message="Please enter a " + click.style(text="valid ", fg="red", blink=True)
+                + " export type like: " + click.style(text="log, md, pdf", underline=True)
+            )
+
     if export_name:
         tmp_filename = f"{export_name}.log"
     else:
@@ -223,6 +232,7 @@ def search_in_log_files(
             else:
                 log_file_list.append(each_file)
 
+    # Create list of params, separated with ','
     if sentences:
         sentence_list = sentences.split(',')
 
@@ -235,6 +245,7 @@ def search_in_log_files(
     if files:
         files_list = files.split(',')
 
+    # Extract and filter logs.
     for each_log in log_file_list:
         full_logfile_path = os.path.join(log_dir, each_log)
         file = open(full_logfile_path, "r")
@@ -294,7 +305,19 @@ def search_in_log_files(
     tmp_file.close()
 
     if not export:
-        os.remove(tmp_file)
+        os.remove(tmp_filename)
+    else:
+        if export.lower() == 'md':
+            pass
+        elif export.lower() == 'pdf':
+            to_pdf(
+                script_name=tmp_filename,
+                saving_path='.',
+                status_dict=Logges.LogStatus.get_blank_dict(),
+                local_file=True
+            )
+            os.remove(tmp_filename)
+            os.remove("pie_chart.png")
 
 
 if __name__ == "__main__":
