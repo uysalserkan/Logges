@@ -159,7 +159,7 @@ class Logges:
 
         filepath, funct = get_log_info()
 
-        if any(True if each_ignored in filepath else False
+        if any(True if each_ignored in filepath.lower() else False
                for each_ignored in IGNORE_FILES_AND_DIRS):
             return
 
