@@ -7,8 +7,8 @@
 """
 import datetime
 import os
-import sys
 import platform
+import sys
 from io import TextIOWrapper
 from typing import Dict
 from typing import List
@@ -127,9 +127,12 @@ def get_current_time_HM() -> str:
     return f"{hour_min_sec}"
 
 
-def console_data(script_name: str, status_dict: Dict[str, int],
-                 statuc_icon_dict: Dict[str, str],
-                 local_file: bool) -> None:
+def console_data(
+    script_name: str,
+    status_dict: Dict[str, int],
+    statuc_icon_dict: Dict[str, str],
+    local_file: bool,
+) -> None:
     """We are printing our logs on console with beauty of rich.
 
     Params:
@@ -164,7 +167,8 @@ def console_data(script_name: str, status_dict: Dict[str, int],
     }
 
     rich_table = Table(
-        title=f"{log_dir.split('/')[-1]} :see_no_evil: :hear_no_evil: :speak_no_evil:"
+        title=
+        f"{log_dir.split('/')[-1]} :see_no_evil: :hear_no_evil: :speak_no_evil:"
     )
 
     rich_table.add_column("DATE", justify="center")
@@ -191,16 +195,20 @@ def console_data(script_name: str, status_dict: Dict[str, int],
     rich_console = Console()
     rich_console.print(rich_table)
     total_length = sum(list(status_dict.values()))
-    rich_console.print(
-        "[bright_black]████████████████[blue]████████████████\
+    rich_console.print("[bright_black]████████████████[blue]████████████████\
 [bright_yellow]████████████████[red]█████████████████[dark_red]██████████████████"
-    )
+                       )
     rich_console.print(
-        f"DEBUG: %{round(status_dict['DEBUG']/total_length*100 if total_length > 0 else 0, 2)}" +
-        f"\tINFO: %{round(status_dict['INFO']/total_length*100 if total_length > 0 else 0, 2)}" +
-        f"\tWARNING: %{round(status_dict['WARNING']/total_length*100 if total_length > 0 else 0, 2)}" +
-        f"\tERROR: %{round(status_dict['ERROR']/total_length*100 if total_length > 0 else 0, 2)}" +
-        f"\tCRITICAL: %{round(status_dict['CRITICAL']/total_length*100 if total_length > 0 else 0, 2)}")
+        f"DEBUG: %{round(status_dict['DEBUG']/total_length*100 if total_length > 0 else 0, 2)}"
+        +
+        f"\tINFO: %{round(status_dict['INFO']/total_length*100 if total_length > 0 else 0, 2)}"
+        +
+        f"\tWARNING: %{round(status_dict['WARNING']/total_length*100 if total_length > 0 else 0, 2)}"
+        +
+        f"\tERROR: %{round(status_dict['ERROR']/total_length*100 if total_length > 0 else 0, 2)}"
+        +
+        f"\tCRITICAL: %{round(status_dict['CRITICAL']/total_length*100 if total_length > 0 else 0, 2)}"
+    )
 
 
 def to_markdown(
@@ -222,10 +230,7 @@ def to_markdown(
         None
     """
     if local_file:
-        md_file = os.path.join(
-            saving_path,
-            script_name.replace('.log', '.md')
-        )
+        md_file = os.path.join(saving_path, script_name.replace(".log", ".md"))
 
         markdown_file = open(md_file, "w")
         filename = script_name
@@ -233,8 +238,7 @@ def to_markdown(
     else:
         md_file = os.path.join(
             saving_path,
-            get_daily_log_file_name(filename=script_name, markdown=True)
-        )
+            get_daily_log_file_name(filename=script_name, markdown=True))
 
         markdown_file = open(md_file, "w")
         filename = get_daily_log_file_name(filename=script_name)
@@ -270,8 +274,8 @@ def to_markdown(
 
     # Write logs in markdown file.
     for index, _ in enumerate(_log_message_list):
-        log_status_clear = _status_list[index].replace("[", "").replace(
-            "]", "")
+        log_status_clear = _status_list[index].replace("[",
+                                                       "").replace("]", "")
         status_dict[log_status_clear] += 1
 
         try:
@@ -419,8 +423,7 @@ def to_pdf(
 
         row_data = []
         for index, item in enumerate(
-            [_date, _log_status, _filename, _functname, _log_msg]
-        ):
+            [_date, _log_status, _filename, _functname, _log_msg]):
             if index == 1:
                 table_text = f"<font color='{color}'>{item}</font>"
             else:
@@ -491,8 +494,7 @@ def extract_logs(
             status_list.append(info_str[11:21].replace(" ", ""))
             filename_list.append(f"[{info_str[22:].split('[')[1][:-2]}]")
             function_and_lineno_list.append(
-                f"[{info_str[22:].split('[')[2][:-1]}]"
-            )
+                f"[{info_str[22:].split('[')[2][:-1]}]")
         else:
             msg_list[len(msg_list) - 1] += each_line
 

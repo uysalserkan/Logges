@@ -1,13 +1,13 @@
 """CLI app."""
 import os
-import click
-
 from datetime import datetime
 from typing import Union
+
+import click
 from Logges import Logges
 
-from .utils import extract_logs
 from .utils import console_data
+from .utils import extract_logs
 from .utils import to_markdown
 from .utils import to_pdf
 
@@ -135,8 +135,11 @@ def show_log_file(file: Union[str, any], local_file: bool) -> None:
     )
 
 
-@Logges_cli.command(name="search", help="Search and get file name which is contains given keyword(s)\
- or Sentence(s), Sentences splitted with ','.")
+@Logges_cli.command(
+    name="search",
+    help="Search and get file name which is contains given keyword(s)\
+ or Sentence(s), Sentences splitted with ','.",
+)
 @click.option(
     "--max_date",
     required=False,
@@ -186,7 +189,8 @@ def show_log_file(file: Union[str, any], local_file: bool) -> None:
     "-e",
     default=None,
     required=False,
-    help="You can export your search result as log, md and pdf (only one type).",
+    help=
+    "You can export your search result as log, md and pdf (only one type).",
 )
 def search_in_log_files(
     max_date: str,
@@ -204,8 +208,10 @@ def search_in_log_files(
         if export.lower() not in ["log", "pdf", "md"]:
             raise click.BadOptionUsage(
                 option_name="export",
-                message="Please enter a " + click.style(text="valid ", fg="red", blink=True)
-                + " export type like: " + click.style(text="log, md, pdf", underline=True)
+                message="Please enter a " +
+                click.style(text="valid ", fg="red", blink=True) +
+                " export type like: " +
+                click.style(text="log, md, pdf", underline=True),
             )
 
     if export_name:
@@ -235,16 +241,16 @@ def search_in_log_files(
 
     # Create list of params, separated with ','
     if sentences:
-        sentence_list = sentences.split(',')
+        sentence_list = sentences.split(",")
 
     if status:
-        status_list = status.split(',')
+        status_list = status.split(",")
 
     if functions:
-        functions_list = functions.split(',')
+        functions_list = functions.split(",")
 
     if files:
-        files_list = files.split(',')
+        files_list = files.split(",")
 
     # Extract and filter logs.
     for each_log in log_file_list:
@@ -258,7 +264,7 @@ def search_in_log_files(
             _log_message_list,
         ) = extract_logs(logs=file)
 
-        each_tmp_log_file = open(each_log, 'w')
+        each_tmp_log_file = open(each_log, "w")
         counter = 0
 
         for index, each_log_msg in enumerate(_log_message_list):
@@ -266,26 +272,30 @@ def search_in_log_files(
                 for each_sentence in sentence_list:
                     if each_sentence in each_log_msg:
                         if status:
-                            if _status_list[index].replace('[', '').replace(']', '') not in status_list:
+                            if (_status_list[index].replace("[", "").replace(
+                                    "]", "") not in status_list):
                                 continue
 
                         if functions:
-                            clear_funct_name = _functname_list[index].replace('[', '')\
-                                                                     .replace(']', '')\
-                                                                     .replace('<', '')\
-                                                                     .replace('>', '').split(':')[0]
+                            clear_funct_name = (_functname_list[index].replace(
+                                "[", "").replace("]",
+                                                 "").replace("<", "").replace(
+                                                     ">", "").split(":")[0])
                             if clear_funct_name not in functions_list:
                                 continue
 
                         if files:
-                            if _filename_list[index].replace('[', '').replace(']', '') not in files_list:
+                            if (_filename_list[index].replace("[", "").replace(
+                                    "]", "") not in files_list):
                                 continue
                         tmp_file.write(
-                            f"{_date_list[index]} [{_status_list[index].replace('[', '').replace(']', '') :8s}] " +
+                            f"{_date_list[index]} [{_status_list[index].replace('[', '').replace(']', '') :8s}] "
+                            +
                             f"{_filename_list[index]} {_functname_list[index]}:({each_log}) {_log_message_list[index]}"
                         )
                         each_tmp_log_file.write(
-                            f"{_date_list[index]} [{_status_list[index].replace('[', '').replace(']', '') :8s}] " +
+                            f"{_date_list[index]} [{_status_list[index].replace('[', '').replace(']', '') :8s}] "
+                            +
                             f"{_filename_list[index]} {_functname_list[index]}: {_log_message_list[index]}"
                         )
                         counter += 1
@@ -308,19 +318,19 @@ def search_in_log_files(
     if not export:
         os.remove(tmp_filename)
     else:
-        if export.lower() == 'md':
+        if export.lower() == "md":
             to_markdown(
                 script_name=tmp_filename,
-                saving_path='.',
+                saving_path=".",
                 status_dict=Logges.LogStatus.get_blank_dict(),
                 status_icons=Logges.LogStatus.get_icon_dict(),
                 local_file=True,
             )
             os.remove(tmp_filename)
-        elif export.lower() == 'pdf':
+        elif export.lower() == "pdf":
             to_pdf(
                 script_name=tmp_filename,
-                saving_path='.',
+                saving_path=".",
                 status_dict=Logges.LogStatus.get_blank_dict(),
                 local_file=True,
             )
