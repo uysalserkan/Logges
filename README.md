@@ -1,27 +1,27 @@
 ```txt
-LLLLLLLLLLL                                                                                            SSSSSSSSSSSSSSS 
+LLLLLLLLLLL                                                                                            SSSSSSSSSSSSSSS
 L:::::::::L                                                                                          SS:::::::::::::::S
 L:::::::::L                                                                                         S:::::SSSSSS::::::S
 LL:::::::LL                                                                                         S:::::S     SSSSSSS
-  L:::::L                  ooooooooooo      ggggggggg   ggggg   ggggggggg   ggggg    eeeeeeeeeeee   S:::::S            
-  L:::::L                oo:::::::::::oo   g:::::::::ggg::::g  g:::::::::ggg::::g  ee::::::::::::ee S:::::S            
-  L:::::L               o:::::::::::::::o g:::::::::::::::::g g:::::::::::::::::g e::::::eeeee:::::eeS::::SSSS         
-  L:::::L               o:::::ooooo:::::og::::::ggggg::::::ggg::::::ggggg::::::gge::::::e     e:::::e SS::::::SSSSS    
-  L:::::L               o::::o     o::::og:::::g     g:::::g g:::::g     g:::::g e:::::::eeeee::::::e   SSS::::::::SS  
-  L:::::L               o::::o     o::::og:::::g     g:::::g g:::::g     g:::::g e:::::::::::::::::e       SSSSSS::::S 
+  L:::::L                  ooooooooooo      ggggggggg   ggggg   ggggggggg   ggggg    eeeeeeeeeeee   S:::::S
+  L:::::L                oo:::::::::::oo   g:::::::::ggg::::g  g:::::::::ggg::::g  ee::::::::::::ee S:::::S
+  L:::::L               o:::::::::::::::o g:::::::::::::::::g g:::::::::::::::::g e::::::eeeee:::::eeS::::SSSS
+  L:::::L               o:::::ooooo:::::og::::::ggggg::::::ggg::::::ggggg::::::gge::::::e     e:::::e SS::::::SSSSS
+  L:::::L               o::::o     o::::og:::::g     g:::::g g:::::g     g:::::g e:::::::eeeee::::::e   SSS::::::::SS
+  L:::::L               o::::o     o::::og:::::g     g:::::g g:::::g     g:::::g e:::::::::::::::::e       SSSSSS::::S
   L:::::L               o::::o     o::::og:::::g     g:::::g g:::::g     g:::::g e::::::eeeeeeeeeee             S:::::S
   L:::::L         LLLLLLo::::o     o::::og::::::g    g:::::g g::::::g    g:::::g e:::::::e                      S:::::S
 LL:::::::LLLLLLLLL:::::Lo:::::ooooo:::::og:::::::ggggg:::::g g:::::::ggggg:::::g e::::::::e         SSSSSSS     S:::::S
 L::::::::::::::::::::::Lo:::::::::::::::o g::::::::::::::::g  g::::::::::::::::g  e::::::::eeeeeeee S::::::SSSSSS:::::S
-L::::::::::::::::::::::L oo:::::::::::oo   gg::::::::::::::g   gg::::::::::::::g   ee:::::::::::::e S:::::::::::::::SS 
-LLLLLLLLLLLLLLLLLLLLLLLL   ooooooooooo       gggggggg::::::g     gggggggg::::::g     eeeeeeeeeeeeee  SSSSSSSSSSSSSSS   
-                                                     g:::::g             g:::::g                                       
-                                         gggggg      g:::::g gggggg      g:::::g                                       
-                                         g:::::gg   gg:::::g g:::::gg   gg:::::g                                       
-                                          g::::::ggg:::::::g  g::::::ggg:::::::g                                       
-                                           gg:::::::::::::g    gg:::::::::::::g                                        
-                                             ggg::::::ggg        ggg::::::ggg                                          
-                                                gggggg              gggggg                                             
+L::::::::::::::::::::::L oo:::::::::::oo   gg::::::::::::::g   gg::::::::::::::g   ee:::::::::::::e S:::::::::::::::SS
+LLLLLLLLLLLLLLLLLLLLLLLL   ooooooooooo       gggggggg::::::g     gggggggg::::::g     eeeeeeeeeeeeee  SSSSSSSSSSSSSSS
+                                                     g:::::g             g:::::g
+                                         gggggg      g:::::g gggggg      g:::::g
+                                         g:::::gg   gg:::::g g:::::gg   gg:::::g
+                                          g::::::ggg:::::::g  g::::::ggg:::::::g
+                                           gg:::::::::::::g    gg:::::::::::::g
+                                             ggg::::::ggg        ggg::::::ggg
+                                                gggggg              gggggg
 
 ```
 
@@ -43,7 +43,7 @@ With **Logges**, you can follow your logs that you want to follow, whether you p
 
 ## Installation :open_file_folder:
 
-You can install Logges with typing `pip install Logges` on Python package managers/terminal. (*Docker file will be here as soon as possible*)
+You can install Logges with typing `pip install Logges` on Python package managers/terminal. (_Docker file will be here as soon as possible_)
 
 ## Usage :memo:
 
@@ -78,7 +78,7 @@ Check our [example](examples) scripts to understand how to use.
 - :pushpin: `logges list` has 2 optional parameter for listing log files.
   - :gem: `--max-date` is filtering logs with maximum date.
   - :gem: `--min-date` is filtering logs with minimum date.
-  - :gem: Please enter your date format as *YYYY-MM-DD*
+  - :gem: Please enter your date format as _YYYY-MM-DD_
 - :pushpin: `logges show` is showing entered filename.
   - :gem: `-f`/`--file` parameter is defines the log filename which is showing on `list` command or local file.
   - :gem: `--local_file` parameter default is `False`, if you want to see your local log file, you need to set this parameter `True`.
@@ -94,7 +94,7 @@ Check our [example](examples) scripts to understand how to use.
 
 ## Encountered Bugs :ghost:
 
-If you find any bug or want to a feature nice-to-have, do not hesitate open an [**issue page**](https://github.com/uysalserkan/Logges/issues/new). 
+If you find any bug or want to a feature nice-to-have, do not hesitate open an [**issue page**](https://github.com/uysalserkan/Logges/issues/new).
 
 ## Contact :tophat:
 
