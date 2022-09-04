@@ -223,7 +223,6 @@ def search_in_log_files(
             else:
                 log_file_list.append(each_file)
 
-    counter = 0
     if sentences:
         sentence_list = sentences.split(',')
 
@@ -246,6 +245,10 @@ def search_in_log_files(
             _functname_list,
             _log_message_list,
         ) = extract_logs(logs=file)
+
+        each_tmp_log_file = open(each_log, 'w')
+        counter = 0
+
         for index, each_log_msg in enumerate(_log_message_list):
             if sentence_list:
                 for each_sentence in sentence_list:
@@ -255,7 +258,10 @@ def search_in_log_files(
                                 continue
 
                         if functions:
-                            clear_funct_name = _functname_list[index].replace('[', '').replace(']', '').replace('<', '').replace('>', '').split(':')[0]
+                            clear_funct_name = _functname_list[index].replace('[', '')\
+                                                                     .replace(']', '')\
+                                                                     .replace('<', '')\
+                                                                     .replace('>', '').split(':')[0]
                             if clear_funct_name not in functions_list:
                                 continue
 
@@ -264,24 +270,31 @@ def search_in_log_files(
                                 continue
                         tmp_file.write(
                             f"{_date_list[index]} [{_status_list[index].replace('[', '').replace(']', '') :8s}] " +
-                            f"{_filename_list[index]} {_functname_list[index]}:{_log_message_list[index]}"
+                            f"{_filename_list[index]} {_functname_list[index]}:({each_log}) {_log_message_list[index]}"
+                        )
+                        each_tmp_log_file.write(
+                            f"{_date_list[index]} [{_status_list[index].replace('[', '').replace(']', '') :8s}] " +
+                            f"{_filename_list[index]} {_functname_list[index]}: {_log_message_list[index]}"
                         )
                         counter += 1
+        if counter > 0:
+            # Close temp file for writting on console log.
+            each_tmp_log_file.close()
+
+            console_data(
+                script_name=each_log,
+                status_dict=Logges.LogStatus.get_blank_dict(),
+                statuc_icon_dict=Logges.LogStatus.get_icon_dict(),
+                local_file=True,
+            )
+
+        # Remove temp log file.
+        os.remove(each_log)
 
     tmp_file.close()
 
-    if counter > 0:
-        console_data(
-            script_name=tmp_filename,
-            status_dict=Logges.LogStatus.get_blank_dict(),
-            statuc_icon_dict=Logges.LogStatus.get_icon_dict(),
-            local_file=True,
-        )
-        if not export:
-            os.remove(tmp_filename)
-    else:
-        click.echo("There is " + click.style("nothing", fg="red") + " about your searching keywords.")
-        os.remove(tmp_filename)
+    if not export:
+        os.remove(tmp_file)
 
 
 if __name__ == "__main__":
