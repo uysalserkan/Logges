@@ -76,7 +76,8 @@ class Logges:
             return icon_status_dict
 
     @staticmethod
-    def setup(logname: str = None, status_level: LogStatus = LogStatus.ERROR) -> None:
+    def setup(logname: str = None,
+              status_level: LogStatus = LogStatus.ERROR) -> None:
         """Set the environment.
 
         Set up environment and setting the logfile name.
@@ -158,10 +159,8 @@ class Logges:
 
         filepath, funct = get_log_info()
 
-        if any(
-            True if each_ignored in filepath else False
-            for each_ignored in IGNORE_FILES_AND_DIRS
-        ):
+        if any(True if each_ignored in filepath else False
+               for each_ignored in IGNORE_FILES_AND_DIRS):
             return
 
         filename = os.path.split(filepath)[1]
@@ -256,9 +255,7 @@ class Logges:
                     zipfile.write(file)
                     os.remove(file)
                 if log:
-                    filename = get_daily_log_file_name(
-                        filename=FILENAME,
-                    )
+                    filename = get_daily_log_file_name(filename=FILENAME, )
                     file = os.path.join(SAVINGPATH, filename)
                     zipfile.write(file)
                     os.remove(file)

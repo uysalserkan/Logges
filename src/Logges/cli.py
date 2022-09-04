@@ -20,10 +20,9 @@ def validate_file(_, __, value):
             log_files.append(each_file)
     if value not in log_files:
         raise click.BadParameter(
-            message="Please enter a "
-            + click.style("valid", fg="red", reverse=True, underline=True)
-            + " log filename."
-        )
+            message="Please enter a " +
+            click.style("valid", fg="red", reverse=True, underline=True) +
+            " log filename.")
     else:
         return value
 
@@ -35,9 +34,8 @@ def validate_date(_, __, value):
 
     elif len(str(value)) < 8:
         raise click.BadParameter(
-            message="Please enter date format as: "
-            + click.style("1998-08-25", fg="red", blink=True)
-        )
+            message="Please enter date format as: " +
+            click.style("1998-08-25", fg="red", blink=True))
 
     if value[4] == ":" and value[7] == ":":
         return str(value).replace(":", "-")
@@ -51,9 +49,8 @@ def validate_date(_, __, value):
 
     else:
         raise click.BadParameter(
-            message="Please enter date format as: "
-            + click.style("1998-08-25", fg="red", blink=True)
-        )
+            message="Please enter date format as: " +
+            click.style("1998-08-25", fg="red", blink=True))
 
 
 @click.group(name="Logges-cli")
@@ -81,31 +78,30 @@ def list_logs(max_date: str, min_date: str):
     log_file_list = []
     for each_file in os.listdir(os.path.split(__file__)[0]):
         if ".log" in each_file:
-            if (not isinstance(min_date, type(None))) and (
-                not isinstance(max_date, type(None))
-            ):
-                if (each_file[:10] >= min_date) and (each_file[:10] <= max_date):
+            if (not isinstance(min_date, type(None))) and (not isinstance(
+                    max_date, type(None))):
+                if (each_file[:10] >= min_date) and (each_file[:10] <=
+                                                     max_date):
                     log_file_list.append(
-                        click.style(text="*: ", fg="bright_green", bold=True)
-                        + click.style(text=each_file, fg="bright_cyan", italic=True)
-                    )
+                        click.style(text="*: ", fg="bright_green", bold=True) +
+                        click.style(
+                            text=each_file, fg="bright_cyan", italic=True))
             elif not isinstance(min_date, type(None)):
                 if each_file[:10] >= min_date:
                     log_file_list.append(
-                        click.style(text="*: ", fg="bright_green", bold=True)
-                        + click.style(text=each_file, fg="bright_cyan", italic=True)
-                    )
+                        click.style(text="*: ", fg="bright_green", bold=True) +
+                        click.style(
+                            text=each_file, fg="bright_cyan", italic=True))
             elif not isinstance(max_date, type(None)):
                 if each_file[:10] <= max_date:
                     log_file_list.append(
-                        click.style(text="*: ", fg="bright_green", bold=True)
-                        + click.style(text=each_file, fg="bright_cyan", italic=True)
-                    )
+                        click.style(text="*: ", fg="bright_green", bold=True) +
+                        click.style(
+                            text=each_file, fg="bright_cyan", italic=True))
             else:
                 log_file_list.append(
-                    click.style(text="*: ", fg="bright_green", bold=True)
-                    + click.style(text=each_file, fg="bright_cyan", italic=True)
-                )
+                    click.style(text="*: ", fg="bright_green", bold=True) +
+                    click.style(text=each_file, fg="bright_cyan", italic=True))
     click.echo_via_pager("\n".join(log_file_list))
 
 
@@ -117,9 +113,9 @@ def list_logs(max_date: str, min_date: str):
     "--file",
     "-f",
     required=True,
-    help="Log file name. If you don't know please use "
-    + click.style("show", fg="blue", underline=True, reverse=True)
-    + " parameter.",
+    help="Log file name. If you don't know please use " +
+    click.style("show", fg="blue", underline=True, reverse=True) +
+    " parameter.",
 )
 @click.option(
     "--local_file",
@@ -193,7 +189,8 @@ def show_log_file(file: Union[str, any], local_file: bool) -> None:
     "-e",
     default=None,
     required=False,
-    help="You can export your search result as log, md and pdf (only one type).",
+    help=
+    "You can export your search result as log, md and pdf (only one type).",
 )
 def search_in_log_files(
     max_date: str,
@@ -211,10 +208,10 @@ def search_in_log_files(
         if export.lower() not in ["log", "pdf", "md"]:
             raise click.BadOptionUsage(
                 option_name="export",
-                message="Please enter a "
-                + click.style(text="valid ", fg="red", blink=True)
-                + " export type like: "
-                + click.style(text="log, md, pdf", underline=True),
+                message="Please enter a " +
+                click.style(text="valid ", fg="red", blink=True) +
+                " export type like: " +
+                click.style(text="log, md, pdf", underline=True),
             )
 
     if export_name:
@@ -228,10 +225,10 @@ def search_in_log_files(
     log_dir = os.path.split(__file__)[0]
     for each_file in os.listdir(log_dir):
         if ".log" in each_file:
-            if (not isinstance(min_date, type(None))) and (
-                not isinstance(max_date, type(None))
-            ):
-                if (each_file[:10] >= min_date) and (each_file[:10] <= max_date):
+            if (not isinstance(min_date, type(None))) and (not isinstance(
+                    max_date, type(None))):
+                if (each_file[:10] >= min_date) and (each_file[:10] <=
+                                                     max_date):
                     log_file_list.append(each_file)
             elif not isinstance(min_date, type(None)):
                 if each_file[:10] >= min_date:
@@ -275,37 +272,31 @@ def search_in_log_files(
                 for each_sentence in sentence_list:
                     if each_sentence in each_log_msg:
                         if status:
-                            if (
-                                _status_list[index].replace("[", "").replace("]", "")
-                                not in status_list
-                            ):
+                            if (_status_list[index].replace("[", "").replace(
+                                    "]", "") not in status_list):
                                 continue
 
                         if functions:
-                            clear_funct_name = (
-                                _functname_list[index]
-                                .replace("[", "")
-                                .replace("]", "")
-                                .replace("<", "")
-                                .replace(">", "")
-                                .split(":")[0]
-                            )
+                            clear_funct_name = (_functname_list[index].replace(
+                                "[", "").replace("]",
+                                                 "").replace("<", "").replace(
+                                                     ">", "").split(":")[0])
                             if clear_funct_name not in functions_list:
                                 continue
 
                         if files:
-                            if (
-                                _filename_list[index].replace("[", "").replace("]", "")
-                                not in files_list
-                            ):
+                            if (_filename_list[index].replace("[", "").replace(
+                                    "]", "") not in files_list):
                                 continue
                         tmp_file.write(
                             f"{_date_list[index]} [{_status_list[index].replace('[', '').replace(']', '') :8s}] "
-                            + f"{_filename_list[index]} {_functname_list[index]}:({each_log}) {_log_message_list[index]}"
+                            +
+                            f"{_filename_list[index]} {_functname_list[index]}:({each_log}) {_log_message_list[index]}"
                         )
                         each_tmp_log_file.write(
                             f"{_date_list[index]} [{_status_list[index].replace('[', '').replace(']', '') :8s}] "
-                            + f"{_filename_list[index]} {_functname_list[index]}: {_log_message_list[index]}"
+                            +
+                            f"{_filename_list[index]} {_functname_list[index]}: {_log_message_list[index]}"
                         )
                         counter += 1
         if counter > 0:
