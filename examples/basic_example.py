@@ -1,7 +1,6 @@
 """A simple example."""
-from other_module import other_method
-
 from Logges import Logges
+from other_module import other_method
 
 if __name__ == "__main__":
     Logges.setup()
