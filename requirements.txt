@@ -1,6 +1,6 @@
 appdirs==1.4.4
 attrs @ file:///opt/conda/conda-bld/attrs_1642510447205/work
-black==22.8.0
+black==22.10.0
 bleach @ file:///opt/conda/conda-bld/bleach_1641577558959/work
 brotlipy==0.7.0
 certifi @ file:///private/var/folders/sy/f16zz6x50xz3113nwtb9bvq00000gp/T/abs_83242e7e-f82d-4a71-8ef2-9d71d212d249gu_wxmeq/croots/recipe/certifi_1655968827803/work/certifi
@@ -43,7 +43,7 @@ PySocks @ file:///Users/builder/ci_310/pysocks_1642536366386/work
 python-dateutil @ file:///tmp/build/80754af9/python-dateutil_1626374649649/work
 readme-renderer @ file:///Users/builder/ci_310/readme_renderer_1642516347890/work
 regex @ file:///opt/concourse/worker/volumes/live/63aed588-2398-47ee-5ad3-e682b77e31f2/volume/regex_1648447727979/work
-reportlab==3.5.67
+reportlab==3.6.12
 requests @ file:///opt/conda/conda-bld/requests_1641824580448/work
 requests-toolbelt @ file:///Users/ktietz/demo/mc3/conda-bld/requests-toolbelt_1629456163440/work
 rfc3986 @ file:///Users/ktietz/demo/mc3/conda-bld/rfc3986_1629478296451/work
