@@ -28,7 +28,7 @@ setup(
     keywords="Log, Logging, Logges, Logger",
     install_requires=[
         "matplotlib==3.6.1",
-        "rich==10.16.2",
+        "rich==13.1.0",
         "reportlab==3.6.12",
         "click==8.1.3",
     ],
