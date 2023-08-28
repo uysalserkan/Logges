@@ -29,7 +29,7 @@ setup(
     install_requires=[
         "matplotlib==3.5.3",
         "rich==10.16.2",
-        "reportlab==3.5.67",
+        "reportlab==3.6.13",
         "click==8.1.3",
     ],
     entry_points="""
