@@ -29,7 +29,7 @@ munkres==1.1.4
 mypy-extensions==1.0.0
 numpy @ file:///private/var/folders/sy/f16zz6x50xz3113nwtb9bvq00000gp/T/abs_e3f85f54-0572-4c0e-b190-4bc4766fc3fenewxarhq/croots/recipe/numpy_and_numpy_base_1652801682879/work
 packaging @ file:///tmp/build/80754af9/packaging_1637314298585/work
-pathspec==0.10.3
+pathspec==0.12.1
 Pillow==10.0.0
 pkginfo @ file:///tmp/build/80754af9/pkginfo_1643162084911/work
 pycodestyle @ file:///tmp/build/80754af9/pycodestyle_1636635402688/work
