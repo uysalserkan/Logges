@@ -1,61 +1,17 @@
-appdirs==1.4.4
-attrs @ file:///opt/conda/conda-bld/attrs_1642510447205/work
-black==22.8.0
-bleach @ file:///opt/conda/conda-bld/bleach_1641577558959/work
-brotlipy==0.7.0
-certifi @ file:///private/var/folders/sy/f16zz6x50xz3113nwtb9bvq00000gp/T/abs_83242e7e-f82d-4a71-8ef2-9d71d212d249gu_wxmeq/croots/recipe/certifi_1655968827803/work/certifi
-cffi @ file:///Users/builder/ci_310/cffi_1643393868399/work
-charset-normalizer @ file:///tmp/build/80754af9/charset-normalizer_1630003229654/work
-click @ file:///opt/concourse/worker/volumes/live/2d66025a-4d79-47c4-43be-6220928b6c82/volume/click_1646056610594/work
-cmarkgfm @ file:///Users/builder/ci_310/cmarkgfm_1642543623745/work
-colorama @ file:///tmp/build/80754af9/colorama_1607707115595/work
-commonmark @ file:///Users/ktietz/demo/mc3/conda-bld/commonmark_1630649545323/work
-cryptography @ file:///private/var/folders/sy/f16zz6x50xz3113nwtb9bvq00000gp/T/abs_b470f7cb-c8f1-42c9-b84f-23789ea77e7c9difcqh4/croots/recipe/cryptography_1652101134392/work
-cycler @ file:///tmp/build/80754af9/cycler_1637851556182/work
-docutils @ file:///Users/builder/ci_310/docutils_1642501816213/work
-flake8 @ file:///opt/conda/conda-bld/flake8_1648129545443/work
-fonttools==4.37.1
-future @ file:///Users/builder/ci_310/future_1642502263251/work
-idna @ file:///tmp/build/80754af9/idna_1637925883363/work
-importlib-metadata @ file:///opt/concourse/worker/volumes/live/a8740f82-0523-4b08-5bb5-afa0c929f5e0/volume/importlib-metadata_1648562424930/work
-keyring @ file:///Users/builder/ci_310/keyring_1642616528347/work
-kiwisolver @ file:///private/var/folders/sy/f16zz6x50xz3113nwtb9bvq00000gp/T/abs_ca2945cc-8f2f-407b-8e24-f05d29ee2f4fvto5sdlk/croots/recipe/kiwisolver_1653292053344/work
-matplotlib @ file:///private/var/folders/sy/f16zz6x50xz3113nwtb9bvq00000gp/T/abs_croot-hkd3cnd2/matplotlib-suite_1647506470899/work
-mccabe @ file:///opt/conda/conda-bld/mccabe_1644221741721/work
-mkl-fft==1.3.1
-mkl-random @ file:///opt/concourse/worker/volumes/live/a9eca864-069c-4240-73c8-4e51b036a10d/volume/mkl_random_1639994047876/work
-mkl-service==2.4.0
-munkres==1.1.4
-mypy-extensions==0.4.3
-numpy @ file:///private/var/folders/sy/f16zz6x50xz3113nwtb9bvq00000gp/T/abs_e3f85f54-0572-4c0e-b190-4bc4766fc3fenewxarhq/croots/recipe/numpy_and_numpy_base_1652801682879/work
-packaging @ file:///tmp/build/80754af9/packaging_1637314298585/work
-pathspec==0.10.0
-Pillow==9.0.1
-pkginfo @ file:///tmp/build/80754af9/pkginfo_1643162084911/work
-pycodestyle @ file:///tmp/build/80754af9/pycodestyle_1636635402688/work
-pycparser @ file:///tmp/build/80754af9/pycparser_1636541352034/work
-pydocstyle @ file:///tmp/build/80754af9/pydocstyle_1621600989141/work
-pyflakes @ file:///tmp/build/80754af9/pyflakes_1636644436481/work
-Pygments @ file:///opt/conda/conda-bld/pygments_1644249106324/work
-pyOpenSSL @ file:///opt/conda/conda-bld/pyopenssl_1643788558760/work
-pyparsing @ file:///tmp/build/80754af9/pyparsing_1635766073266/work
-PySocks @ file:///Users/builder/ci_310/pysocks_1642536366386/work
-python-dateutil @ file:///tmp/build/80754af9/python-dateutil_1626374649649/work
-readme-renderer @ file:///Users/builder/ci_310/readme_renderer_1642516347890/work
-regex @ file:///opt/concourse/worker/volumes/live/63aed588-2398-47ee-5ad3-e682b77e31f2/volume/regex_1648447727979/work
-reportlab==3.5.67
-requests @ file:///opt/conda/conda-bld/requests_1641824580448/work
-requests-toolbelt @ file:///Users/ktietz/demo/mc3/conda-bld/requests-toolbelt_1629456163440/work
-rfc3986 @ file:///Users/ktietz/demo/mc3/conda-bld/rfc3986_1629478296451/work
-rich @ file:///opt/conda/conda-bld/rich_1641600379360/work
-six @ file:///tmp/build/80754af9/six_1644875935023/work
-snowballstemmer @ file:///tmp/build/80754af9/snowballstemmer_1637937080595/work
-toml @ file:///tmp/build/80754af9/toml_1616166611790/work
-tornado @ file:///Users/builder/ci_310/tornado_1642538510757/work
-tqdm @ file:///private/var/folders/sy/f16zz6x50xz3113nwtb9bvq00000gp/T/abs_6cb3db64-b7e1-4db2-ab0b-f944920e5367lekntvc5/croots/recipe/tqdm_1650891088614/work
-twine @ file:///tmp/build/80754af9/twine_1643404643330/work
-typed-ast @ file:///Users/builder/ci_310/typed-ast_1642538648001/work
-typing_extensions @ file:///opt/conda/conda-bld/typing_extensions_1647553014482/work
-urllib3 @ file:///private/var/folders/sy/f16zz6x50xz3113nwtb9bvq00000gp/T/abs_0b00bbfb-4d57-4b5b-af70-5677ec53f4ac495c5h1w/croots/recipe/urllib3_1650637219008/work
-webencodings==0.5.1
-zipp @ file:///private/var/folders/sy/f16zz6x50xz3113nwtb9bvq00000gp/T/abs_b279673d-f037-44c7-8773-c5a6b6f51037d3wfr9cq/croots/recipe/zipp_1652341773612/work
+click==8.1.7 ; python_version >= "3.11" and python_version < "4.0"
+colorama==0.4.6 ; python_version >= "3.11" and python_version < "4.0"
+commonmark==0.9.1 ; python_version >= "3.11" and python_version < "4.0"
+contourpy==1.3.0 ; python_version >= "3.11" and python_version < "4.0"
+cycler==0.12.1 ; python_version >= "3.11" and python_version < "4.0"
+fonttools==4.54.1 ; python_version >= "3.11" and python_version < "4.0"
+kiwisolver==1.4.7 ; python_version >= "3.11" and python_version < "4.0"
+matplotlib==3.9.2 ; python_version >= "3.11" and python_version < "4.0"
+numpy==2.1.2 ; python_version >= "3.11" and python_version < "4.0"
+packaging==24.1 ; python_version >= "3.11" and python_version < "4.0"
+pillow==11.0.0 ; python_version >= "3.11" and python_version < "4.0"
+pygments==2.18.0 ; python_version >= "3.11" and python_version < "4.0"
+pyparsing==3.2.0 ; python_version >= "3.11" and python_version < "4.0"
+python-dateutil==2.9.0.post0 ; python_version >= "3.11" and python_version < "4.0"
+reportlab==3.6.13 ; python_version >= "3.11" and python_version < "4"
+rich==10.16.2 ; python_version >= "3.11" and python_version < "4.0"
+six==1.16.0 ; python_version >= "3.11" and python_version < "4.0"
