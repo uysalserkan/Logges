@@ -1,11 +1,64 @@
-[project]
+[tool.poetry]
 name = "Logges"
-requires-python = ">=3.6"
-[build-system]
-requires = [
-    "setuptools",
-    'matplotlib==3.5.2',
-    'rich==10.16.2',
-    'reportlab==3.5.67',
-    'click==8.0.4',
+version = "2.2.1"
+description = "A simple Logging tool can extract as Markdown, PDF, or print console."
+authors = ["Serkan UYSAL", "Ozkan UYSAL"]
+maintainers = ["Serkan UYSAL <uysalserkan08@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "Logges", from = "src"}]
+
+homepage = "https://github.com/uysalserkan/Logges"
+repository = "https://github.com/uysalserkan/Logges"
+keywords = ["Log", "Logging", "Logges", "Logger", "logging", "markdown", "pdf", "console"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3 :: Only",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: System :: Logging",
+    "Topic :: Text Processing :: Markup",
+    "Topic :: Text Processing :: Markup :: Markdown",
+    "Topic :: Text Processing :: Markup :: PDF",
+    "Topic :: Utilities",
 ]
+
+[tool.poetry.scripts]
+logges = "Logges.cli:Logges_cli"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+matplotlib = "^3.5.2"
+rich = "^10.16.2"
+reportlab = "^3.5.67"
+click = "^8.0.4"
+
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+#build-backend = "setuptools.build_meta"
+
+#[project]
+#name = "Logges"
+#requires-python = ">=3.6"
+#version = "2.2"
+#
+#[build-system]
+#requires = [
+#    "setuptools",
+#    'matplotlib==3.5.2',
+#    'rich==10.16.2',
+#    'reportlab==3.5.67',
+#    'click==8.0.4',
+#]
