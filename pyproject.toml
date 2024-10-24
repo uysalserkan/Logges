@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "Logges"
-version = "2.2.1"
+version = "2.2.2"
 description = "A simple Logging tool can extract as Markdown, PDF, or print console."
 authors = ["Serkan UYSAL", "Ozkan UYSAL"]
 maintainers = ["Serkan UYSAL <uysalserkan08@gmail.com>"]
@@ -27,7 +27,6 @@ classifiers = [
     "Topic :: System :: Logging",
     "Topic :: Text Processing :: Markup",
     "Topic :: Text Processing :: Markup :: Markdown",
-    "Topic :: Text Processing :: Markup :: PDF",
     "Topic :: Utilities",
 ]
 
@@ -46,19 +45,3 @@ click = "^8.0.4"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
-
-#build-backend = "setuptools.build_meta"
-
-#[project]
-#name = "Logges"
-#requires-python = ">=3.6"
-#version = "2.2"
-#
-#[build-system]
-#requires = [
-#    "setuptools",
-#    'matplotlib==3.5.2',
-#    'rich==10.16.2',
-#    'reportlab==3.5.67',
-#    'click==8.0.4',
-#]
