@@ -7,6 +7,7 @@
 """
 import os
 import sys
+from ast import literal_eval
 from enum import Enum
 from shutil import copy2
 from typing import Dict
@@ -77,7 +78,8 @@ class Logges:
 
     @staticmethod
     def setup(logname: str = None,
-              status_level: LogStatus = LogStatus.ERROR) -> None:
+              status_level: LogStatus = LogStatus.ERROR,
+              print_status: bool = True) -> None:
         """Set the environment.
 
         Set up environment and setting the logfile name.
@@ -87,10 +89,13 @@ class Logges:
             logname `str`: It defines your log file name.
             status_level `LogStatus`: If status equal or greater than parameter, automatically print it.
             Default value is `LogStatus.ERROR`
+            print_status `bool`: Show on console log status.
 
         Return:
             None
         """
+
+        os.environ["print_status"] = str(print_status)
         global FILENAME, SAVINGPATH, STATUS_LEVEL
         STATUS_LEVEL = status_level.value
         filepath = sys._getframe().f_back.f_code.co_filename
@@ -139,8 +144,7 @@ class Logges:
     @staticmethod
     def log(
         msg: Union[str, any],
-        status: LogStatus = LogStatus.DEBUG,
-        print_log: bool = False,
+        status: LogStatus = LogStatus.DEBUG
     ) -> None:
         r"""Log a string with status message, please do not use `\n` character in your strigs.
 
@@ -152,6 +156,8 @@ class Logges:
         Return:
             None
         """
+        print_log = literal_eval(os.environ["print_status"])
+
         global IGNORE_FILES_AND_DIRS
         cur_time = get_current_time_HM()
         if not isinstance(msg, str):
@@ -165,7 +171,7 @@ class Logges:
 
         filename = os.path.split(filepath)[1]
 
-        msg = f"[{cur_time}] [{status.name:8s}] [{filename}] [{funct}]: {msg}"
+        msg = f"[{cur_time}] [{status.name.center(10)}] [{filename}] [{funct}]: {msg}"
 
         if print_log:
             print(msg)
