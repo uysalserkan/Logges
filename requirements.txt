@@ -43,7 +43,7 @@ PySocks @ file:///Users/builder/ci_310/pysocks_1642536366386/work
 python-dateutil @ file:///tmp/build/80754af9/python-dateutil_1626374649649/work
 readme-renderer @ file:///Users/builder/ci_310/readme_renderer_1642516347890/work
 regex @ file:///opt/concourse/worker/volumes/live/63aed588-2398-47ee-5ad3-e682b77e31f2/volume/regex_1648447727979/work
-reportlab==4.0.4
+reportlab==4.3.1
 requests @ file:///opt/conda/conda-bld/requests_1641824580448/work
 requests-toolbelt @ file:///Users/ktietz/demo/mc3/conda-bld/requests-toolbelt_1629456163440/work
 rfc3986 @ file:///Users/ktietz/demo/mc3/conda-bld/rfc3986_1629478296451/work
