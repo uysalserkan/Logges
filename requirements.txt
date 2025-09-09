@@ -22,7 +22,7 @@ keyring @ file:///Users/builder/ci_310/keyring_1642616528347/work
 kiwisolver @ file:///private/var/folders/sy/f16zz6x50xz3113nwtb9bvq00000gp/T/abs_ca2945cc-8f2f-407b-8e24-f05d29ee2f4fvto5sdlk/croots/recipe/kiwisolver_1653292053344/work
 matplotlib @ file:///private/var/folders/sy/f16zz6x50xz3113nwtb9bvq00000gp/T/abs_croot-hkd3cnd2/matplotlib-suite_1647506470899/work
 mccabe @ file:///opt/conda/conda-bld/mccabe_1644221741721/work
-mkl-fft==1.3.1
+mkl-fft==2.0.0
 mkl-random @ file:///opt/concourse/worker/volumes/live/a9eca864-069c-4240-73c8-4e51b036a10d/volume/mkl_random_1639994047876/work
 mkl-service==2.4.0
 munkres==1.1.4
