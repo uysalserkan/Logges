@@ -4,15 +4,30 @@
 @authors: Serkan UYSAL, Özkan UYSAL
 @date: 2022
 @mails: uysalserkan08@gmail.com, ozkan.uysal.2009@hotmail.com
+
+DEPRECATION NOTICE:
+The static Logges class API is deprecated and will be removed in version 3.0.
+Please migrate to the new Logger class:
+
+Old API (deprecated):
+    from Logges import Logges
+    Logges.setup(logname="myapp")
+    Logges.log("message", Logges.LogStatus.ERROR)
+
+New API (recommended):
+    from Logges import get_logger, LogLevel
+    logger = get_logger("myapp")
+    logger.error("message")
 """
+
 import os
 import sys
+import warnings
 from ast import literal_eval
 from enum import Enum
+from pathlib import Path
 from shutil import copy2
-from typing import Dict
-from typing import List
-from typing import Union
+from typing import Dict, List, Union, Optional
 from zipfile import ZipFile
 
 from .utils import extract_logs
@@ -23,14 +38,23 @@ from .utils import get_saving_path
 from .utils import to_markdown
 from .utils import to_pdf
 
+# Import new logger components
+from .logger import Logger as NewLogger
+from .config import LogConfig, LogLevel
+
 FILENAME = None
 SAVINGPATH = None
 STATUS_LEVEL = None
 IGNORE_FILES_AND_DIRS = []
 
+# Global instance for backward compatibility
+_COMPAT_LOGGER: Optional[NewLogger] = None
+
 
 class Logges:
     """The best logging tool in the world :D.
+
+    DEPRECATED: This static API is deprecated. Use the new Logger class instead.
 
     You have to initial `setup` method with run script and set as `setup(__file__)`.
 
@@ -76,11 +100,37 @@ class Logges:
             }
             return icon_status_dict
 
+        def to_new_level(self) -> LogLevel:
+            """Convert old LogStatus to new LogLevel.
+
+            Returns:
+                Corresponding LogLevel enum value
+            """
+            mapping = {
+                0: LogLevel.DEBUG,
+                1: LogLevel.INFO,
+                2: LogLevel.WARNING,
+                3: LogLevel.ERROR,
+                4: LogLevel.CRITICAL,
+            }
+            if self.value not in mapping:
+                import warnings
+
+                warnings.warn(
+                    f"Unknown log status value {self.value}, defaulting to INFO",
+                    RuntimeWarning,
+                    stacklevel=2,
+                )
+                return LogLevel.INFO
+            return mapping[self.value]
+
     @staticmethod
-    def setup(logname: str = None,
-              status_level: LogStatus = LogStatus.ERROR,
-              print_status: bool = True) -> None:
+    def setup(
+        logname: str = None, status_level: LogStatus = LogStatus.ERROR, print_status: bool = True
+    ) -> None:
         """Set the environment.
+
+        DEPRECATED: Use Logger class instead.
 
         Set up environment and setting the logfile name.
         If you don't enter any name, the log name will be executing script name.
@@ -94,9 +144,16 @@ class Logges:
         Return:
             None
         """
+        warnings.warn(
+            "Logges.setup() is deprecated. Use Logger class instead:\n"
+            "  from Logges import get_logger\n"
+            "  logger = get_logger('myapp')",
+            DeprecationWarning,
+            stacklevel=2,
+        )
 
         os.environ["print_status"] = str(print_status)
-        global FILENAME, SAVINGPATH, STATUS_LEVEL
+        global FILENAME, SAVINGPATH, STATUS_LEVEL, _COMPAT_LOGGER
         STATUS_LEVEL = status_level.value
         filepath = sys._getframe().f_back.f_code.co_filename
         abs_filepath = os.path.abspath(filepath)
@@ -106,9 +163,24 @@ class Logges:
             FILENAME = os.path.split(abs_filepath)[1].split(".py")[0]
         SAVINGPATH = os.path.split(abs_filepath)[0]
 
+        # Create new logger instance for compatibility
+        try:
+            config = LogConfig(
+                name=FILENAME,
+                level=status_level.to_new_level(),
+                log_dir=Path(SAVINGPATH),
+                print_to_console=print_status,
+            )
+            _COMPAT_LOGGER = NewLogger(config)
+        except Exception:
+            # If new logger fails, fall back to old behavior
+            pass
+
     @staticmethod
     def _write_logs(msg: str) -> None:
         """write_logs method called by `logs` method for writting all logs to a file. You do not need this method.
+
+        DEPRECATED: Internal method, will be removed.
 
         Parameters:
             msg `str`: A string that contains all log informations, separated by new line character.
@@ -118,11 +190,14 @@ class Logges:
         """
         global FILENAME, STATUS_LEVEL
         filename = get_daily_log_file_name(filename=FILENAME)
-        # saving_dir = get_saving_path()
         log_dir = os.path.join(SAVINGPATH, filename)
-        log_file = open(f"{log_dir}", "a")
-        log_file.writelines(msg + "\n")
-        log_file.close()
+
+        # Use context manager for proper resource management
+        try:
+            with open(log_dir, "a") as log_file:
+                log_file.write(msg + "\n")
+        except (IOError, OSError) as e:
+            print(f"Error writing to log file: {e}", file=sys.stderr)
 
     @staticmethod
     def ignore_files(name: Union[str, List[str]]) -> None:
@@ -141,12 +216,15 @@ class Logges:
             if name.lower() not in IGNORE_FILES_AND_DIRS:
                 IGNORE_FILES_AND_DIRS.append(name.lower())
 
+        # Update compat logger if it exists
+        if _COMPAT_LOGGER:
+            _COMPAT_LOGGER.config.ignored_files = IGNORE_FILES_AND_DIRS
+
     @staticmethod
-    def log(
-        msg: Union[str, any],
-        status: LogStatus = LogStatus.DEBUG
-    ) -> None:
+    def log(msg: Union[str, any], status: LogStatus = LogStatus.DEBUG) -> None:
         r"""Log a string with status message, please do not use `\n` character in your strigs.
+
+        DEPRECATED: Use logger.info(), logger.error(), etc. instead.
 
         Parameters:
             msg `str`: A string, showing on your report.
@@ -156,7 +234,16 @@ class Logges:
         Return:
             None
         """
-        print_log = literal_eval(os.environ["print_status"])
+        # Try to use new logger if available
+        if _COMPAT_LOGGER:
+            try:
+                _COMPAT_LOGGER.log(msg, status.to_new_level())
+                return
+            except Exception:
+                pass  # Fall back to old implementation
+
+        # Old implementation
+        print_log = literal_eval(os.environ.get("print_status", "True"))
 
         global IGNORE_FILES_AND_DIRS
         cur_time = get_current_time_HM()
@@ -165,8 +252,10 @@ class Logges:
 
         filepath, funct = get_log_info()
 
-        if any(True if each_ignored in filepath.lower() else False
-               for each_ignored in IGNORE_FILES_AND_DIRS):
+        if any(
+            True if each_ignored in filepath.lower() else False
+            for each_ignored in IGNORE_FILES_AND_DIRS
+        ):
             return
 
         filename = os.path.split(filepath)[1]
@@ -197,14 +286,17 @@ class Logges:
         file_dir = SAVINGPATH
         full_logfile_path = os.path.join(file_dir, filename)
 
-        file = open(full_logfile_path, "r")
-        (
-            _,
-            _,
-            _,
-            _,
-            _log_message_list,
-        ) = extract_logs(logs=file)
+        try:
+            with open(full_logfile_path, "r") as file:
+                (
+                    _,
+                    _,
+                    _,
+                    _,
+                    _log_message_list,
+                ) = extract_logs(logs=file)
+        except (IOError, OSError):
+            return False
 
         if isinstance(keyword, str):
             for each_log in _log_message_list:
@@ -261,7 +353,9 @@ class Logges:
                     zipfile.write(file)
                     os.remove(file)
                 if log:
-                    filename = get_daily_log_file_name(filename=FILENAME, )
+                    filename = get_daily_log_file_name(
+                        filename=FILENAME,
+                    )
                     file = os.path.join(SAVINGPATH, filename)
                     zipfile.write(file)
                     os.remove(file)
