@@ -1,47 +1,93 @@
-[tool.poetry]
-name = "Logges"
-version = "2.2.2"
-description = "A simple Logging tool can extract as Markdown, PDF, or print console."
-authors = ["Serkan UYSAL", "Ozkan UYSAL"]
-maintainers = ["Serkan UYSAL <uysalserkan08@gmail.com>"]
-license = "MIT"
-readme = "README.md"
-packages = [{include = "Logges", from = "src"}]
-
-homepage = "https://github.com/uysalserkan/Logges"
-repository = "https://github.com/uysalserkan/Logges"
-keywords = ["Log", "Logging", "Logges", "Logger", "logging", "markdown", "pdf", "console"]
-classifiers = [
-    "Development Status :: 5 - Production/Stable",
-    "Intended Audience :: Developers",
-    "License :: OSI Approved :: MIT License",
-    "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.6",
-    "Programming Language :: Python :: 3.7",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
-    "Programming Language :: Python :: 3 :: Only",
-    "Topic :: Software Development :: Libraries :: Python Modules",
-    "Topic :: System :: Logging",
-    "Topic :: Text Processing :: Markup",
-    "Topic :: Text Processing :: Markup :: Markdown",
-    "Topic :: Utilities",
+[tool.pytest.ini_options]
+testpaths = ["test"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = [
+    "-v",
+    "--strict-markers",
+    "--tb=short",
+    "--cov=src/Logges",
+    "--cov-report=term-missing",
+    "--cov-report=html",
 ]
 
-[tool.poetry.scripts]
-logges = "Logges.cli:Logges_cli"
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_any_unimported = false
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+check_untyped_defs = true
+strict_equality = true
 
-[tool.poetry.dependencies]
-python = "^3.11"
-matplotlib = "^3.5.2"
-rich = "^10.16.2"
-reportlab = "^3.5.67"
-click = "^8.0.4"
+[[tool.mypy.overrides]]
+module = ["matplotlib.*", "reportlab.*", "rich.*"]
+ignore_missing_imports = true
 
+[tool.black]
+line-length = 100
+target-version = ["py310", "py311"]
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+  | venv_tmp
+)/
+'''
 
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+    "B",   # flake8-bugbear
+    "C4",  # flake8-comprehensions
+    "UP",  # pyupgrade
+    "ARG", # flake8-unused-arguments
+    "SIM", # flake8-simplify
+]
+ignore = [
+    "E501",  # line too long (handled by black)
+    "B008",  # do not perform function calls in argument defaults
+    "C901",  # too complex
+]
 
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+[tool.ruff.per-file-ignores]
+"__init__.py" = ["F401"]
+"test_*.py" = ["ARG", "S101"]
+
+[tool.coverage.run]
+source = ["src"]
+omit = [
+    "*/test/*",
+    "*/tests/*",
+    "*/__pycache__/*",
+    "*/venv/*",
+    "*/venv_tmp/*",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+    "@abstractmethod",
+]
